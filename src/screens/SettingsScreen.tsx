@@ -1,18 +1,18 @@
 import { View, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
+import AppBar from "../AppBar";
 
 export default function SettingsScreen() {
   return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium">Ustawienia!</Text>
+    <View>
+      <AppBar title="Ustawienia" />
+      <Text variant="headlineMedium" style={styles.text}>
+        Ustawienia!
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  text: { fontSize: 30, textAlign: "center" },
 });
