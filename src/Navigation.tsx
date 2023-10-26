@@ -4,10 +4,10 @@ import { BottomNavigation } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import TrainingScreen from "./TrainingScreen";
-import StatisticsScreen from "./StatisticsScreen";
-import HistoryScreen from "./HistoryScreen";
-import SettingsScreen from "./SettingsScreen";
+import TrainingScreen from "./screens/TrainingScreen";
+import StatisticsScreen from "./screens/StatisticsScreen";
+import HistoryScreen from "./screens/HistoryScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 
