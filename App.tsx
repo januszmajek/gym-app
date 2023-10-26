@@ -1,35 +1,30 @@
-import HomeScreen from "./src/HomeScreen";
-
-import * as React from 'react';
-import { AppRegistry } from 'react-native';
-import { DefaultTheme, PaperProvider, Text } from 'react-native-paper';
-// import { DarkTheme, PaperProvider } from 'react-native-paper';
-import * as appConfig from './app.json';
-import MyComponent from "./src/BottomNavigation";
-import { NavigationContainer } from '@react-navigation/native';
+import * as React from "react";
+import { AppRegistry } from "react-native";
+import { DefaultTheme, PaperProvider, Text } from "react-native-paper";
+import * as appConfig from "./app.json";
+import Navigation from "./src/Navigation";
+import { NavigationContainer } from "@react-navigation/native";
 
 const appName = appConfig.expo.name;
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'tomato',
-    secondary: 'green',
+    primary: "tomato",
+    secondary: "green",
   },
 };
 
 export default function App() {
   return (
-    <PaperProvider theme={theme} >
-      <HomeScreen />
+    <PaperProvider theme={theme}>
       <NavigationContainer>
-        <MyComponent/>
+        <Navigation />
       </NavigationContainer>
     </PaperProvider>
   );
 }
 AppRegistry.registerComponent(appName, () => App);
-
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -39,4 +34,3 @@ AppRegistry.registerComponent(appName, () => App);
 //     justifyContent: 'center',
 //   },
 // });
-

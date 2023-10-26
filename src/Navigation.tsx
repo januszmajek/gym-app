@@ -1,15 +1,17 @@
-import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
-
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, BottomNavigation  } from 'react-native-paper';
+import * as React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { BottomNavigation } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// import Icon from 'react-native-paper';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
+import TrainingScreen from "./TrainingScreen";
+import StatisticsScreen from "./StatisticsScreen";
+import HistoryScreen from "./HistoryScreen";
+import SettingsScreen from "./SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 
-export default function MyComponent() {
+export default function Navigation() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -18,10 +20,10 @@ export default function MyComponent() {
       tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
           navigationState={state}
-         safeAreaInsets={insets}
+          safeAreaInsets={insets}
           onTabPress={({ route, preventDefault }) => {
             const event = navigation.emit({
-              type: 'tabPress',
+              type: "tabPress",
               target: route.key,
               canPreventDefault: true,
             });
@@ -29,7 +31,7 @@ export default function MyComponent() {
             if (event.defaultPrevented) {
               preventDefault();
             } else {
-             navigation.dispatch({
+              navigation.dispatch({
                 ...CommonActions.navigate(route.name, route.params),
                 target: state.key,
               });
@@ -45,13 +47,13 @@ export default function MyComponent() {
           }}
           getLabelText={({ route }) => {
             const { options } = descriptors[route.key];
-              const label =
+            const label =
               options.tabBarLabel !== undefined
                 ? options.tabBarLabel
                 : options.title !== undefined
                 ? options.title
-                // @ts-ignore
-                : route.title;
+                : // @ts-ignore
+                  route.title;
 
             return label;
           }}
@@ -59,12 +61,32 @@ export default function MyComponent() {
       )}
     >
       <Tab.Screen
-        name="Home"
-        component={HomeScreen}
+        name="Trening"
+        component={TrainingScreen}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: "Trening",
           tabBarIcon: ({ color, size }) => {
-            return <Icon name="home" size={size} color={color} />;
+            return <Icon name="arm-flex" size={size} color={color} />;
+          },
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryScreen}
+        options={{
+          tabBarLabel: "Historia",
+          tabBarIcon: ({ color, size }) => {
+            return <Icon name="history" size={size} color={color} />;
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Statistics"
+        component={StatisticsScreen}
+        options={{
+          tabBarLabel: "Statystyki",
+          tabBarIcon: ({ color, size }) => {
+            return <Icon name="chart-line" size={size} color={color} />;
           },
         }}
       />
@@ -72,7 +94,7 @@ export default function MyComponent() {
         name="Settings"
         component={SettingsScreen}
         options={{
-          tabBarLabel: 'Settings',
+          tabBarLabel: "Ustawienia",
           tabBarIcon: ({ color, size }) => {
             return <Icon name="cog" size={size} color={color} />;
           },
@@ -81,27 +103,3 @@ export default function MyComponent() {
     </Tab.Navigator>
   );
 }
-
-function HomeScreen() {
-  return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium">Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium">Settings!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
