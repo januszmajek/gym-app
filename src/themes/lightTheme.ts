@@ -1,4 +1,6 @@
-const theme = {
+import { DefaultTheme } from "react-native-paper";
+
+const lightTheme = {
   ...DefaultTheme,
   colors: {
     primary: "rgb(0, 95, 175)",
@@ -44,4 +46,4 @@ const theme = {
   },
 };
 
-export default theme;
+export default lightTheme;

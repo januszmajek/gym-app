@@ -1,3 +1,5 @@
+import { DefaultTheme } from "react-native-paper";
+
 const darkTheme = {
   ...DefaultTheme,
   colors: {
@@ -44,4 +46,4 @@ const darkTheme = {
   },
 };
 
-export default theme;
+export default darkTheme;
