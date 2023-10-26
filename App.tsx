@@ -23,7 +23,7 @@ const theme = {
 		tertiaryContainer: "rgb(212, 227, 255)",
 
 
-    
+
 		onTertiaryContainer: "rgb(0, 28, 58)",
 		error: "rgb(186, 26, 26)",
 		onError: "rgb(255, 255, 255)",
