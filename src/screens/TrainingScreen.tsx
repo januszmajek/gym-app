@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
-import AppBar from "../AppBar";
+import AppBar from "../components/AppBar";
 
 export default function TrainingScreen() {
 	return (
