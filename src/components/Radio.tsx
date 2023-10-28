@@ -1,26 +1,25 @@
 import * as React from "react";
-import { View } from "react-native";
 import { RadioButton } from "react-native-paper";
 
-interface RadioProps {
+interface Option {
+    label: string,
+    value: string
 }
 
-const Radio = () => {
-	const [checked, setChecked] = React.useState("first");
+interface RadioProps {
+    options: Option[]
+}
+
+
+const Radio = ( {options}:RadioProps ) => {
+	const [value, setValue] = React.useState(options[0].value);
 
 	return (
-		<View>
-			<RadioButton
-				value="first"
-				status={ checked === "first" ? "checked" : "unchecked" }
-				onPress={() => setChecked("first")}
-			/>
-			<RadioButton
-				value="second"
-				status={ checked === "second" ? "checked" : "unchecked" }
-				onPress={() => setChecked("second")}
-			/>
-		</View>
+		<RadioButton.Group onValueChange={value => setValue(value)} value={value}>
+			{options.map(({label, value}: Option) => 
+				<RadioButton.Item key={value} label={label} value={value} />
+			)}
+		</RadioButton.Group>
 	);
 };
 
