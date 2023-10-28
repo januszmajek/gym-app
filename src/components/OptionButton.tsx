@@ -25,7 +25,7 @@ const OptionButton = ( {type, options}:OptionButtonProps) => {
 			<Button onPress={showDialog} style={styles.button}>{type}</Button>
 			<Portal>
 				<Dialog visible={visible} onDismiss={hideDialog} style={styles.container}>
-					<Dialog.Title style={styles.title}>Wybierz jednostkę</Dialog.Title>
+					<Dialog.Title style={styles.title}>{type}</Dialog.Title>
 					<Radio options={options}/>
 					<Dialog.Actions>
 						<Button onPress={hideDialog}>Zapisz</Button>
