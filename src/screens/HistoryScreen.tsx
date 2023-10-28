@@ -3,16 +3,16 @@ import { Text } from "react-native-paper";
 import AppBar from "../AppBar";
 
 export default function HistoryScreen() {
-  return (
-    <View>
-      <AppBar title="Historia" />
-      <Text variant="headlineMedium" style={styles.text}>
+	return (
+		<View>
+			<AppBar title="Historia" />
+			<Text variant="headlineMedium" style={styles.text}>
         Historia!
-      </Text>
-    </View>
-  );
+			</Text>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-  text: { fontSize: 30, textAlign: "center" },
+	text: { fontSize: 30, textAlign: "center" },
 });
