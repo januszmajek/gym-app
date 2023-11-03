@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Button, Dialog, Portal } from "react-native-paper";
 import Radio from "./Radio";
 import ButtonLabel from "./ButtonLabel";
@@ -12,9 +12,10 @@ interface Option {
 interface OptionButtonProps {
   type: string;
   options: Option[];
+  icon: string;
 }
 
-const OptionButton = ({ type, options }: OptionButtonProps) => {
+const OptionButton = ({ type, options, icon }: OptionButtonProps) => {
   const [visible, setVisible] = React.useState(false);
 
   const showDialog = () => setVisible(true);
@@ -22,13 +23,13 @@ const OptionButton = ({ type, options }: OptionButtonProps) => {
   const hideDialog = () => setVisible(false);
 
   return (
-    <View>
+    <View style={{ width: "100%" }}>
       <Button
         onPress={showDialog}
         labelStyle={styles.labelStyle}
         contentStyle={styles.contentStyle}
         style={styles.style}
-        icon="arm-flex"
+        icon={icon}
       >
         <ButtonLabel bigLabel={type} smallLabel={type} />
       </Button>
@@ -41,7 +42,9 @@ const OptionButton = ({ type, options }: OptionButtonProps) => {
           <Dialog.Title style={styles.title}>{type}</Dialog.Title>
           <Radio options={options} />
           <Dialog.Actions>
-            <Button onPress={hideDialog}>Zapisz</Button>
+            <Button onPress={hideDialog}>
+              <Text>Zapisz</Text>
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -54,12 +57,16 @@ export default OptionButton;
 const styles = StyleSheet.create({
   container: { paddingHorizontal: 10 },
   contentStyle: {},
-  labelStyle: { fontSize: 20, padding: 8, textAlign: "left" },
+  labelStyle: {
+    fontSize: 32,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    textAlign: "left",
+  },
   style: {
-    alignItems: "center",
+    alignItems: "stretch",
     borderRadius: 0,
     flexDirection: "row",
-    width: "100%",
   },
   title: { fontSize: 20, textAlign: "center" },
 });

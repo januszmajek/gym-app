@@ -16,6 +16,6 @@ const ButtonLabel = ({ bigLabel, smallLabel }: ButtonLabelProps) => (
 export default ButtonLabel;
 
 const styles = StyleSheet.create({
-  bigLabel: { fontSize: 22 },
-  smallLabel: {},
+  bigLabel: { fontSize: 20 },
+  smallLabel: { fontSize: 16 },
 });
