@@ -2,6 +2,7 @@ import * as React from "react";
 import { View, StyleSheet } from "react-native";
 import { Button, Dialog, Portal} from "react-native-paper";
 import Radio from "./Radio";
+import ButtonLabel from "./ButtonLabel";
 
 interface Option {
     label: string,
@@ -22,9 +23,19 @@ const OptionButton = ( {type, options}:OptionButtonProps) => {
 
 	return (
 		<View>
-			<Button onPress={showDialog} style={styles.button}>{type}</Button>
+			<Button 
+				onPress={showDialog} 
+				labelStyle={styles.labelStyle} 
+				contentStyle={styles.contentStyle}
+				style={styles.style}
+				icon="arm-flex">
+				<ButtonLabel bigLabel={type} smallLabel={type} />
+			</Button>
 			<Portal>
-				<Dialog visible={visible} onDismiss={hideDialog} style={styles.container}>
+				<Dialog 
+					visible={visible} 
+					onDismiss={hideDialog} 
+					style={styles.container}>
 					<Dialog.Title style={styles.title}>{type}</Dialog.Title>
 					<Radio options={options}/>
 					<Dialog.Actions>
@@ -41,5 +52,7 @@ export default OptionButton;
 const styles = StyleSheet.create({
 	container: { paddingHorizontal: 10},
 	title: { fontSize: 20, textAlign: "center" },
-	button: { fontSize: 28, borderRadius: 0, textAlign: "left", padding: 0},
+	style: { borderRadius: 0, width: "100%", flexDirection: "row", alignItems: "center"},
+	labelStyle: { fontSize: 20, textAlign: "left", padding: 8},
+	contentStyle: {},
 });

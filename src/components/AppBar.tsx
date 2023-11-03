@@ -12,3 +12,4 @@ const AppBar = ({ title }: AppBarProps) => (
 );
 
 export default AppBar;
+
