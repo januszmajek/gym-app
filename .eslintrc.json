@@ -4,7 +4,9 @@
 	},
 	"extends": [
 		"eslint:recommended",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:react-native/all",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
 	],
 	"overrides": [
 		{
@@ -12,9 +14,10 @@
 				"node": true
 			},
 			"files": [
-				".eslintrc.{js,cjs}"
+				".eslintrc.{js,cjs,json}"
 			],
 			"parserOptions": {
+				"project": "./tsconfig.json",
 				"sourceType": "script"
 			}
 		}
@@ -26,24 +29,12 @@
 	},
 	"plugins": [
 		"@typescript-eslint",
-		"react"
+		"react-native",
+		"prettier"
 	],
 	"rules": {
-		"indent": [
-			"error",
-			"tab"
-		],
-		"linebreak-style": [
-			"error",
-			"windows"
-		],
-		"quotes": [
-			"error",
-			"double"
-		],
-		"semi": [
-			"error",
-			"always"
-		]
+		"no-multiple-empty-lines": ["error", {"max": 1}],
+		"key-spacing": ["error", { "beforeColon": false, "afterColon": true }],
+		"no-nested-ternary": "error"
 	}
 }
