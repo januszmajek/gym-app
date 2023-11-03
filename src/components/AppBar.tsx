@@ -6,10 +6,9 @@ interface AppBarProps {
 }
 
 const AppBar = ({ title }: AppBarProps) => (
-	<Appbar.Header>
-		<Appbar.Content title={title} />
-	</Appbar.Header>
+  <Appbar.Header>
+    <Appbar.Content title={title} />
+  </Appbar.Header>
 );
 
 export default AppBar;
-
