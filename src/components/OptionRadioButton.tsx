@@ -1,9 +1,12 @@
 import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Button, Dialog, Portal } from "react-native-paper";
 import Radio from "./Radio";
 import ButtonLabel from "./ButtonLabel";
-import { useSettingsStore } from "../hooks/useSettingsStore";
+import useWeightStore from "../hooks/useWeightStore";
+import useDistanceStore from "../hooks/useDistanceStore";
+import useThemeStore from "../hooks/useThemeStore";
+import useLengthStore from "../hooks/useLengthStore";
 
 interface Option {
   label: string;
@@ -17,20 +20,27 @@ interface OptionButtonProps {
   icon: string;
 }
 
-
-
-const OptionButton = ({ type, label, options, icon }: OptionButtonProps) => {
+const OptionRadioButton = ({
+  type,
+  label,
+  options,
+  icon,
+}: OptionButtonProps) => {
   const [visible, setVisible] = React.useState(false);
-  const value =
-    type === "theme"
-      ? useSettingsStore((state) => state.theme)
-      : type === "weight"
-      ? useSettingsStore((state) => state.weightUnit)
-      : type === "distance"
-      ? useSettingsStore((state) => state.distanceUnit)
-      : type === "length"
-      ? useSettingsStore((state) => state.lengthUnit)
-      : "";
+
+  const store = () => {
+    if (type === "weight") {
+      return useWeightStore();
+    } else if (type === "distance") {
+      return useDistanceStore();
+    } else if (type === "length") {
+      return useLengthStore();
+    } else {
+      return useThemeStore();
+    }
+  };
+
+  const { value, changeValue } = store();
 
   const showDialog = () => setVisible(true);
 
@@ -54,19 +64,19 @@ const OptionButton = ({ type, label, options, icon }: OptionButtonProps) => {
           style={styles.container}
         >
           <Dialog.Title style={styles.title}>{label}</Dialog.Title>
-          <Radio options={options} />
-          <Dialog.Actions>
-            <Button onPress={hideDialog}>
-              <Text>Zapisz</Text>
-            </Button>
-          </Dialog.Actions>
+          <Radio
+            options={options}
+            initValue={value}
+            changeValue={changeValue}
+            hideDialog={hideDialog}
+          />
         </Dialog>
       </Portal>
     </View>
   );
 };
 
-export default OptionButton;
+export default OptionRadioButton;
 
 const styles = StyleSheet.create({
   container: { paddingHorizontal: 10 },
