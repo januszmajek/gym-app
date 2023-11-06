@@ -4,7 +4,8 @@ import OptionButton from "../components/OptionButton";
 
 export default function SettingsScreen() {
   const distance = {
-    type: "Jednostka odległości",
+    type: "distance",
+    label: "Jednostka dystansu",
     options: [
       { label: "Kilometr", value: "km" },
       { label: "Mila", value: "mi" },
@@ -13,7 +14,8 @@ export default function SettingsScreen() {
   };
 
   const weight = {
-    type: "Jednostka wagi",
+    type: "weight",
+    label: "Jednostka wagi",
     options: [
       { label: "Kilogram", value: "kg" },
       { label: "Funt", value: "lb" },
@@ -22,7 +24,8 @@ export default function SettingsScreen() {
   };
 
   const size = {
-    type: "Jednostka długości",
+    type: "length",
+    label: "Jednostka długości",
     options: [
       { label: "Centymetr", value: "cm" },
       { label: "Cal", value: "inch" },
@@ -31,10 +34,11 @@ export default function SettingsScreen() {
   };
 
   const theme = {
-    type: "Układ kolorystyczny",
+    type: "theme",
+    label: "Układ kolorystyczny",
     options: [
-      { label: "Zmrożony niebieski", value: "1" },
-      { label: "Szary polski", value: "2" },
+      { label: "Jasny niebieski", value: "light" },
+      { label: "Ciemny polski", value: "dark" },
       { label: "Zielone ziółko", value: "3" },
       { label: "Białe nosy", value: "4" },
     ],
@@ -46,8 +50,14 @@ export default function SettingsScreen() {
   return (
     <View>
       <AppBar title="Ustawienia" />
-      {buttons.map(({ type, options, icon }) => (
-        <OptionButton key={type} type={type} options={options} icon={icon} />
+      {buttons.map(({ type, label, options, icon }) => (
+        <OptionButton
+          key={type}
+          type={type}
+          label={label}
+          options={options}
+          icon={icon}
+        />
       ))}
     </View>
   );

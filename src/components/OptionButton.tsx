@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Button, Dialog, Portal } from "react-native-paper";
 import Radio from "./Radio";
 import ButtonLabel from "./ButtonLabel";
+import { useSettingsStore } from "../hooks/useSettingsStore";
 
 interface Option {
   label: string;
@@ -11,12 +12,23 @@ interface Option {
 
 interface OptionButtonProps {
   type: string;
+  label: string;
   options: Option[];
   icon: string;
 }
 
-const OptionButton = ({ type, options, icon }: OptionButtonProps) => {
+const OptionButton = ({ type, label, options, icon }: OptionButtonProps) => {
   const [visible, setVisible] = React.useState(false);
+  const value =
+    type === "theme"
+      ? useSettingsStore((state) => state.theme)
+      : type === "weight"
+      ? useSettingsStore((state) => state.weightUnit)
+      : type === "distance"
+      ? useSettingsStore((state) => state.distanceUnit)
+      : type === "length"
+      ? useSettingsStore((state) => state.lengthUnit)
+      : "";
 
   const showDialog = () => setVisible(true);
 
@@ -31,7 +43,7 @@ const OptionButton = ({ type, options, icon }: OptionButtonProps) => {
         style={styles.style}
         icon={icon}
       >
-        <ButtonLabel bigLabel={type} smallLabel={type} />
+        <ButtonLabel bigLabel={label} smallLabel={value} />
       </Button>
       <Portal>
         <Dialog
@@ -39,7 +51,7 @@ const OptionButton = ({ type, options, icon }: OptionButtonProps) => {
           onDismiss={hideDialog}
           style={styles.container}
         >
-          <Dialog.Title style={styles.title}>{type}</Dialog.Title>
+          <Dialog.Title style={styles.title}>{label}</Dialog.Title>
           <Radio options={options} />
           <Dialog.Actions>
             <Button onPress={hideDialog}>
@@ -62,7 +74,7 @@ const styles = StyleSheet.create({
   labelStyle: {
     fontSize: 32,
     paddingHorizontal: 10,
-    paddingVertical: 0,
+    paddingVertical: 1,
     textAlign: "left",
   },
   style: {
