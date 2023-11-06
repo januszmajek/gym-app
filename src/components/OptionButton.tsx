@@ -21,7 +21,6 @@ const OptionButton = ({ type, options, icon }: OptionButtonProps) => {
   const showDialog = () => setVisible(true);
 
   const hideDialog = () => setVisible(false);
-  const hideDialog = () => setVisible(false);
 
   return (
     <View>
