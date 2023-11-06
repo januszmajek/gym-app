@@ -11,6 +11,10 @@ const ButtonLabel = ({ bigLabel, smallLabel }: ButtonLabelProps) => (
     <Text style={styles.bigLabel}>{bigLabel}</Text>
     <Text style={styles.smallLabel}>{smallLabel}</Text>
   </View>
+  <View>
+    <Text style={styles.bigLabel}>{bigLabel}</Text>
+    <Text style={styles.smallLabel}>{smallLabel}</Text>
+  </View>
 );
 
 export default ButtonLabel;
@@ -19,3 +23,4 @@ const styles = StyleSheet.create({
   bigLabel: { fontSize: 20 },
   smallLabel: { fontSize: 16 },
 });
+
