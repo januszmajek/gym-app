@@ -23,7 +23,7 @@ const OptionButton = ({ type, options, icon }: OptionButtonProps) => {
   const hideDialog = () => setVisible(false);
 
   return (
-    <View style={{ width: "100%" }}>
+    <View>
       <Button
         onPress={showDialog}
         labelStyle={styles.labelStyle}
@@ -56,17 +56,18 @@ export default OptionButton;
 
 const styles = StyleSheet.create({
   container: { paddingHorizontal: 10 },
-  contentStyle: {},
+  contentStyle: {
+    justifyContent: "flex-start",
+  },
   labelStyle: {
     fontSize: 32,
     paddingHorizontal: 10,
-    paddingVertical: 2,
+    paddingVertical: 0,
     textAlign: "left",
   },
   style: {
-    alignItems: "stretch",
     borderRadius: 0,
-    flexDirection: "row",
+    paddingVertical: 2,
   },
   title: { fontSize: 20, textAlign: "center" },
 });

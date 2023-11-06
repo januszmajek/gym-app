@@ -44,7 +44,7 @@ export default function SettingsScreen() {
   const buttons = [distance, weight, size, theme];
 
   return (
-    <View style={{ width: "100%" }}>
+    <View>
       <AppBar title="Ustawienia" />
       {buttons.map(({ type, options, icon }) => (
         <OptionButton key={type} type={type} options={options} icon={icon} />
