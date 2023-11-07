@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Dialog, Portal, TouchableRipple } from "react-native-paper";
 import Radio from "./Radio";
 import useWeightStore from "../hooks/useWeightStore";
