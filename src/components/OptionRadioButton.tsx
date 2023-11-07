@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { Dialog, Portal } from "react-native-paper";
+import { Dialog, Portal, TouchableRipple } from "react-native-paper";
 import Radio from "./Radio";
 import useWeightStore from "../hooks/useWeightStore";
 import useDistanceStore from "../hooks/useDistanceStore";
@@ -68,17 +68,15 @@ const OptionRadioButton = ({
 
   return (
     <View>
-      <TouchableOpacity
-        onPress={showDialog}
-        style={styles.buttonStyle}
-        activeOpacity={0.65}
-      >
-        <Icon name={iconName} size={32} color={colors.primary}></Icon>
-        <View>
-          <Text style={styles.bigLabel}>{label}</Text>
-          <Text style={styles.smallLabel}>{value}</Text>
-        </View>
-      </TouchableOpacity>
+      <TouchableRipple onPress={showDialog} style={styles.buttonStyle}>
+        <>
+          <Icon name={iconName} size={32} color={colors.primary} />
+          <View>
+            <Text style={styles.bigLabel}>{label}</Text>
+            <Text style={styles.smallLabel}>{value}</Text>
+          </View>
+        </>
+      </TouchableRipple>
       <Portal>
         <Dialog
           visible={visible}

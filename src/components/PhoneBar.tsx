@@ -7,7 +7,7 @@ import useThemeStore from "../hooks/useThemeStore";
 const STYLES = ["default", "dark-content", "light-content"] as const;
 // const TRANSITIONS = ["fade", "slide", "none"] as const;
 
-const StatusAppBar = () => {
+const PhoneBar = () => {
   const { colors } = useTheme();
   const { value: theme } = useThemeStore();
   // UKRYWANIE STATUS BARU - KIEDYŚ MOŻE SIĘ PRZYDAĆ
@@ -33,4 +33,4 @@ const StatusAppBar = () => {
     />
   );
 };
-export default StatusAppBar;
+export default PhoneBar;

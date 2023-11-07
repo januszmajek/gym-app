@@ -7,7 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import lightTheme from "./src/themes/lightTheme";
 import darkTheme from "./src/themes/darkTheme";
 import useThemeStore from "./src/hooks/useThemeStore";
-import StatusAppBar from "./src/components/StatusAppBar";
+import PhoneBar from "./src/components/PhoneBar";
 
 const appName = appConfig.expo.name;
 
@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <PaperProvider theme={themeType === "Jasny" ? lightTheme : darkTheme}>
-      <StatusAppBar />
+      <PhoneBar />
       <NavigationContainer>
         <Navigation />
       </NavigationContainer>
