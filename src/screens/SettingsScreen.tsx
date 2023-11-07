@@ -39,8 +39,6 @@ export default function SettingsScreen() {
     options: [
       { label: "Jasny niebieski", value: "Jasny" },
       { label: "Ciemny polski", value: "Ciemny" },
-      { label: "Zielone ziółko", value: "3" },
-      { label: "Białe nosy", value: "4" },
     ],
     icon: "palette",
   };
@@ -50,13 +48,13 @@ export default function SettingsScreen() {
   return (
     <View>
       <AppBar title="Ustawienia" />
-      {buttons.map(({ type, label, options, icon }) => (
+      {buttons.map(({ type, label, options, icon }, key) => (
         <OptionRadioButton
-          key={type}
+          key={key}
           type={type}
           label={label}
           options={options}
-          icon={icon}
+          iconName={icon}
         />
       ))}
     </View>

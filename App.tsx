@@ -12,8 +12,6 @@ const appName = appConfig.expo.name;
 
 export default function App() {
   const { value: themeType } = useThemeStore();
-  // TODO: hook(?) do sprawdzenia jaki theme jest aktualnie używany
-  // po zrobieniu opcji wyboru theme w ustawieniach
 
   return (
     <PaperProvider theme={themeType === "Jasny" ? lightTheme : darkTheme}>
