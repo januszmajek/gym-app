@@ -32,20 +32,17 @@ export default function App() {
   const themeType = "light";
 
   return (
-    <View>
+    <PaperProvider theme={themeType === "light" ? lightTheme : darkTheme}>
       <View>
         {session && session.user ? (
-          <Account key={session.user.id} session={session} />
+          <NavigationContainer>
+            <Navigation />
+          </NavigationContainer>
         ) : (
           <Auth />
         )}
       </View>
-      <PaperProvider theme={themeType === "light" ? lightTheme : darkTheme}>
-        <NavigationContainer>
-          <Navigation />
-        </NavigationContainer>
-      </PaperProvider>
-    </View>
+    </PaperProvider>
   );
 }
 
