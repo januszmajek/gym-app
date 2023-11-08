@@ -6,7 +6,7 @@ import Navigation from "./src/Navigation";
 import { NavigationContainer } from "@react-navigation/native";
 import lightTheme from "./src/themes/lightTheme";
 import darkTheme from "./src/themes/darkTheme";
-import useThemeStore from "./src/hooks/useThemeStore";
+import useThemeStore from "./src/hooks/stores/useThemeStore";
 import PhoneBar from "./src/components/PhoneBar";
 
 const appName = appConfig.expo.name;

@@ -2,10 +2,10 @@ import * as React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Dialog, Portal, TouchableRipple } from "react-native-paper";
 import Radio from "./Radio";
-import useWeightStore from "../hooks/useWeightStore";
-import useDistanceStore from "../hooks/useDistanceStore";
-import useThemeStore from "../hooks/useThemeStore";
-import useLengthStore from "../hooks/useLengthStore";
+import useWeightStore from "../hooks/stores/useWeightStore";
+import useDistanceStore from "../hooks/stores/useDistanceStore";
+import useThemeStore from "../hooks/stores/useThemeStore";
+import useLengthStore from "../hooks/stores/useLengthStore";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -22,6 +22,7 @@ interface OptionRadioButtonProps {
   options: Option[];
   iconName: string;
 }
+
 const OptionRadioButton = ({
   type,
   label,

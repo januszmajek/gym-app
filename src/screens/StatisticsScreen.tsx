@@ -3,16 +3,16 @@ import { Text } from "react-native-paper";
 import AppBar from "../components/AppBar";
 
 export default function StatisticsScreen() {
-	return (
-		<View>
-			<AppBar title="Statystyki" />
-			<Text variant="headlineMedium" style={styles.text}>
+  return (
+    <View>
+      <AppBar title="Statystyki" />
+      <Text variant="headlineMedium" style={styles.text}>
         Statystyki!
-			</Text>
-		</View>
-	);
+      </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-	text: { fontSize: 30, textAlign: "center" },
+  text: { fontSize: 30, textAlign: "center" },
 });

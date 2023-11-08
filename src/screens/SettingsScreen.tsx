@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import AppBar from "../components/AppBar";
 import OptionRadioButton from "../components/OptionRadioButton";
+import OptionSwitchButton from "../components/OptionSwitchButton";
 
 export default function SettingsScreen() {
   const distance = {
@@ -43,17 +44,38 @@ export default function SettingsScreen() {
     icon: "palette",
   };
 
-  const buttons = [distance, weight, size, theme];
+  const vibrate = {
+    type: "vibrate",
+    label: "Wibracje",
+    icon: "vibrate",
+  };
+
+  const keepScreenOn = {
+    type: "keepScreenOn",
+    label: "Nie wygaszaj ekranu",
+    icon: "cellphone",
+  };
+
+  const radioButtons = [distance, weight, size, theme];
+  const switchButtons = [vibrate, keepScreenOn];
 
   return (
     <View>
       <AppBar title="Ustawienia" />
-      {buttons.map(({ type, label, options, icon }, key) => (
+      {radioButtons.map(({ type, label, options, icon }, key) => (
         <OptionRadioButton
           key={key}
           type={type}
           label={label}
           options={options}
+          iconName={icon}
+        />
+      ))}
+      {switchButtons.map(({ type, label, icon }, key) => (
+        <OptionSwitchButton
+          key={key}
+          type={type}
+          label={label}
           iconName={icon}
         />
       ))}

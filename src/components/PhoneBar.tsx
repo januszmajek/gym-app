@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StatusBar } from "react-native";
 import type { StatusBarStyle } from "react-native";
 import { useTheme } from "react-native-paper";
-import useThemeStore from "../hooks/useThemeStore";
+import useThemeStore from "../hooks/stores/useThemeStore";
 
 const STYLES = ["default", "dark-content", "light-content"] as const;
 // const TRANSITIONS = ["fade", "slide", "none"] as const;
