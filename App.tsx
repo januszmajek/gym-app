@@ -13,6 +13,7 @@ import Auth from "./src/components/authentication/Auth";
 import Account from "./src/components/authentication/Account";
 import { View } from "react-native";
 import { Session } from "@supabase/supabase-js";
+import GoogleAuth from "./src/components/authentication/GoogleAuth";
 
 const appName = appConfig.expo.name;
 
@@ -39,7 +40,10 @@ export default function App() {
             <Navigation />
           </NavigationContainer>
         ) : (
-          <Auth />
+          <>
+            <Auth />
+            <GoogleAuth />
+          </>
         )}
       </View>
     </PaperProvider>
