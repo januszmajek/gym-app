@@ -32,9 +32,9 @@ export default function App() {
 
   return (
     <PaperProvider theme={themeType === "Jasny" ? lightTheme : darkTheme}>
+      <PhoneBar />
       {session && session.user ? (
-        <PhoneBar />
-      <NavigationContainer>
+        <NavigationContainer>
           <Navigation />
         </NavigationContainer>
       ) : (

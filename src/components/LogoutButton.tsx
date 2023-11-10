@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet } from "react-native";
-import { Switch, TouchableRipple, useTheme } from "react-native-paper";
+import { TouchableRipple, useTheme } from "react-native-paper";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { supabase } from "../../utils/supabase";
 
 const LogoutButton = () => {
   const { colors } = useTheme();
