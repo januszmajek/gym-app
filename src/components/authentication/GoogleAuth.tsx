@@ -8,7 +8,8 @@ import { supabase } from "../../../utils/supabase";
 export default function () {
   GoogleSignin.configure({
     scopes: ["https://www.googleapis.com/auth/drive.readonly"],
-    webClientId: "YOUR CLIENT ID FROM GOOGLE CONSOLE",
+    webClientId:
+      "878398367561-1b9gg3juiliq7ut1somsv7kvbmn89qb9.apps.googleusercontent.com",
   });
 
   return (
@@ -28,7 +29,7 @@ export default function () {
           } else {
             throw new Error("no ID token present!");
           }
-        } catch (error: Error) {
+        } catch (error: any) {
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
             // user cancelled the login flow
           } else if (error.code === statusCodes.IN_PROGRESS) {

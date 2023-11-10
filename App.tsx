@@ -10,8 +10,6 @@ import "react-native-url-polyfill/auto";
 import { useState, useEffect } from "react";
 import { supabase } from "./utils/supabase";
 import Auth from "./src/components/authentication/Auth";
-import Account from "./src/components/authentication/Account";
-import { View } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import GoogleAuth from "./src/components/authentication/GoogleAuth";
 
@@ -34,18 +32,16 @@ export default function App() {
 
   return (
     <PaperProvider theme={themeType === "light" ? lightTheme : darkTheme}>
-      <View>
-        {session && session.user ? (
-          <NavigationContainer>
-            <Navigation />
-          </NavigationContainer>
-        ) : (
-          <>
-            <Auth />
-            <GoogleAuth />
-          </>
-        )}
-      </View>
+      {session && session.user ? (
+        <NavigationContainer>
+          <Navigation />
+        </NavigationContainer>
+      ) : (
+        <>
+          <Auth />
+          <GoogleAuth />
+        </>
+      )}
     </PaperProvider>
   );
 }
