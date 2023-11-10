@@ -8,10 +8,9 @@ import lightTheme from "./src/themes/lightTheme";
 import darkTheme from "./src/themes/darkTheme";
 import "react-native-url-polyfill/auto";
 import { useState, useEffect } from "react";
-import { supabase } from "./utils/supabase";
+import { supabase } from "./supabase/supabase";
 import Auth from "./src/components/authentication/Auth";
 import { Session } from "@supabase/supabase-js";
-import GoogleAuth from "./src/components/authentication/GoogleAuth";
 import useThemeStore from "./src/hooks/stores/useThemeStore";
 import PhoneBar from "./src/components/PhoneBar";
 
@@ -40,7 +39,6 @@ export default function App() {
       ) : (
         <>
           <Auth />
-          <GoogleAuth />
         </>
       )}
     </PaperProvider>
