@@ -2,6 +2,7 @@ import { View } from "react-native";
 import AppBar from "../components/AppBar";
 import OptionRadioButton from "../components/OptionRadioButton";
 import OptionSwitchButton from "../components/OptionSwitchButton";
+import LogoutButton from "../components/LogoutButton";
 
 export default function SettingsScreen() {
   const distance = {
@@ -79,6 +80,7 @@ export default function SettingsScreen() {
           iconName={icon}
         />
       ))}
+      <LogoutButton />
     </View>
   );
 }
