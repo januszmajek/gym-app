@@ -1,11 +1,11 @@
-//TODO: bring it back at the end
+// TODO: bring it back at the end
 
 // import {
 //   GoogleSignin,
 //   GoogleSigninButton,
 //   statusCodes,
 // } from "@react-native-google-signin/google-signin";
-// import { supabase } from "../../../utils/supabase";
+// import { supabase } from "../../../supabase/supabase";
 //
 // export default function () {
 //   GoogleSignin.configure({
