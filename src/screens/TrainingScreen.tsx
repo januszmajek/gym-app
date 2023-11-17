@@ -6,7 +6,10 @@ import AppBar from "../components/AppBar";
 // import useDistanceStore from "../hooks/stores/useDistanceStore";
 // import useVibrateStore from "../hooks/stores/useVibrateStore";
 // import useKeepScreenOnStore from "../hooks/stores/useKeepScreenOnStore";
-import ExerciseList from "../components/ExerciseList";
+// import ExerciseList from "../components/ExerciseList";
+import WorkoutList from "../components/WorkoutList";
+import AddWorkoutButton from "../components/AddWorkoutButton";
+
 export default function TrainingScreen() {
   // const { value: lengthUnit } = useLengthStore();
   // const { value: weightUnit } = useWeightStore();
@@ -15,21 +18,24 @@ export default function TrainingScreen() {
   // const { value: keepScreenOn } = useKeepScreenOnStore();
 
   return (
-    <View>
+    <View style={styles.screen}>
       <AppBar title="Trening" />
       <Text variant="headlineMedium" style={styles.text}>
         Pozdro poćwicz
       </Text>
-      <ExerciseList />
+      <WorkoutList />
+      {/* <ExerciseList /> */}
       {/*<Text>Biegasz w {distanceUnit}</Text>*/}
       {/*<Text>Podnosisz {weightUnit}</Text>*/}
       {/*<Text>Mierzysz bica w {lengthUnit}</Text>*/}
       {/*<Text>{vibrate ? "Wibrujesz" : "Nie wibrujesz"}</Text>*/}
       {/*<Text>{keepScreenOn ? "Nie wygaszasz ekranu" : "Wygaszasz ekran"}</Text>*/}
+      <AddWorkoutButton />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: { minHeight: "100%" },
   text: { fontSize: 30, textAlign: "center" },
 });

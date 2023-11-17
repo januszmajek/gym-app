@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, Text, StyleSheet } from "react-native";
 import { supabase } from "../../supabase/supabase";
-
-interface Exercise {
-  id: string;
-  name: string;
-  primary_muscles: string[];
-  secondary_muscles: string[];
-  force: string;
-  level: string;
-  mechanic: string;
-  equipment: string;
-  category: string;
-  instructions: string[];
-}
+import { Exercise } from "../../types";
 
 const ExerciseList = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
