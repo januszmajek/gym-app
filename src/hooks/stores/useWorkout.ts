@@ -7,11 +7,12 @@ interface WorkoutStore {
     addWorkout: (workout: Workout) => void;
     removeWorkout: (workoutId: number) => void;
     updateWorkout: (workoutId: number, updatedWorkout: Workout) => void;
+    getWorkoutById: (workoutId: number) => Workout | undefined;
 }
 
-const useWorkoutStore = create<WorkoutStore>((set) => ({
+const useWorkout = create<WorkoutStore>((set) => ({
     workouts: [],
-    nextId: 0,
+    nextId: 1,
     addWorkout: (workout) =>
         set((state) => ({
             workouts: [...state.workouts, workout],
@@ -27,6 +28,10 @@ const useWorkoutStore = create<WorkoutStore>((set) => ({
                 workout.id === workoutId ? { ...workout, ...updatedWorkout } : workout,
             ),
         })),
+    getWorkoutById: (workoutId) => {
+        const workout = workouts.find((w) => w.id === workoutId);
+        return workout ? { ...workout } : undefined;
+    },
 }));
 
-export default useWorkoutStore;
+export default useWorkout;

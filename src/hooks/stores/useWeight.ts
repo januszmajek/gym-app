@@ -5,9 +5,9 @@ interface WeightStore {
     changeValue: (unit: string) => void;
 }
 
-const useWeightStore = create<WeightStore>((set) => ({
+const useWeight = create<WeightStore>((set) => ({
     value: "Kilogram",
     changeValue: (unit: string) => set({ value: unit }),
 }));
 
-export default useWeightStore;
+export default useWeight;
