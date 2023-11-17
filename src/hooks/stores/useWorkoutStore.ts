@@ -6,6 +6,7 @@ interface WorkoutStore {
     nextId: number;
     addWorkout: (workout: Workout) => void;
     removeWorkout: (workoutId: number) => void;
+    updateWorkout: (workoutId: number, updatedWorkout: Workout) => void;
 }
 
 const useWorkoutStore = create<WorkoutStore>((set) => ({
@@ -19,6 +20,12 @@ const useWorkoutStore = create<WorkoutStore>((set) => ({
     removeWorkout: (workoutId) =>
         set((state) => ({
             workouts: state.workouts.filter((workout) => workout.id !== workoutId),
+        })),
+    updateWorkout: (workoutId, updatedWorkout) =>
+        set((state) => ({
+            workouts: state.workouts.map((workout) =>
+                workout.id === workoutId ? { ...workout, ...updatedWorkout } : workout,
+            ),
         })),
 }));
 
