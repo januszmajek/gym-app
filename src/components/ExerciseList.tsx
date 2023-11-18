@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import { FlatList, Text, StyleSheet } from "react-native";
 import { supabase } from "../../supabase/supabase";
 import { Exercise } from "../../types";
+import useWorkout from "../hooks/stores/useWorkout";
+import { TouchableRipple } from "react-native-paper";
 
 const ExerciseList = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const { activeWorkoutId, addWorkoutUnit } = useWorkout();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -17,7 +20,17 @@ const ExerciseList = () => {
   }, []);
 
   const renderItem = ({ item }: { item: Exercise }) => (
-    <Text style={styles.item}>{item.name}</Text>
+    <TouchableRipple
+      onPress={() =>
+        addWorkoutUnit(activeWorkoutId, {
+          ...item,
+          sets: [{ weight: 0, repetitions: 0 }],
+          pause: 0,
+        })
+      }
+    >
+      <Text style={styles.item}>{item.name}</Text>
+    </TouchableRipple>
   );
 
   return (

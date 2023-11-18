@@ -1,14 +1,14 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
 import { FAB } from "react-native-paper";
-import useWorkoutStore from "../hooks/stores/useWorkoutStore";
+import useWorkoutStore from "../hooks/stores/useWorkout";
 
 const AddWorkoutButton = () => {
   const { nextId, addWorkout } = useWorkoutStore();
   const emptyWorkout = {
     id: nextId,
     name: "New workout",
-    exercises: [],
+    workoutUnits: [],
   };
 
   return (

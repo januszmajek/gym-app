@@ -1,22 +1,24 @@
 import React from "react";
 
-import { View, Text, Button } from "react-native";
+import { View, Text } from "react-native";
 
-import useWorkoutStore from "../hooks/stores/useWorkoutStore";
+import useWorkoutStore from "../hooks/stores/useWorkout";
+import AppBar from "./AppBar";
+import { TouchableRipple } from "react-native-paper";
 
 const WorkoutList = () => {
-  const { workouts, removeWorkout } = useWorkoutStore();
+  const { workouts, setActiveWorkoutId } = useWorkoutStore();
 
   return (
     <View>
-      <Text>Workout List</Text>
-
+      <AppBar title={"Workout List"} />
       {workouts.map((workout) => (
-        <View key={workout.id}>
+        <TouchableRipple
+          key={workout.id}
+          onPress={() => setActiveWorkoutId(workout.id)}
+        >
           <Text>{workout.name}</Text>
-
-          <Button title="Remove" onPress={() => removeWorkout(workout.id)} />
-        </View>
+        </TouchableRipple>
       ))}
     </View>
   );

@@ -2,43 +2,48 @@ import * as React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Dialog, Portal, TouchableRipple } from "react-native-paper";
 import Radio from "./Radio";
-import useWeightStore from "../hooks/stores/useWeightStore";
-import useDistanceStore from "../hooks/stores/useDistanceStore";
+import useWeight from "../hooks/stores/useWeight";
+import useDistance from "../hooks/stores/useDistance";
 import useThemeStore from "../hooks/stores/useThemeStore";
-import useLengthStore from "../hooks/stores/useLengthStore";
-
+import useLength from "../hooks/stores/useLength";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
 import { useTheme } from "react-native-paper";
 
 interface Option {
   label: string;
+
   value: string;
 }
-
 interface OptionRadioButtonProps {
   type: string;
+
   label: string;
+
   options: Option[];
+
   iconName: string;
 }
 
 const OptionRadioButton = ({
   type,
+
   label,
+
   options,
+
   iconName,
 }: OptionRadioButtonProps) => {
   const [visible, setVisible] = React.useState(false);
+
   const { colors } = useTheme();
 
   const store = () => {
     if (type === "weight") {
-      return useWeightStore();
+      return useWeight();
     } else if (type === "distance") {
-      return useDistanceStore();
+      return useDistance();
     } else if (type === "length") {
-      return useLengthStore();
+      return useLength();
     } else {
       return useThemeStore();
     }
@@ -52,18 +57,29 @@ const OptionRadioButton = ({
 
   const styles = StyleSheet.create({
     bigLabel: { color: colors.primary, fontSize: 20 },
+
     buttonStyle: {
       alignItems: "center",
+
       backgroundColor: colors.primaryContainer,
+
       borderRadius: 0,
+
       display: "flex",
+
       flexDirection: "row",
+
       gap: 15,
+
       paddingHorizontal: 10,
+
       paddingVertical: 8,
     },
+
     dialogContainer: { paddingHorizontal: 10 },
+
     smallLabel: { color: colors.primary, fontSize: 16 },
+
     title: { fontSize: 20, textAlign: "center" },
   });
 
@@ -72,8 +88,10 @@ const OptionRadioButton = ({
       <TouchableRipple onPress={showDialog} style={styles.buttonStyle}>
         <>
           <Icon name={iconName} size={32} color={colors.primary} />
+
           <View>
             <Text style={styles.bigLabel}>{label}</Text>
+
             <Text style={styles.smallLabel}>{value}</Text>
           </View>
         </>
