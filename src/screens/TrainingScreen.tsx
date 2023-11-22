@@ -4,9 +4,14 @@ import AddWorkoutButton from "../components/AddWorkoutButton";
 import useWorkout from "../hooks/stores/useWorkout";
 import Workout from "../components/Workout";
 import React from "react";
+import { useTheme } from "react-native-paper";
 
 export default function TrainingScreen() {
   const { activeWorkoutId } = useWorkout();
+  const { colors } = useTheme();
+  const styles = StyleSheet.create({
+    screen: { backgroundColor: colors.background, minHeight: "100%" },
+  });
 
   return (
     <View style={styles.screen}>
@@ -21,7 +26,3 @@ export default function TrainingScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: { minHeight: "100%" },
-});
