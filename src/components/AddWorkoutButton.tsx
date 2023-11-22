@@ -21,7 +21,7 @@ const AddWorkoutButton = () => {
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-  async function handleCreateWorkout() {
+  const handleCreateWorkout = async () => {
     const { data, error: supabaseError } = await supabase
       .from("workouts")
       .insert({ user_id: session?.user.id, name: workoutName })
@@ -37,7 +37,7 @@ const AddWorkoutButton = () => {
       addWorkout({ id: data.id, name: data.name, workoutUnits: [] });
       setActiveWorkoutId(data.id);
     }
-  }
+  };
 
   const styles = StyleSheet.create({
     buttonStyle: {

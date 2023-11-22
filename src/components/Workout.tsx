@@ -5,6 +5,7 @@ import AppBar from "./AppBar";
 import { Button, Dialog, Portal } from "react-native-paper";
 import ExerciseList from "./ExerciseList";
 import WorkoutUnitItem from "./WorkoutUnitItem";
+import { supabase } from "../../supabase/supabase";
 
 interface WorkoutProps {
   id: number;
@@ -16,7 +17,17 @@ const Workout = ({ id }: WorkoutProps) => {
   const workout = getWorkoutById(id);
   const [showExerciseList, setShowExerciseList] = React.useState(false);
 
-  const clickRemoveWorkout = () => {
+  const handleRemoveWorkout = async () => {
+    const { error: supabaseError } = await supabase
+      .from("workouts")
+      .delete()
+      .eq("id", id);
+
+    if (supabaseError) {
+      console.log(supabaseError.message);
+      return;
+    }
+
     removeWorkout(id);
     setActiveWorkoutId(0);
   };
@@ -33,7 +44,7 @@ const Workout = ({ id }: WorkoutProps) => {
       {workout ? (
         <>
           <AppBar title={workout.name} />
-          <Button onPress={clickRemoveWorkout}>
+          <Button onPress={handleRemoveWorkout}>
             <Text>Remove workout</Text>
           </Button>
           <Button onPress={showAddExercise}>
