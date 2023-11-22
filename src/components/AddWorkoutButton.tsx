@@ -16,13 +16,8 @@ const AddWorkoutButton = () => {
   const [visible, setVisible] = React.useState(false);
   const [workoutName, setWorkoutName] = React.useState("");
   const { session } = useSession();
-  const { addWorkout } = useWorkoutStore();
+  const { setActiveWorkoutId, addWorkout } = useWorkoutStore();
   const { colors } = useTheme();
-  // const emptyWorkout = {
-  //   id: nextId,
-  //   name: "New workout",
-  //   workoutUnits: [],
-  // };
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
@@ -30,14 +25,18 @@ const AddWorkoutButton = () => {
     const { data, error: supabaseError } = await supabase
       .from("workouts")
       .insert({ user_id: session?.user.id, name: workoutName })
-      .select();
+      .select()
+      .single();
 
     if (supabaseError) {
       console.log(supabaseError.message);
       return;
     }
-
-    console.log(data);
+    if (data) {
+      console.log(data);
+      addWorkout({ id: data.id, name: data.name, workoutUnits: [] });
+      setActiveWorkoutId(data.id);
+    }
   }
 
   const styles = StyleSheet.create({
@@ -99,10 +98,11 @@ const AddWorkoutButton = () => {
               outlineStyle={styles.outline}
               activeUnderlineColor="rgba(0,0,0,0)"
             />
-            <TouchableRipple style={styles.buttonStyle} onPress={() => {}}>
-              <Text style={styles.buttonText} onPress={handleCreateWorkout}>
-                Save
-              </Text>
+            <TouchableRipple
+              style={styles.buttonStyle}
+              onPress={handleCreateWorkout}
+            >
+              <Text style={styles.buttonText}>Save</Text>
             </TouchableRipple>
           </Dialog.Content>
         </Dialog>
