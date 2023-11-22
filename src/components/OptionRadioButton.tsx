@@ -11,30 +11,23 @@ import { useTheme } from "react-native-paper";
 
 interface Option {
   label: string;
-
   value: string;
 }
+
 interface OptionRadioButtonProps {
   type: string;
-
   label: string;
-
   options: Option[];
-
   iconName: string;
 }
 
 const OptionRadioButton = ({
   type,
-
   label,
-
   options,
-
   iconName,
 }: OptionRadioButtonProps) => {
   const [visible, setVisible] = React.useState(false);
-
   const { colors } = useTheme();
 
   const store = () => {
@@ -50,36 +43,24 @@ const OptionRadioButton = ({
   };
 
   const { value, changeValue } = store();
-
   const showDialog = () => setVisible(true);
-
   const hideDialog = () => setVisible(false);
 
   const styles = StyleSheet.create({
     bigLabel: { color: colors.primary, fontSize: 20 },
-
     buttonStyle: {
       alignItems: "center",
-
       backgroundColor: colors.primaryContainer,
-
       borderRadius: 0,
-
       display: "flex",
-
       flexDirection: "row",
-
       gap: 15,
-
       paddingHorizontal: 10,
-
       paddingVertical: 8,
     },
 
     dialogContainer: { paddingHorizontal: 10 },
-
     smallLabel: { color: colors.primary, fontSize: 16 },
-
     title: { fontSize: 20, textAlign: "center" },
   });
 
@@ -88,10 +69,8 @@ const OptionRadioButton = ({
       <TouchableRipple onPress={showDialog} style={styles.buttonStyle}>
         <>
           <Icon name={iconName} size={32} color={colors.primary} />
-
           <View>
             <Text style={styles.bigLabel}>{label}</Text>
-
             <Text style={styles.smallLabel}>{value}</Text>
           </View>
         </>
