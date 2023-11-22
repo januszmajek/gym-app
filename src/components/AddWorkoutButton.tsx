@@ -10,13 +10,13 @@ import {
 } from "react-native-paper";
 import { supabase } from "../../supabase/supabase";
 import useSession from "../hooks/stores/useSession";
-// import useWorkoutStore from "../hooks/stores/useWorkout";
+import useWorkoutStore from "../hooks/stores/useWorkout";
 
 const AddWorkoutButton = () => {
   const [visible, setVisible] = React.useState(false);
   const [workoutName, setWorkoutName] = React.useState("");
   const { session } = useSession();
-  // const { nextId, addWorkout } = useWorkoutStore();
+  const { addWorkout } = useWorkoutStore();
   const { colors } = useTheme();
   // const emptyWorkout = {
   //   id: nextId,

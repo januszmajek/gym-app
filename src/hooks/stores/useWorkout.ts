@@ -3,7 +3,6 @@ import { Workout, WorkoutUnit } from "../../../types";
 
 interface WorkoutStore {
     workouts: Workout[];
-    nextId: number;
     activeWorkoutId: number;
     addWorkout: (workout: Workout) => void;
     removeWorkout: (workoutId: number) => void;
@@ -20,12 +19,10 @@ interface WorkoutStore {
 
 const useWorkout = create<WorkoutStore>((set, get) => ({
     workouts: [],
-    nextId: 1,
     activeWorkoutId: 0,
     addWorkout: (workout) =>
         set((state) => ({
             workouts: [...state.workouts, workout],
-            nextId: state.nextId + 1,
         })),
     removeWorkout: (workoutId) =>
         set((state) => ({
