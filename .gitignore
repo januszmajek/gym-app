@@ -37,3 +37,6 @@ yarn-error.*
 .vscode
 # JetBrains
 .idea/
+
+#was is das?
+%ProgramData%

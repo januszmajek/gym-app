@@ -24,8 +24,10 @@ const ExerciseList = () => {
       onPress={() =>
         addWorkoutUnit(activeWorkoutId, {
           ...item,
-          sets: [{ weight: 0, repetitions: 0 }],
-          pause: 0,
+          sets: [
+            { weight: 25, repetitions: 10, pause: 60 },
+            { weight: 40, repetitions: 5, pause: 90 },
+          ],
         })
       }
     >

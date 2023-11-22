@@ -1,10 +1,10 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import React from "react";
 
 import { WorkoutUnit } from "../../types";
 import useWeight from "../hooks/stores/useWeight";
 
-const WorkoutUnitItem = ({ name, sets, pause }: WorkoutUnit) => {
+const WorkoutUnitItem = ({ name, sets }: WorkoutUnit) => {
   const { value: unit } = useWeight();
   return (
     <>
@@ -13,9 +13,9 @@ const WorkoutUnitItem = ({ name, sets, pause }: WorkoutUnit) => {
         <Text>
           {set.repetitions} x {set.weight}
           {unit}
+          Pause: {set.pause}
         </Text>
       ))}
-      <Text>Pause: {pause}</Text>
     </>
   );
 };

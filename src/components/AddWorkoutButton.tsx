@@ -1,32 +1,114 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
-import { FAB } from "react-native-paper";
-import useWorkoutStore from "../hooks/stores/useWorkout";
+import { StyleSheet, Text } from "react-native";
+import {
+  Dialog,
+  FAB,
+  Portal,
+  TextInput,
+  TouchableRipple,
+  useTheme,
+} from "react-native-paper";
+import { supabase } from "../../supabase/supabase";
+import useSession from "../hooks/stores/useSession";
+// import useWorkoutStore from "../hooks/stores/useWorkout";
 
 const AddWorkoutButton = () => {
-  const { nextId, addWorkout } = useWorkoutStore();
-  const emptyWorkout = {
-    id: nextId,
-    name: "New workout",
-    workoutUnits: [],
-  };
+  const [visible, setVisible] = React.useState(false);
+  const [workoutName, setWorkoutName] = React.useState("");
+  const { session } = useSession();
+  // const { nextId, addWorkout } = useWorkoutStore();
+  const { colors } = useTheme();
+  // const emptyWorkout = {
+  //   id: nextId,
+  //   name: "New workout",
+  //   workoutUnits: [],
+  // };
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
+
+  async function handleCreateWorkout() {
+    const { data, error: supabaseError } = await supabase
+      .from("workouts")
+      .insert({ user_id: session?.user.id, name: workoutName })
+      .select();
+
+    if (supabaseError) {
+      console.log(supabaseError.message);
+      return;
+    }
+
+    console.log(data);
+  }
+
+  const styles = StyleSheet.create({
+    buttonStyle: {
+      alignItems: "center",
+      backgroundColor: colors.primary,
+      borderRadius: 10,
+      color: colors.primaryContainer,
+      paddingVertical: 12,
+    },
+    buttonText: {
+      color: colors.primaryContainer,
+    },
+    dialogContainer: { paddingHorizontal: 5 },
+    dialogContent: {
+      gap: 20,
+    },
+    dialogTitle: {
+      color: colors.primary,
+      fontSize: 21,
+    },
+    fab: {
+      bottom: 0,
+      margin: 16,
+      position: "absolute",
+      right: 0,
+    },
+    inputText: {
+      textDecorationLine: "none",
+    },
+    outline: {
+      borderRadius: 4,
+    },
+  });
 
   return (
-    <FAB
-      icon="plus"
-      style={styles.fab}
-      onPress={() => addWorkout(emptyWorkout)}
-    />
+    <>
+      <FAB icon="plus" style={styles.fab} onPress={showDialog} />
+      <Portal>
+        <Dialog
+          visible={visible}
+          onDismiss={() => {
+            hideDialog();
+            setWorkoutName("");
+          }}
+          style={styles.dialogContainer}
+        >
+          <Dialog.Title style={styles.dialogTitle}>
+            <Text>Create workout</Text>
+          </Dialog.Title>
+          <Dialog.Content style={styles.dialogContent}>
+            <TextInput
+              value={workoutName}
+              onChangeText={(workoutName) => setWorkoutName(workoutName)}
+              mode="outlined"
+              label="Workout name"
+              placeholder="Monday chest..."
+              style={styles.inputText}
+              outlineStyle={styles.outline}
+              activeUnderlineColor="rgba(0,0,0,0)"
+            />
+            <TouchableRipple style={styles.buttonStyle} onPress={() => {}}>
+              <Text style={styles.buttonText} onPress={handleCreateWorkout}>
+                Save
+              </Text>
+            </TouchableRipple>
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  fab: {
-    bottom: 0,
-    margin: 16,
-    position: "absolute",
-    right: 0,
-  },
-});
 
 export default AddWorkoutButton;
