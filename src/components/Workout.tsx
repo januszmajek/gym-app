@@ -2,10 +2,11 @@ import * as React from "react";
 import useWorkoutStore from "../hooks/stores/useWorkout";
 import { View, Text, StyleSheet } from "react-native";
 import AppBar from "./AppBar";
-import { Button, Dialog, Portal } from "react-native-paper";
+import { Button, Dialog, Portal, useTheme } from "react-native-paper";
 import ExerciseList from "./ExerciseList";
 import WorkoutUnitItem from "./WorkoutUnitItem";
 import { supabase } from "../../supabase/supabase";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface WorkoutProps {
   id: number;
@@ -16,18 +17,17 @@ const Workout = ({ id }: WorkoutProps) => {
     useWorkoutStore();
   const workout = getWorkoutById(id);
   const [showExerciseList, setShowExerciseList] = React.useState(false);
+  const { colors } = useTheme();
 
   const handleRemoveWorkout = async () => {
     const { error: supabaseError } = await supabase
       .from("workouts")
       .delete()
       .eq("id", id);
-
     if (supabaseError) {
       console.log(supabaseError.message);
       return;
     }
-
     removeWorkout(id);
     setActiveWorkoutId(0);
   };
@@ -39,6 +39,7 @@ const Workout = ({ id }: WorkoutProps) => {
   const hideAddExercise = () => {
     setShowExerciseList(false);
   };
+
   return (
     <View>
       {workout ? (
@@ -63,9 +64,15 @@ const Workout = ({ id }: WorkoutProps) => {
               onDismiss={hideAddExercise}
               style={styles.dialogContainer}
             >
-              <Dialog.Title style={styles.title}>
-                <Text>Add exercise</Text>
-              </Dialog.Title>
+              <View style={styles.titleContainer}>
+                <Icon
+                  name="arrow-left"
+                  size={32}
+                  color={colors.secondary}
+                  onPress={hideAddExercise}
+                />
+                <Text style={styles.title}>Add exercise</Text>
+              </View>
               <ExerciseList />
             </Dialog>
           </Portal>
@@ -82,4 +89,12 @@ export default Workout;
 const styles = StyleSheet.create({
   dialogContainer: { paddingHorizontal: 10 },
   title: { fontSize: 20, textAlign: "center" },
+  titleContainer: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+    justifyContent: "flex-start",
+    marginBottom: 15,
+  },
 });
