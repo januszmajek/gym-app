@@ -6,10 +6,13 @@ import useWorkout from "../hooks/stores/useWorkout";
 import { TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useDebounce from "../hooks/useDebounce";
+import ExerciseDescription from "./ExerciseDescription";
 
 const ExerciseList = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const { activeWorkoutId, addWorkoutUnit } = useWorkout();
+  const [activeExerciseDescription, setActiveExerciseDescription] =
+    useState<string>();
   const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
   const [searchText, setSearchText] = useState("");
   const debouncedValue = useDebounce(searchText, 250);
@@ -76,7 +79,11 @@ const ExerciseList = () => {
   }, [debouncedValue]);
 
   const renderItem = ({ item }: { item: Exercise }) => (
-    <TouchableRipple id={item.id} style={styles.container}>
+    <TouchableRipple
+      id={item.id}
+      style={styles.container}
+      onPress={() => setActiveExerciseDescription(item.id)}
+    >
       <>
         <View style={styles.item}>
           <Text style={styles.exerciseName}>{item.name}</Text>
@@ -100,7 +107,11 @@ const ExerciseList = () => {
     </TouchableRipple>
   );
 
-  return (
+  return activeExerciseDescription ? (
+    <ExerciseDescription
+      exercise={exercises.find((e) => e.id === activeExerciseDescription)}
+    />
+  ) : (
     <View>
       <TextInput
         style={styles.searchInput}
@@ -110,7 +121,6 @@ const ExerciseList = () => {
         onChangeText={(text) => setSearchText(text)}
       />
       <FlatList
-        style={styles.flatlist}
         data={filteredExercises}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}

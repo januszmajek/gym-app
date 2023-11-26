@@ -10,6 +10,10 @@ const WorkoutList = () => {
   const { workouts, setActiveWorkoutId } = useWorkoutStore();
   const { colors } = useTheme();
   const styles = StyleSheet.create({
+    view: {
+      maxHeight: "100%",
+      overflow: "scroll",
+    },
     workoutContainer: {
       backgroundColor: colors.background,
       borderBottomWidth: 0,
@@ -27,7 +31,7 @@ const WorkoutList = () => {
     },
   });
   return (
-    <View>
+    <View style={styles.view}>
       <AppBar title={"Workout List"} />
       {workouts.map((workout) => (
         <TouchableRipple

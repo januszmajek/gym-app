@@ -2,16 +2,17 @@ import { Text, StyleSheet, View } from "react-native";
 import React from "react";
 
 import { WorkoutUnit } from "../../types";
-import useWeight from "../hooks/stores/useWeight";
 import { useTheme } from "react-native-paper";
+import SetItem from "./SetItem";
 
 const WorkoutUnitItem = ({ name, sets }: WorkoutUnit) => {
-  const { value: unit } = useWeight();
   const { colors } = useTheme();
   const styles = StyleSheet.create({
-    container: {},
+    container: {
+      paddingHorizontal: 15,
+    },
     name: {
-      color: colors.tertiaryContainer,
+      color: colors.tertiary,
       fontSize: 18,
     },
   });
@@ -19,11 +20,7 @@ const WorkoutUnitItem = ({ name, sets }: WorkoutUnit) => {
     <View style={styles.container}>
       <Text style={styles.name}>{name}</Text>
       {sets.map((set) => (
-        <Text>
-          {set.repetitions} x {set.weight}
-          {unit}
-          Pause: {set.pause}
-        </Text>
+        <SetItem set={set} />
       ))}
     </View>
   );
