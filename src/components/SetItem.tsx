@@ -3,6 +3,7 @@ import { Set } from "../../types";
 import React, { useEffect, useState } from "react";
 import { TouchableRipple } from "react-native-paper";
 import useWeight from "../hooks/stores/useWeight";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface SetItemProps {
   set: Set;
@@ -77,32 +78,38 @@ const SetItem: React.FC<SetItemProps> = ({
   }, [pauseValue]);
 
   return (
-    <View>
-      <TouchableRipple style={styles.button} onPress={incrementWeight}>
-        <Text style={styles.buttonText}>+</Text>
-      </TouchableRipple>
-      <Text>
-        {weightValue} {weightUnit === "Kilogram" ? "kg" : "lbs"}
-      </Text>
-      <TouchableRipple style={styles.button} onPress={decrementWeight}>
-        <Text style={styles.buttonText}>-</Text>
-      </TouchableRipple>
-      <TouchableRipple style={styles.button} onPress={incrementRepetitions}>
-        <Text style={styles.buttonText}>+</Text>
-      </TouchableRipple>
-      <Text>{repetitionsValue}</Text>
-      <TouchableRipple style={styles.button} onPress={decrementRepetitions}>
-        <Text style={styles.buttonText}>-</Text>
-      </TouchableRipple>
-      <TouchableRipple style={styles.button} onPress={incrementPause}>
-        <Text style={styles.buttonText}>+</Text>
-      </TouchableRipple>
-      <Text>
-        {minutes}:{seconds}
-      </Text>
-      <TouchableRipple style={styles.button} onPress={decrementPuase}>
-        <Text style={styles.buttonText}>-</Text>
-      </TouchableRipple>
+    <View style={styles.setContainer}>
+      <View style={styles.viewContainer}>
+        <TouchableRipple style={styles.button} onPress={incrementWeight}>
+          <Icon name="plus" />
+        </TouchableRipple>
+        <Text>
+          {weightValue} {weightUnit === "Kilogram" ? "kg" : "lbs"}
+        </Text>
+        <TouchableRipple style={styles.button} onPress={decrementWeight}>
+          <Icon name="minus" />
+        </TouchableRipple>
+      </View>
+      <View style={styles.viewContainer}>
+        <TouchableRipple style={styles.button} onPress={incrementRepetitions}>
+          <Icon name="plus" />
+        </TouchableRipple>
+        <Text>{repetitionsValue}</Text>
+        <TouchableRipple style={styles.button} onPress={decrementRepetitions}>
+          <Icon name="minus" />
+        </TouchableRipple>
+      </View>
+      <View style={styles.viewContainer}>
+        <TouchableRipple style={styles.button} onPress={incrementPause}>
+          <Icon name="plus" />
+        </TouchableRipple>
+        <Text>
+          {minutes}:{seconds}
+        </Text>
+        <TouchableRipple style={styles.button} onPress={decrementPuase}>
+          <Icon name="minus" />
+        </TouchableRipple>
+      </View>
     </View>
   );
 };
@@ -110,12 +117,17 @@ const SetItem: React.FC<SetItemProps> = ({
 const styles = StyleSheet.create({
   button: {
     borderRadius: 5,
-    flexDirection: "column",
-    marginHorizontal: 10,
     padding: 10,
   },
-  buttonText: {
-    fontSize: 16,
+  setContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  viewContainer: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
 
