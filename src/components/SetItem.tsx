@@ -81,33 +81,33 @@ const SetItem: React.FC<SetItemProps> = ({
     <View style={styles.setContainer}>
       <View style={styles.viewContainer}>
         <TouchableRipple style={styles.button} onPress={incrementWeight}>
-          <Icon name="plus" />
+          <Icon name="plus" size={28} />
         </TouchableRipple>
         <Text>
           {weightValue} {weightUnit === "Kilogram" ? "kg" : "lbs"}
         </Text>
         <TouchableRipple style={styles.button} onPress={decrementWeight}>
-          <Icon name="minus" />
+          <Icon name="minus" size={28} />
         </TouchableRipple>
       </View>
       <View style={styles.viewContainer}>
         <TouchableRipple style={styles.button} onPress={incrementRepetitions}>
-          <Icon name="plus" />
+          <Icon name="plus" size={28} />
         </TouchableRipple>
         <Text>{repetitionsValue}</Text>
         <TouchableRipple style={styles.button} onPress={decrementRepetitions}>
-          <Icon name="minus" />
+          <Icon name="minus" size={28} />
         </TouchableRipple>
       </View>
       <View style={styles.viewContainer}>
         <TouchableRipple style={styles.button} onPress={incrementPause}>
-          <Icon name="plus" />
+          <Icon name="plus" size={28} />
         </TouchableRipple>
         <Text>
           {minutes}:{seconds}
         </Text>
         <TouchableRipple style={styles.button} onPress={decrementPuase}>
-          <Icon name="minus" />
+          <Icon name="minus" size={28} />
         </TouchableRipple>
       </View>
     </View>
