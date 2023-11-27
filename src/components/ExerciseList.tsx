@@ -3,13 +3,19 @@ import { FlatList, Text, StyleSheet, View } from "react-native";
 import { supabase } from "../../supabase/supabase";
 import { Exercise } from "../../types";
 import useWorkout from "../hooks/stores/useWorkout";
-import { TextInput, TouchableRipple, useTheme } from "react-native-paper";
+import {
+  ActivityIndicator,
+  TextInput,
+  TouchableRipple,
+  useTheme,
+} from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useDebounce from "../hooks/useDebounce";
 import ExerciseDescription from "./ExerciseDescription";
 
 const ExerciseList = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [loading, setLoading] = useState(false);
   const { activeWorkoutId, addWorkoutUnit } = useWorkout();
   const [activeExerciseDescription, setActiveExerciseDescription] =
     useState<string>();
@@ -19,12 +25,14 @@ const ExerciseList = () => {
   const { colors } = useTheme();
   useEffect(() => {
     const fetchExercises = async () => {
+      setLoading(true);
       const { data, error } = await supabase.from("exercises").select("*");
       if (error) console.log("Error fetching data", error);
       else {
         setExercises(data);
         setFilteredExercises(data);
       }
+      setLoading(false);
     };
 
     fetchExercises();
@@ -45,6 +53,9 @@ const ExerciseList = () => {
     exerciseName: {
       color: colors.tertiary,
       fontSize: 16,
+    },
+    indicatorContainer: {
+      paddingVertical: 220,
     },
     item: {
       paddingHorizontal: 10,
@@ -120,11 +131,17 @@ const ExerciseList = () => {
         placeholder="Search by exercise name..."
         onChangeText={(text) => setSearchText(text)}
       />
-      <FlatList
-        data={filteredExercises}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      {loading ? (
+        <View style={styles.indicatorContainer}>
+          <ActivityIndicator color={colors.primary} size={128} />
+        </View>
+      ) : (
+        <FlatList
+          data={filteredExercises}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </View>
   );
 };
