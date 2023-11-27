@@ -4,9 +4,10 @@ import useWorkoutStore from "../hooks/stores/useWorkout";
 import AppBar from "./AppBar";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { supabase } from "../../supabase/supabase";
 
 const WorkoutList = () => {
-  const { workouts, setActiveWorkoutId } = useWorkoutStore();
+  const { workouts, removeWorkout, setActiveWorkoutId } = useWorkoutStore();
   const { colors } = useTheme();
   const styles = StyleSheet.create({
     deleteButton: {
@@ -34,6 +35,19 @@ const WorkoutList = () => {
       fontSize: 18,
     },
   });
+
+  const handleDeleteWorkout = async (workoutId: number) => {
+    const { error: supabaseError } = await supabase
+      .from("workouts")
+      .delete()
+      .eq("id", workoutId);
+    if (supabaseError) {
+      console.log(supabaseError.message);
+      return;
+    }
+    removeWorkout(workoutId);
+  };
+
   return (
     <View style={styles.view}>
       <AppBar title={"Workout List"} />
@@ -48,7 +62,7 @@ const WorkoutList = () => {
             <TouchableRipple
               borderless
               style={styles.deleteButton}
-              onPress={() => {}}
+              onPress={() => handleDeleteWorkout(workout.id)}
             >
               <Icon name="delete" size={28} color={colors.error} />
             </TouchableRipple>
