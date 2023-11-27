@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Set } from "../../types";
 import React, { useEffect, useState } from "react";
-import { TouchableRipple } from "react-native-paper";
+import { TouchableRipple, useTheme } from "react-native-paper";
 import useWeight from "../hooks/stores/useWeight";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -12,6 +12,7 @@ interface SetItemProps {
 const SetItem: React.FC<SetItemProps> = ({
   set: { weight, repetitions, pause },
 }) => {
+  const { colors } = useTheme();
   const weightValues = [
     0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5,
     7, 7.5, 8, 10, 12, 14, 16, 18, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40,
@@ -77,58 +78,143 @@ const SetItem: React.FC<SetItemProps> = ({
     setSeconds(s);
   }, [pauseValue]);
 
+  const styles = StyleSheet.create({
+    actionsContainer: {
+      alignItems: "center",
+      borderLeftColor: colors.elevation.level1,
+      borderLeftWidth: 1,
+      borderStyle: "dashed",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      width: "15%",
+    },
+    button: {
+      borderRadius: 15,
+      padding: 6,
+    },
+    buttonContainer: {
+      alignItems: "center",
+      display: "flex",
+      justifyContent: "center",
+      width: 60,
+    },
+    buttonLabel: {
+      color: colors.primary,
+    },
+    buttonValue: {},
+    buttonsContainer: {
+      display: "flex",
+      width: "80%",
+    },
+    firstRowContainer: {
+      display: "flex",
+      flexDirection: "row",
+      paddingBottom: 4,
+    },
+    secondRowContainer: {
+      alignItems: "center",
+      borderStyle: "dashed",
+      borderTopColor: colors.elevation.level1,
+      borderTopWidth: 1,
+      display: "flex",
+      paddingTop: 3,
+    },
+    setContainer: {
+      backgroundColor: colors.primaryContainer,
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 2,
+      padding: 5,
+    },
+    valueContainer: {
+      alignItems: "center",
+      display: "flex",
+      flexDirection: "row",
+    },
+  });
   return (
     <View style={styles.setContainer}>
-      <View style={styles.viewContainer}>
-        <TouchableRipple style={styles.button} onPress={incrementWeight}>
-          <Icon name="plus" size={28} />
-        </TouchableRipple>
-        <Text>
-          {weightValue} {weightUnit === "Kilogram" ? "kg" : "lbs"}
-        </Text>
-        <TouchableRipple style={styles.button} onPress={decrementWeight}>
-          <Icon name="minus" size={28} />
-        </TouchableRipple>
+      <View style={styles.buttonsContainer}>
+        <View style={styles.firstRowContainer}>
+          <View style={styles.valueContainer}>
+            <TouchableRipple
+              borderless
+              style={styles.button}
+              onPress={incrementWeight}
+            >
+              <Icon color={colors.primary} name="plus" size={28} />
+            </TouchableRipple>
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonLabel}>Weight</Text>
+              <Text style={styles.buttonValue}>
+                {weightValue} {weightUnit === "Kilogram" ? "kg" : "lbs"}
+              </Text>
+            </View>
+            <TouchableRipple
+              borderless
+              style={styles.button}
+              onPress={decrementWeight}
+            >
+              <Icon color={colors.primary} name="minus" size={28} />
+            </TouchableRipple>
+          </View>
+          <View style={styles.valueContainer}>
+            <TouchableRipple
+              borderless
+              style={styles.button}
+              onPress={incrementRepetitions}
+            >
+              <Icon color={colors.primary} name="plus" size={28} />
+            </TouchableRipple>
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonLabel}>Reps</Text>
+              <Text style={styles.buttonValue}>{repetitionsValue}</Text>
+            </View>
+            <TouchableRipple
+              borderless
+              style={styles.button}
+              onPress={decrementRepetitions}
+            >
+              <Icon color={colors.primary} name="minus" size={28} />
+            </TouchableRipple>
+          </View>
+        </View>
+        <View style={styles.secondRowContainer}>
+          <View style={styles.valueContainer}>
+            <TouchableRipple
+              borderless
+              style={styles.button}
+              onPress={incrementPause}
+            >
+              <Icon color={colors.primary} name="plus" size={28} />
+            </TouchableRipple>
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonLabel}>Pause</Text>
+              <Text style={styles.buttonValue}>
+                {minutes}:{seconds}
+              </Text>
+            </View>
+            <TouchableRipple
+              borderless
+              style={styles.button}
+              onPress={decrementPuase}
+            >
+              <Icon color={colors.primary} name="minus" size={28} />
+            </TouchableRipple>
+          </View>
+        </View>
       </View>
-      <View style={styles.viewContainer}>
-        <TouchableRipple style={styles.button} onPress={incrementRepetitions}>
-          <Icon name="plus" size={28} />
+      <View style={styles.actionsContainer}>
+        <TouchableRipple borderless onPress={() => {}} style={styles.button}>
+          <Icon color={colors.primary} name="content-copy" size={28} />
         </TouchableRipple>
-        <Text>{repetitionsValue}</Text>
-        <TouchableRipple style={styles.button} onPress={decrementRepetitions}>
-          <Icon name="minus" size={28} />
-        </TouchableRipple>
-      </View>
-      <View style={styles.viewContainer}>
-        <TouchableRipple style={styles.button} onPress={incrementPause}>
-          <Icon name="plus" size={28} />
-        </TouchableRipple>
-        <Text>
-          {minutes}:{seconds}
-        </Text>
-        <TouchableRipple style={styles.button} onPress={decrementPuase}>
-          <Icon name="minus" size={28} />
+        <TouchableRipple borderless onPress={() => {}} style={styles.button}>
+          <Icon color={colors.error} name="delete" size={28} />
         </TouchableRipple>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 5,
-    padding: 10,
-  },
-  setContainer: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  viewContainer: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
-
 export default SetItem;

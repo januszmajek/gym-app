@@ -45,12 +45,14 @@ const Workout = ({ id }: WorkoutProps) => {
       {workout ? (
         <>
           <AppBar title={workout.name} />
-          <Button onPress={handleRemoveWorkout}>
-            <Text>Remove workout</Text>
-          </Button>
-          <Button onPress={showAddExercise}>
-            <Text>Add exercise</Text>
-          </Button>
+          <View style={styles.buttonsContainer}>
+            <Button onPress={handleRemoveWorkout}>
+              <Text>Remove workout</Text>
+            </Button>
+            <Button onPress={showAddExercise}>
+              <Text>Add exercise</Text>
+            </Button>
+          </View>
           {workout.workoutUnits ? (
             workout.workoutUnits.map((workoutUnit) => (
               <WorkoutUnitItem {...workoutUnit} />
@@ -87,6 +89,11 @@ const Workout = ({ id }: WorkoutProps) => {
 export default Workout;
 
 const styles = StyleSheet.create({
+  buttonsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
   dialogContainer: { paddingHorizontal: 10 },
   title: { fontSize: 20, textAlign: "center" },
   titleContainer: {
