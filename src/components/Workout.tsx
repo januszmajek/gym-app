@@ -1,6 +1,6 @@
 import * as React from "react";
 import useWorkoutStore from "../hooks/stores/useWorkout";
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import {
   Button,
   Dialog,
@@ -66,13 +66,19 @@ const Workout = ({ id }: WorkoutProps) => {
     setRenaming(true);
   };
 
-  const endRename = () => {
+  const endRename = async () => {
     setRenaming(false);
-  };
-
-  const handleOutsideClick = () => {
-    if (renaming) {
-      endRename();
+    if (workout && workoutName != workout.name) {
+      const { data, error: supabaseError } = await supabase
+        .from("workouts")
+        .update({ name: workoutName })
+        .eq("id", id)
+        .select();
+      if (supabaseError) {
+        console.log(supabaseError.message);
+        return;
+      }
+      console.log(data);
     }
   };
 
@@ -110,6 +116,7 @@ const Workout = ({ id }: WorkoutProps) => {
     },
     renameTextInput: {
       flexGrow: 1,
+      height: 40,
       marginRight: 50,
     },
     workoutHeader: {
@@ -127,81 +134,80 @@ const Workout = ({ id }: WorkoutProps) => {
   });
 
   return (
-    <TouchableWithoutFeedback onPress={handleOutsideClick}>
-      <View>
-        {workout ? (
-          <>
-            <View style={styles.workoutHeader}>
+    <View>
+      {workout ? (
+        <>
+          <View style={styles.workoutHeader}>
+            <TouchableRipple
+              borderless
+              onPress={handleArrowPress}
+              style={styles.arrowContainer}
+            >
+              <Icon name="arrow-left" size={32} color={colors.primary} />
+            </TouchableRipple>
+            {renaming ? (
+              <View style={styles.renameContainer}>
+                <TextInput
+                  mode="outlined"
+                  value={workoutName}
+                  label="Workout name"
+                  onChangeText={(workoutName) => setWorkoutName(workoutName)}
+                  style={styles.renameTextInput}
+                  onBlur={endRename}
+                  autoFocus={true}
+                ></TextInput>
+                <TouchableRipple>
+                  <Icon name="check" size={32} color={colors.primary} />
+                </TouchableRipple>
+              </View>
+            ) : (
               <TouchableRipple
                 borderless
-                onPress={handleArrowPress}
-                style={styles.arrowContainer}
+                onPress={startRename}
+                style={styles.renameButton}
               >
-                <Icon name="arrow-left" size={32} color={colors.primary} />
+                <Text style={styles.workoutTitle}>{workoutName}</Text>
               </TouchableRipple>
-              {renaming ? (
-                <View style={styles.renameContainer}>
-                  <TextInput
-                    value={workoutName}
-                    label="Workout name"
-                    onChangeText={(workoutName) => setWorkoutName(workoutName)}
-                    style={styles.renameTextInput}
-                    onBlur={endRename}
-                    autoFocus={true}
-                  ></TextInput>
-                  <TouchableRipple>
-                    <Icon name="check" size={32} color={colors.primary} />
-                  </TouchableRipple>
-                </View>
-              ) : (
-                <TouchableRipple
-                  borderless
-                  onPress={startRename}
-                  style={styles.renameButton}
-                >
-                  <Text style={styles.workoutTitle}>{workoutName}</Text>
-                </TouchableRipple>
-              )}
-            </View>
-            <View style={styles.buttonsContainer}>
-              <Button onPress={showAddExercise}>
-                <Text>Add exercise</Text>
-              </Button>
-              <Button onPress={handleRemoveWorkout}>
-                <Text style={styles.removeText}>Remove workout</Text>
-              </Button>
-            </View>
-            {workout.workoutUnits ? (
-              workout.workoutUnits.map((workoutUnit) => (
-                <WorkoutUnitItem {...workoutUnit} />
-              ))
-            ) : (
-              <Text>No exercises added</Text>
             )}
-            <Portal>
-              <Dialog
-                visible={showExerciseList}
-                onDismiss={hideAddExercise}
-                style={styles.dialogContainer}
-              >
-                <View style={styles.dialogTitleContainer}>
-                  <Icon
-                    name="arrow-left"
-                    size={32}
-                    color={colors.secondary}
-                    onPress={hideAddExercise}
-                  />
-                  <Text style={styles.dialogTitle}>Add exercise</Text>
-                </View>
-                <ExerciseList />
-              </Dialog>
-            </Portal>
-          </>
-        ) : (
-          <Text>Error: Workout not found</Text>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+          </View>
+          <View style={styles.buttonsContainer}>
+            <Button onPress={showAddExercise}>
+              <Text>Add exercise</Text>
+            </Button>
+            <Button onPress={handleRemoveWorkout}>
+              <Text style={styles.removeText}>Remove workout</Text>
+            </Button>
+          </View>
+          {workout.workoutUnits ? (
+            workout.workoutUnits.map((workoutUnit) => (
+              <WorkoutUnitItem {...workoutUnit} />
+            ))
+          ) : (
+            <Text>No exercises added</Text>
+          )}
+          <Portal>
+            <Dialog
+              visible={showExerciseList}
+              onDismiss={hideAddExercise}
+              style={styles.dialogContainer}
+            >
+              <View style={styles.dialogTitleContainer}>
+                <Icon
+                  name="arrow-left"
+                  size={32}
+                  color={colors.secondary}
+                  onPress={hideAddExercise}
+                />
+                <Text style={styles.dialogTitle}>Add exercise</Text>
+              </View>
+              <ExerciseList />
+            </Dialog>
+          </Portal>
+        </>
+      ) : (
+        <Text>Error: Workout not found</Text>
+      )}
+    </View>
   );
 };
 
