@@ -34,7 +34,7 @@ const AddWorkoutButton = () => {
     }
     if (data) {
       console.log(data);
-      addWorkout({ id: data.id, name: data.name, workoutUnits: [] });
+      addWorkout({ id: data.id, name: data.name });
       setActiveWorkoutId(data.id);
     }
   };

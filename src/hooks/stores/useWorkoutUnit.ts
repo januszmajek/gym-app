@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { WorkoutUnit } from "../../../types";
 
-interface WorkoutUnitStore {
+interface WorkoutUnitsStore {
     workoutUnits: WorkoutUnit[];
     addWorkoutUnit: (workoutUnit: WorkoutUnit) => void;
     removeWorkoutUnit: (workoutUnitId: number) => void;
@@ -10,10 +10,11 @@ interface WorkoutUnitStore {
         updatedWorkoutUnit: WorkoutUnit,
     ) => void;
     getWorkoutUnitById: (workoutUnitId: number) => WorkoutUnit | undefined;
+    getWorkoutUnitsByWorkoutId: (workoutId: number) => WorkoutUnit[];
     syncWorkoutUnits: (workoutUnits: WorkoutUnit[]) => void;
 }
 
-const useWorkout = create<WorkoutUnitStore>((set, get) => ({
+const useWorkoutUnits = create<WorkoutUnitsStore>((set, get) => ({
     workoutUnits: [],
     addWorkoutUnit: (workoutUnit) =>
         set((state) => ({
@@ -37,8 +38,14 @@ const useWorkout = create<WorkoutUnitStore>((set, get) => ({
         const workoutUnit = get().workoutUnits.find((w) => w.id === workoutUnitId);
         return workoutUnit ? { ...workoutUnit } : undefined;
     },
+    getWorkoutUnitsByWorkoutId: (workoutId) => {
+        const workoutUnits = get().workoutUnits.filter(
+            (w) => w.workoutId === workoutId,
+        );
+        return workoutUnits ? [...workoutUnits] : [];
+    },
     syncWorkoutUnits: (workoutUnits) =>
         set(() => ({ workoutUnits: workoutUnits })),
 }));
 
-export default useWorkout;
+export default useWorkoutUnits;

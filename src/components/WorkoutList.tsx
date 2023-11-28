@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import useWorkoutStore from "../hooks/stores/useWorkout";
 import AppBar from "./AppBar";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../supabase/supabase";
+import useSession from "../hooks/stores/useSession";
+import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 
 const WorkoutList = () => {
-  const { workouts, removeWorkout, setActiveWorkoutId } = useWorkoutStore();
+  const { workouts, syncWorkouts, removeWorkout, setActiveWorkoutId } =
+    useWorkoutStore();
+  const { syncWorkoutUnits } = useWorkoutUnits();
+
+  const { session } = useSession();
   const { colors } = useTheme();
   const styles = StyleSheet.create({
     deleteButton: {
@@ -47,6 +53,30 @@ const WorkoutList = () => {
     }
     removeWorkout(workoutId);
   };
+
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      if (session) {
+        const { data, error } = await supabase
+          .from("workouts")
+          .select("*")
+          .eq("user_id", session.user.id);
+        if (error) return;
+        syncWorkouts(data);
+
+        if (session) {
+          const { data, error } = await supabase
+            .from("workout units")
+            .select("*")
+            .eq("user_id", session.user.id);
+          if (error) return;
+          syncWorkoutUnits(data);
+        }
+      }
+    };
+
+    fetchWorkouts();
+  }, [session]);
 
   return (
     <View style={styles.view}>

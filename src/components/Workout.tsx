@@ -14,7 +14,8 @@ import WorkoutUnitItem from "./WorkoutUnitItem";
 import { supabase } from "../../supabase/supabase";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useEffect, useState } from "react";
-import { Workout as IWorkout } from "../../types";
+import { Workout as IWorkout, WorkoutUnit } from "../../types";
+import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 
 interface WorkoutProps {
   id: number;
@@ -23,14 +24,17 @@ interface WorkoutProps {
 const Workout = ({ id }: WorkoutProps) => {
   const { getWorkoutById, removeWorkout, setActiveWorkoutId } =
     useWorkoutStore();
+  const { getWorkoutUnitsByWorkoutId } = useWorkoutUnits();
   const [showExerciseList, setShowExerciseList] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const [workout, setWorkout] = useState<IWorkout>();
+  const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>([]);
   const [workoutName, setWorkoutName] = useState("");
   const { colors } = useTheme();
 
   useEffect(() => {
     setWorkout(getWorkoutById(id));
+    setWorkoutUnits(getWorkoutUnitsByWorkoutId(id));
   }, [id]);
 
   useEffect(() => {
@@ -101,6 +105,11 @@ const Workout = ({ id }: WorkoutProps) => {
       gap: 10,
       justifyContent: "flex-start",
       marginBottom: 15,
+    },
+    noExercisesInfo: {
+      fontSize: 18,
+      marginTop: 10,
+      textAlign: "center",
     },
     removeText: {
       color: colors.error,
@@ -178,12 +187,12 @@ const Workout = ({ id }: WorkoutProps) => {
               <Text style={styles.removeText}>Remove workout</Text>
             </Button>
           </View>
-          {workout.workoutUnits ? (
-            workout.workoutUnits.map((workoutUnit) => (
+          {workoutUnits.length > 0 ? (
+            workoutUnits.map((workoutUnit) => (
               <WorkoutUnitItem {...workoutUnit} />
             ))
           ) : (
-            <Text>No exercises added</Text>
+            <Text style={styles.noExercisesInfo}>No exercises added</Text>
           )}
           <Portal>
             <Dialog
