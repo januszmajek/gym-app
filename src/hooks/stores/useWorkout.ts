@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Workout, WorkoutUnit } from "../../../types";
+import { Workout } from "../../../types";
 
 interface WorkoutStore {
     workouts: Workout[];
@@ -9,12 +9,7 @@ interface WorkoutStore {
     updateWorkout: (workoutId: number, updatedWorkout: Workout) => void;
     getWorkoutById: (workoutId: number) => Workout | undefined;
     setActiveWorkoutId: (workoutId: number) => void;
-    addWorkoutUnit: (workoutId: number, workoutUnit: WorkoutUnit) => void;
-    //   removeWorkoutUnit: (WorkoutId: number, workoutUnitId: number) => void;
-    //   updateWorkoutUnit: (
-    //     workoutId: number,
-    //     updatedWorkoutUnit: WorkoutUnit,
-    //   ) => void;
+    syncWorkouts: (workouts: Workout[]) => void;
 }
 
 const useWorkout = create<WorkoutStore>((set, get) => ({
@@ -39,29 +34,7 @@ const useWorkout = create<WorkoutStore>((set, get) => ({
         return workout ? { ...workout } : undefined;
     },
     setActiveWorkoutId: (workoutId) => set({ activeWorkoutId: workoutId }),
-    addWorkoutUnit: (workoutId, workoutUnit) =>
-        set((state) => ({
-            workouts: state.workouts.map((workout) =>
-                workout.id === workoutId
-                    ? {
-                        ...workout,
-                        workoutUnits: [...workout.workoutUnits, workoutUnit],
-                    }
-                    : workout,
-            ),
-        })),
-    //   removeWorkoutUnit: (workoutId, workoutUnitId) =>
-    //     set((state) => ({
-    //       workouts: state.workouts.workoutUnits.map((workoutUnit) =>
-    //         state.workouts.filter((workout) => workout.id !== workoutId),
-    //       ),
-    //     })),
-    //   updateWorkoutUnit: (workoutId, updatedWorkout) =>
-    //     set((state) => ({
-    //       workouts: state.workouts.map((workout) =>
-    //         workout.id === workoutId ? { ...workout, ...updatedWorkout } : workout,
-    //       ),
-    //     })),
+    syncWorkouts: (workouts) => set(() => ({ workouts: workouts })),
 }));
 
 export default useWorkout;
