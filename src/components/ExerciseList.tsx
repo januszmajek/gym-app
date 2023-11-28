@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, Text, StyleSheet, View } from "react-native";
 import { supabase } from "../../supabase/supabase";
-import { Exercise } from "../../types";
+import { Exercise, Set } from "../../types";
 import useWorkout from "../hooks/stores/useWorkout";
 import {
   ActivityIndicator,
@@ -12,11 +12,16 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useDebounce from "../hooks/useDebounce";
 import ExerciseDescription from "./ExerciseDescription";
+import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
+import useSession from "../hooks/stores/useSession";
+import { Json } from "../../supabase/types_db";
 
 const ExerciseList = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const { session } = useSession();
   const [loading, setLoading] = useState(false);
-  const { activeWorkoutId, addWorkoutUnit } = useWorkout();
+  const { activeWorkoutId } = useWorkout();
+  const { addWorkoutUnit } = useWorkoutUnits();
   const [activeExerciseDescription, setActiveExerciseDescription] =
     useState<string>();
   const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
@@ -89,6 +94,32 @@ const ExerciseList = () => {
     setFilteredExercises(filtered);
   }, [debouncedValue]);
 
+  const handleAddWorkoutUnit = async (exercise_id: string) => {
+    if (session) {
+      const unit = {
+        workout_id: activeWorkoutId,
+        exercise_id: exercise_id,
+        sets: [] as Set[],
+        order: 0,
+        user_id: session.user.id,
+      };
+      console.log(unit);
+      const { data, error } = await supabase
+        .from("workout_units")
+        .insert(unit)
+        .select();
+
+      if (error) {
+        console.log(error);
+        return;
+      }
+      if (data) {
+        const unit = data[0];
+        addWorkoutUnit(unit);
+      }
+    }
+  };
+
   const renderItem = ({ item }: { item: Exercise }) => (
     <TouchableRipple
       id={item.id}
@@ -102,15 +133,7 @@ const ExerciseList = () => {
         </View>
         <TouchableRipple
           style={styles.addContainer}
-          onPress={() =>
-            addWorkoutUnit(activeWorkoutId, {
-              ...item,
-              sets: [
-                { weight: 25, repetitions: 10, pause: 60 },
-                { weight: 40, repetitions: 5, pause: 90 },
-              ],
-            })
-          }
+          onPress={() => handleAddWorkoutUnit(item.id)}
         >
           <Icon name={"plus"} size={32} color={colors.primary} />
         </TouchableRipple>

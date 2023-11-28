@@ -40,7 +40,7 @@ const useWorkoutUnits = create<WorkoutUnitsStore>((set, get) => ({
     },
     getWorkoutUnitsByWorkoutId: (workoutId) => {
         const workoutUnits = get().workoutUnits.filter(
-            (w) => w.workoutId === workoutId,
+            (w) => w.workout_id === workoutId,
         );
         return workoutUnits ? [...workoutUnits] : [];
     },
