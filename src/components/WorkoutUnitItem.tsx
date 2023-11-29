@@ -11,16 +11,23 @@ import {
 import SetItem from "./SetItem";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../supabase/supabase";
+import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 
 interface WorkoutUnitProps {
   sets: Set[];
+  workoutUnitId: number;
   exercise_id: string;
 }
 
-const WorkoutUnitItem = ({ exercise_id, sets }: WorkoutUnitProps) => {
+const WorkoutUnitItem = ({
+  exercise_id,
+  workoutUnitId,
+  sets,
+}: WorkoutUnitProps) => {
   const { colors } = useTheme();
   const [name, setName] = useState("");
   const [showEdit, setShowEdit] = useState(false);
+  const { removeWorkoutUnit } = useWorkoutUnits();
 
   const styles = StyleSheet.create({
     addUnitButton: {
@@ -101,6 +108,20 @@ const WorkoutUnitItem = ({ exercise_id, sets }: WorkoutUnitProps) => {
     setShowEdit(false);
   };
 
+  const handleAddSet = () => {};
+
+  const handleDeleteWorkoutUnit = async () => {
+    const { error } = await supabase
+      .from("workout_units")
+      .delete()
+      .eq("id", workoutUnitId);
+    if (error) {
+      console.log(error);
+      return;
+    }
+    removeWorkoutUnit(workoutUnitId);
+  };
+
   useEffect(() => {
     const getWorkoutUnitName = async (exercise_id: string) => {
       const { data, error } = await supabase
@@ -135,7 +156,7 @@ const WorkoutUnitItem = ({ exercise_id, sets }: WorkoutUnitProps) => {
         <TouchableRipple
           borderless
           style={styles.iconContainer}
-          onPress={() => {}}
+          onPress={handleDeleteWorkoutUnit}
         >
           <Icon name="delete" size={28} color={colors.error} />
         </TouchableRipple>
@@ -169,7 +190,7 @@ const WorkoutUnitItem = ({ exercise_id, sets }: WorkoutUnitProps) => {
             ))}
           </View>
           <View style={styles.addUnitButtonContainer}>
-            <Button style={styles.addUnitButton} onPress={() => {}}>
+            <Button style={styles.addUnitButton} onPress={handleAddSet}>
               <Text style={styles.addUnitText}>Add set</Text>
             </Button>
           </View>

@@ -196,6 +196,7 @@ const Workout = ({ id }: WorkoutProps) => {
               <WorkoutUnitItem
                 key={i}
                 sets={workoutUnit.sets}
+                workoutUnitId={workoutUnit.id}
                 exercise_id={workoutUnit.exercise_id}
               />
             ))
