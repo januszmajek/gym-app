@@ -24,7 +24,8 @@ interface WorkoutProps {
 const Workout = ({ id }: WorkoutProps) => {
   const { getWorkoutById, removeWorkout, setActiveWorkoutId } =
     useWorkoutStore();
-  const { getWorkoutUnitsByWorkoutId } = useWorkoutUnits();
+  const { getWorkoutUnitsByWorkoutId, workoutUnits: workoutUnitsInStore } =
+    useWorkoutUnits();
   const [showExerciseList, setShowExerciseList] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const [workout, setWorkout] = useState<IWorkout>();
@@ -34,8 +35,11 @@ const Workout = ({ id }: WorkoutProps) => {
 
   useEffect(() => {
     setWorkout(getWorkoutById(id));
-    setWorkoutUnits(getWorkoutUnitsByWorkoutId(id));
   }, [id]);
+
+  useEffect(() => {
+    setWorkoutUnits(getWorkoutUnitsByWorkoutId(id));
+  }, [id, workoutUnitsInStore]);
 
   useEffect(() => {
     workout && setWorkoutName(workout.name);
@@ -188,8 +192,12 @@ const Workout = ({ id }: WorkoutProps) => {
             </Button>
           </View>
           {workoutUnits.length > 0 ? (
-            workoutUnits.map((workoutUnit) => (
-              <WorkoutUnitItem {...workoutUnit} />
+            workoutUnits.map((workoutUnit, i) => (
+              <WorkoutUnitItem
+                key={i}
+                sets={workoutUnit.sets}
+                exercise_id={workoutUnit.exercise_id}
+              />
             ))
           ) : (
             <Text style={styles.noExercisesInfo}>No exercises added</Text>

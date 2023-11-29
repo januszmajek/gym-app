@@ -14,7 +14,6 @@ import useDebounce from "../hooks/useDebounce";
 import ExerciseDescription from "./ExerciseDescription";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import useSession from "../hooks/stores/useSession";
-import { Json } from "../../supabase/types_db";
 
 const ExerciseList = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -103,7 +102,6 @@ const ExerciseList = () => {
         order: 0,
         user_id: session.user.id,
       };
-      console.log(unit);
       const { data, error } = await supabase
         .from("workout_units")
         .insert(unit)
@@ -114,6 +112,7 @@ const ExerciseList = () => {
         return;
       }
       if (data) {
+        console.log(data);
         const unit = data[0];
         addWorkoutUnit(unit);
       }

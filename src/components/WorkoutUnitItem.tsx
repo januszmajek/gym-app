@@ -1,7 +1,6 @@
 import { Text, StyleSheet, View } from "react-native";
-import React, { useState } from "react";
-
-import { WorkoutUnit } from "../../types";
+import React, { useEffect, useState } from "react";
+import { Set } from "../../types";
 import {
   Button,
   Dialog,
@@ -11,10 +10,16 @@ import {
 } from "react-native-paper";
 import SetItem from "./SetItem";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { supabase } from "../../supabase/supabase";
 
-const WorkoutUnitItem = ({ name, sets }: WorkoutUnit) => {
+interface WorkoutUnitProps {
+  sets: Set[];
+  exercise_id: string;
+}
+
+const WorkoutUnitItem = ({ exercise_id, sets }: WorkoutUnitProps) => {
   const { colors } = useTheme();
-
+  const [name, setName] = useState("");
   const [showEdit, setShowEdit] = useState(false);
 
   const styles = StyleSheet.create({
@@ -95,6 +100,24 @@ const WorkoutUnitItem = ({ name, sets }: WorkoutUnit) => {
   const hideEditWorkoutUnit = () => {
     setShowEdit(false);
   };
+
+  useEffect(() => {
+    const getWorkoutUnitName = async (exercise_id: string) => {
+      const { data, error } = await supabase
+        .from("exercises")
+        .select("name")
+        .eq("id", exercise_id);
+
+      if (error) {
+        console.log(error);
+      }
+      console.log(data);
+      data && setName(data[0].name);
+    };
+
+    getWorkoutUnitName(exercise_id);
+  }, []);
+
   return (
     <View style={styles.container}>
       <View>
@@ -135,7 +158,7 @@ const WorkoutUnitItem = ({ name, sets }: WorkoutUnit) => {
           </View>
           <View>
             {sets.map((set, i) => (
-              <View>
+              <View key={i}>
                 <Text style={styles.setLabel}>
                   {i + 1}
                   {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}

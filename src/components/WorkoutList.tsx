@@ -51,6 +51,7 @@ const WorkoutList = () => {
       console.log(supabaseError.message);
       return;
     }
+    console.log("removing workout:", workoutId);
     removeWorkout(workoutId);
   };
 
@@ -62,14 +63,16 @@ const WorkoutList = () => {
           .select("*")
           .eq("user_id", session.user.id);
         if (error) return;
+        console.log("syncing workouts:", data);
         syncWorkouts(data);
 
         if (session) {
           const { data, error } = await supabase
-            .from("workout units")
+            .from("workout_units")
             .select("*")
             .eq("user_id", session.user.id);
           if (error) return;
+          console.log("syncing workout units:", data);
           syncWorkoutUnits(data);
         }
       }
