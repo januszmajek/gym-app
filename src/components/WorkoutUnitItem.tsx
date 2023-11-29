@@ -27,7 +27,7 @@ const WorkoutUnitItem = ({
   const { colors } = useTheme();
   const [name, setName] = useState("");
   const [showEdit, setShowEdit] = useState(false);
-  const { removeWorkoutUnit } = useWorkoutUnits();
+  const { removeWorkoutUnit, addSet } = useWorkoutUnits();
 
   const styles = StyleSheet.create({
     addUnitButton: {
@@ -108,7 +108,19 @@ const WorkoutUnitItem = ({
     setShowEdit(false);
   };
 
-  const handleAddSet = () => {};
+  const handleAddSet = async () => {
+    const { data, error } = await supabase
+      .from("workout_units")
+      .update({ sets: { weight: 0, repetitions: 0, pause: 0 } })
+      .eq("id", workoutUnitId)
+      .select();
+
+    if (error) {
+      console.log(error);
+    }
+    console.log(data);
+    addSet(workoutUnitId);
+  };
 
   const handleDeleteWorkoutUnit = async () => {
     const { error } = await supabase
