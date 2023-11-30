@@ -3,6 +3,8 @@ import { WorkoutUnit } from "../../../types";
 
 interface WorkoutUnitsStore {
     workoutUnits: WorkoutUnit[];
+    activeWorkoutUnitId: number;
+    setActiveWorkoutUnitId: (workoutUnitId: number) => void;
     addWorkoutUnit: (workoutUnit: WorkoutUnit) => void;
     removeWorkoutUnit: (workoutUnitId: number) => void;
     updateWorkoutUnit: (
@@ -16,6 +18,9 @@ interface WorkoutUnitsStore {
 
 const useWorkoutUnits = create<WorkoutUnitsStore>((set, get) => ({
     workoutUnits: [],
+    activeWorkoutUnitId: 0,
+    setActiveWorkoutUnitId: (workoutUnitId) =>
+        set({ activeWorkoutUnitId: workoutUnitId }),
     addWorkoutUnit: (workoutUnit) =>
         set((state) => ({
             workoutUnits: [...state.workoutUnits, workoutUnit],
