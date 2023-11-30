@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { WorkoutUnit, Set } from "../../../types";
+import { WorkoutUnit } from "../../../types";
 
 interface WorkoutUnitsStore {
     workoutUnits: WorkoutUnit[];
@@ -12,8 +12,6 @@ interface WorkoutUnitsStore {
     getWorkoutUnitById: (workoutUnitId: number) => WorkoutUnit | undefined;
     getWorkoutUnitsByWorkoutId: (workoutId: number) => WorkoutUnit[];
     syncWorkoutUnits: (workoutUnits: WorkoutUnit[]) => void;
-    addSet: (workoutUnitId: number) => void;
-    // updateSets: (workoutUnitId: number, sets: Set[]) => void;
 }
 
 const useWorkoutUnits = create<WorkoutUnitsStore>((set, get) => ({
@@ -48,21 +46,6 @@ const useWorkoutUnits = create<WorkoutUnitsStore>((set, get) => ({
     },
     syncWorkoutUnits: (workoutUnits) =>
         set(() => ({ workoutUnits: workoutUnits })),
-    addSet: (workoutUnitId) => {
-        set((state) => ({
-            workoutUnits: state.workoutUnits.map((workoutUnit) =>
-                workoutUnit.id === workoutUnitId
-                    ? {
-                        ...workoutUnit,
-                        sets: [
-                            ...workoutUnit.sets,
-                            { weight: 0, repetitions: 0, pause: 0 },
-                        ],
-                    }
-                    : workoutUnit,
-            ),
-        }));
-    },
 }));
 
 export default useWorkoutUnits;

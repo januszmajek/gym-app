@@ -111,7 +111,7 @@ const WorkoutUnitItem = ({
   const handleAddSet = async () => {
     const { data, error } = await supabase
       .from("workout_units")
-      .update({ sets: { weight: 0, repetitions: 0, pause: 0 } })
+      .update({ sets: [{ weight: 0, repetitions: 0, pause: 0 }] })
       .eq("id", workoutUnitId)
       .select();
 
