@@ -7,11 +7,13 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../supabase/supabase";
 import useSession from "../hooks/stores/useSession";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
+import useSet from "../hooks/stores/useSet";
 
 const WorkoutList = () => {
   const { workouts, syncWorkouts, removeWorkout, setActiveWorkoutId } =
     useWorkoutStore();
   const { syncWorkoutUnits } = useWorkoutUnits();
+  const { syncSets } = useSet();
 
   const { session } = useSession();
   const { colors } = useTheme();
@@ -66,7 +68,7 @@ const WorkoutList = () => {
         console.log("syncing workouts:", data);
         syncWorkouts(data);
 
-        if (session) {
+        {
           const { data, error } = await supabase
             .from("workout_units")
             .select("*")
@@ -74,6 +76,16 @@ const WorkoutList = () => {
           if (error) return;
           console.log("syncing workout units:", data);
           syncWorkoutUnits(data);
+        }
+
+        {
+          const { data, error } = await supabase
+            .from("sets")
+            .select("*")
+            .eq("user_id", session.user.id);
+          if (error) return;
+          console.log("syncing sets:", data);
+          syncSets(data);
         }
       }
     };
