@@ -108,7 +108,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
               {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}
               {" set"}
             </Text>
-            <SetItem key={i} set={set} />
+            <SetItem key={i} setId={set.id} />
           </View>
         ))}
       </View>

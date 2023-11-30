@@ -4,15 +4,23 @@ import React, { useEffect, useState } from "react";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import useWeight from "../hooks/stores/useWeight";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import useSet from "../hooks/stores/useSet";
 
 interface SetItemProps {
-  set: Set;
+  setId: number;
 }
 
-const SetItem: React.FC<SetItemProps> = ({
-  set: { weight, repetitions, pause },
-}) => {
+const SetItem: React.FC<SetItemProps> = ({ setId }) => {
   const { colors } = useTheme();
+  const { sets: allSets, getSetById, removeSet, addSet } = useSet();
+  const [set, setSet] = useState<Set>();
+  const [weightValue, setWeightValue] = useState(0);
+  const [repetitionsValue, setRepetitionsValue] = useState(0);
+  const [pauseValue, setPauseValue] = useState(0);
+  const [order, setOrder] = useState(0);
+  const [minutes, setMinutes] = useState("00");
+  const [seconds, setSeconds] = useState("00");
+
   const weightValues = [
     0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5,
     7, 7.5, 8, 10, 12, 14, 16, 18, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40,
@@ -26,11 +34,19 @@ const SetItem: React.FC<SetItemProps> = ({
     135, 150, 165, 180, 210, 240, 270, 300,
   ];
 
-  const [weightValue, setWeightValue] = useState(weight);
-  const [repetitionsValue, setRepetitionsValue] = useState(repetitions);
-  const [pauseValue, setPauseValue] = useState(pause);
-  const [minutes, setMinutes] = useState("00");
-  const [seconds, setSeconds] = useState("00");
+  useEffect(() => {
+    console.log(getSetById(setId));
+    setSet(getSetById(setId));
+  }, [allSets]);
+
+  useEffect(() => {
+    if (set) {
+      setWeightValue(set.weight);
+      setPauseValue(set.pause);
+      setRepetitionsValue(set.repetitions);
+      setOrder(set.order);
+    }
+  }, [set]);
 
   const { value: weightUnit } = useWeight();
 
@@ -77,6 +93,16 @@ const SetItem: React.FC<SetItemProps> = ({
     setMinutes(m);
     setSeconds(s);
   }, [pauseValue]);
+
+  const handleDeleteSet = () => {
+    if (set) {
+      removeSet(set.id);
+    }
+  };
+
+  const handleCopySet = () => {
+    if (set) addSet({ ...set });
+  };
 
   const styles = StyleSheet.create({
     actionsContainer: {
@@ -134,6 +160,7 @@ const SetItem: React.FC<SetItemProps> = ({
       flexDirection: "row",
     },
   });
+
   return (
     <View style={styles.setContainer}>
       <View style={styles.buttonsContainer}>
@@ -207,10 +234,18 @@ const SetItem: React.FC<SetItemProps> = ({
         </View>
       </View>
       <View style={styles.actionsContainer}>
-        <TouchableRipple borderless onPress={() => {}} style={styles.button}>
+        <TouchableRipple
+          borderless
+          onPress={handleCopySet}
+          style={styles.button}
+        >
           <Icon color={colors.primary} name="content-copy" size={28} />
         </TouchableRipple>
-        <TouchableRipple borderless onPress={() => {}} style={styles.button}>
+        <TouchableRipple
+          borderless
+          onPress={handleDeleteSet}
+          style={styles.button}
+        >
           <Icon color={colors.error} name="delete" size={28} />
         </TouchableRipple>
       </View>
