@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, SafeAreaView } from "react-native";
 import WorkoutList from "../components/WorkoutList";
 import AddWorkoutButton from "../components/AddWorkoutButton";
 import useWorkout from "../hooks/stores/useWorkout";
@@ -19,9 +19,13 @@ export default function TrainingScreen() {
   return (
     <View style={styles.screen}>
       {activeWorkoutUnitId ? (
-        <WorkoutUnit workoutUnitId={activeWorkoutUnitId} />
+        <SafeAreaView>
+          <WorkoutUnit workoutUnitId={activeWorkoutUnitId} />
+        </SafeAreaView>
       ) : activeWorkoutId ? (
-        <Workout id={activeWorkoutId} />
+        <SafeAreaView>
+          <Workout id={activeWorkoutId} />
+        </SafeAreaView>
       ) : (
         <>
           <WorkoutList />
