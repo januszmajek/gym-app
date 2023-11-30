@@ -195,7 +195,6 @@ const Workout = ({ id }: WorkoutProps) => {
             workoutUnits.map((workoutUnit, i) => (
               <WorkoutUnitItem
                 key={i}
-                sets={workoutUnit.sets}
                 workoutUnitId={workoutUnit.id}
                 exercise_id={workoutUnit.exercise_id}
               />

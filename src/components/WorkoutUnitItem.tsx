@@ -12,22 +12,22 @@ import SetItem from "./SetItem";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../supabase/supabase";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
+import useSet from "../hooks/stores/useSet";
+import useSession from "../hooks/stores/useSession";
 
 interface WorkoutUnitProps {
-  sets: Set[];
   workoutUnitId: number;
   exercise_id: string;
 }
 
-const WorkoutUnitItem = ({
-  exercise_id,
-  workoutUnitId,
-  sets,
-}: WorkoutUnitProps) => {
+const WorkoutUnitItem = ({ exercise_id, workoutUnitId }: WorkoutUnitProps) => {
   const { colors } = useTheme();
   const [name, setName] = useState("");
   const [showEdit, setShowEdit] = useState(false);
-  const { removeWorkoutUnit, addSet } = useWorkoutUnits();
+  const { removeWorkoutUnit } = useWorkoutUnits();
+  const { sets: allSets, addSet, getSetsByWorkoutUnitId } = useSet();
+  const [sets, setSets] = useState<Set[]>([]);
+  const { session } = useSession();
 
   const styles = StyleSheet.create({
     addUnitButton: {
@@ -108,18 +108,33 @@ const WorkoutUnitItem = ({
     setShowEdit(false);
   };
 
-  const handleAddSet = async () => {
-    const { data, error } = await supabase
-      .from("workout_units")
-      .update({ sets: [{ weight: 0, repetitions: 0, pause: 0 }] })
-      .eq("id", workoutUnitId)
-      .select();
+  useEffect(() => {
+    console.log(getSetsByWorkoutUnitId(workoutUnitId));
+    setSets(getSetsByWorkoutUnitId(workoutUnitId));
+  }, [allSets]);
 
-    if (error) {
-      console.log(error);
+  const handleAddSet = async () => {
+    if (session) {
+      const { data, error } = await supabase
+        .from("sets")
+        .insert({
+          user_id: session.user.id,
+          unit_id: workoutUnitId,
+          weight: 0,
+          repetitions: 0,
+          pause: 0,
+          order: 0,
+        })
+        .select();
+
+      if (error) {
+        console.log(error);
+      }
+      console.log("add set", data);
+      if (data) {
+        addSet(data[0]);
+      }
     }
-    console.log(data);
-    addSet(workoutUnitId);
   };
 
   const handleDeleteWorkoutUnit = async () => {

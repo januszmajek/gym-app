@@ -22,20 +22,22 @@ const AddWorkoutButton = () => {
   const hideDialog = () => setVisible(false);
 
   const handleCreateWorkout = async () => {
-    const { data, error: supabaseError } = await supabase
-      .from("workouts")
-      .insert({ user_id: session?.user.id, name: workoutName })
-      .select()
-      .single();
+    if (session) {
+      const { data, error: supabaseError } = await supabase
+        .from("workouts")
+        .insert({ user_id: session?.user.id, name: workoutName })
+        .select()
+        .single();
 
-    if (supabaseError) {
-      console.log(supabaseError.message);
-      return;
-    }
-    if (data) {
-      console.log(data);
-      addWorkout({ id: data.id, name: data.name });
-      setActiveWorkoutId(data.id);
+      if (supabaseError) {
+        console.log(supabaseError.message);
+        return;
+      }
+      if (data) {
+        console.log(data);
+        addWorkout({ id: data.id, name: data.name });
+        setActiveWorkoutId(data.id);
+      }
     }
   };
 

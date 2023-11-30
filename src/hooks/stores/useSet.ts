@@ -33,7 +33,7 @@ const useSet = create<SetStore>((set, get) => ({
         return set ? { ...set } : undefined;
     },
     getSetsByWorkoutUnitId: (workoutUnitId) => {
-        const sets = get().sets.filter((w) => w.workout_unit_id === workoutUnitId);
+        const sets = get().sets.filter((w) => w.unit_id === workoutUnitId);
         return sets ? [...sets] : ([] as Set[]);
     },
     syncSets: (sets) => set(() => ({ sets: sets })),

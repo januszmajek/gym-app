@@ -98,7 +98,6 @@ const ExerciseList = () => {
       const unit = {
         workout_id: activeWorkoutId,
         exercise_id: exercise_id,
-        sets: [] as Set[],
         order: 0,
         user_id: session.user.id,
       };
