@@ -1,74 +1,32 @@
 import * as React from "react";
-import useWorkoutStore from "../hooks/stores/useWorkout";
+import useWorkout from "../hooks/stores/useWorkout";
 import { View, Text, StyleSheet } from "react-native";
-import {
-  Button,
-  Dialog,
-  Portal,
-  TextInput,
-  TouchableRipple,
-  useTheme,
-} from "react-native-paper";
+import { Button, Dialog, Portal, useTheme } from "react-native-paper";
 import ExerciseList from "./ExerciseList";
 import WorkoutUnitItem from "./WorkoutUnitItem";
 import { supabase } from "../../supabase/supabase";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useEffect, useState } from "react";
-import { Workout as IWorkout, WorkoutUnit } from "../../types";
+import { WorkoutUnit } from "../../types";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
+import WorkoutHeader from "./WorkoutHeader";
 
 interface WorkoutProps {
   workoutId: string;
-  workoutName: string | undefined;
 }
 
-const Workout: React.FC<WorkoutProps> = ({ workoutId, workoutName: name }) => {
-  const { getWorkoutById, removeWorkout, setActiveWorkoutId } =
-    useWorkoutStore();
+const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
+  const { removeWorkout, setActiveWorkoutId, getWorkoutById } = useWorkout();
   const { getWorkoutUnitsByWorkoutId, workoutUnits: workoutUnitsInStore } =
     useWorkoutUnits();
   const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>([]);
   const [showExerciseList, setShowExerciseList] = useState(false);
-  const [workoutName, setWorkoutName] = useState(name);
-  const [workout, setWorkout] = useState<IWorkout>();
-  const [renaming, setRenaming] = useState(false);
+  const name = getWorkoutById(workoutId)?.name;
   const { colors } = useTheme();
-
-  useEffect(() => {
-    setWorkout(getWorkoutById(workoutId));
-  }, []);
 
   useEffect(() => {
     setWorkoutUnits(getWorkoutUnitsByWorkoutId(workoutId));
   }, [workoutUnitsInStore]);
-
-  const handleArrowPress = () => {
-    setActiveWorkoutId(undefined);
-  };
-
-  const startRenaming = () => {
-    setRenaming(true);
-    console.log("Start renaming...");
-  };
-
-  const finishRenaming = async () => {
-    setRenaming(false);
-    console.log("...Finished renaming");
-    if (workout && workoutName != workout.name) {
-      const { data, error: supabaseError } = await supabase
-        .from("workouts")
-        .update({ name: workoutName })
-        .eq("id", workoutId)
-        .select();
-      if (supabaseError) {
-        console.log(supabaseError.message);
-        return;
-      }
-      console.log("Renamed workout:", data);
-      return;
-    }
-    console.log("But input was not changed!");
-  };
 
   const showAddExercise = () => {
     setShowExerciseList(true);
@@ -94,10 +52,6 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId, workoutName: name }) => {
   };
 
   const styles = StyleSheet.create({
-    arrowContainer: {
-      borderRadius: 15,
-      padding: 7,
-    },
     buttonsContainer: {
       display: "flex",
       flexDirection: "row",
@@ -121,71 +75,13 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId, workoutName: name }) => {
     removeText: {
       color: colors.error,
     },
-    renameButton: {
-      borderRadius: 10,
-      paddingHorizontal: 15,
-      paddingVertical: 8,
-    },
-    renameContainer: {
-      display: "flex",
-      flexDirection: "row",
-    },
-    renameTextInput: {
-      flexGrow: 1,
-      height: 40,
-      marginRight: 50,
-    },
-    workoutHeader: {
-      alignItems: "center",
-      display: "flex",
-      flexDirection: "row",
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-    },
-    workoutTitle: {
-      borderRadius: 15,
-      color: colors.primary,
-      fontSize: 24,
-    },
   });
 
   return (
     <View>
-      {workout ? (
+      {name ? (
         <>
-          <View style={styles.workoutHeader}>
-            <TouchableRipple
-              borderless
-              onPress={handleArrowPress}
-              style={styles.arrowContainer}
-            >
-              <Icon name="arrow-left" size={32} color={colors.primary} />
-            </TouchableRipple>
-            {renaming ? (
-              <View style={styles.renameContainer}>
-                <TextInput
-                  mode="outlined"
-                  value={workoutName}
-                  label="Workout name"
-                  onChangeText={(workoutName) => setWorkoutName(workoutName)}
-                  style={styles.renameTextInput}
-                  onBlur={finishRenaming}
-                  autoFocus={true}
-                ></TextInput>
-                <TouchableRipple>
-                  <Icon name="check" size={32} color={colors.primary} />
-                </TouchableRipple>
-              </View>
-            ) : (
-              <TouchableRipple
-                borderless
-                onPress={startRenaming}
-                style={styles.renameButton}
-              >
-                <Text style={styles.workoutTitle}>{workoutName}</Text>
-              </TouchableRipple>
-            )}
-          </View>
+          <WorkoutHeader workoutId={workoutId} workoutName={name} />
           <View style={styles.buttonsContainer}>
             <Button onPress={showAddExercise}>
               <Text>Add exercise</Text>

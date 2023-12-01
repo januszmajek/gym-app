@@ -61,7 +61,7 @@ const WorkoutList = () => {
     <View style={styles.view}>
       <AppBar title={"Workout List"} />
       {workouts.map((workout) => (
-        <WorkoutItem workout={workout} />
+        <WorkoutItem key={workout.id} workout={workout} />
       ))}
     </View>
   );
