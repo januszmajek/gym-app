@@ -3,18 +3,18 @@ import { Workout } from "../../../types";
 
 interface WorkoutStore {
     workouts: Workout[];
-    activeWorkoutId: number;
+    activeWorkoutId: string | undefined;
     addWorkout: (workout: Workout) => void;
-    removeWorkout: (workoutId: number) => void;
-    updateWorkout: (workoutId: number, updatedWorkout: Workout) => void;
-    getWorkoutById: (workoutId: number) => Workout | undefined;
-    setActiveWorkoutId: (workoutId: number) => void;
+    removeWorkout: (workoutId: string) => void;
+    updateWorkout: (workoutId: string, updatedWorkout: Workout) => void;
+    getWorkoutById: (workoutId: string) => Workout | undefined;
+    setActiveWorkoutId: (workoutId: string) => void;
     syncWorkouts: (workouts: Workout[]) => void;
 }
 
 const useWorkout = create<WorkoutStore>((set, get) => ({
     workouts: [],
-    activeWorkoutId: 0,
+    activeWorkoutId: undefined,
     addWorkout: (workout) =>
         set((state) => ({
             workouts: [...state.workouts, workout],

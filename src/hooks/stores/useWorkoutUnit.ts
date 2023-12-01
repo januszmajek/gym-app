@@ -3,22 +3,22 @@ import { WorkoutUnit } from "../../../types";
 
 interface WorkoutUnitsStore {
     workoutUnits: WorkoutUnit[];
-    activeWorkoutUnitId: number;
-    setActiveWorkoutUnitId: (workoutUnitId: number) => void;
+    activeWorkoutUnitId: string | undefined;
+    setActiveWorkoutUnitId: (workoutUnitId: string) => void;
     addWorkoutUnit: (workoutUnit: WorkoutUnit) => void;
-    removeWorkoutUnit: (workoutUnitId: number) => void;
+    removeWorkoutUnit: (workoutUnitId: string) => void;
     updateWorkoutUnit: (
-        workoutUnitId: number,
+        workoutUnitId: string,
         updatedWorkoutUnit: WorkoutUnit,
     ) => void;
-    getWorkoutUnitById: (workoutUnitId: number) => WorkoutUnit | undefined;
-    getWorkoutUnitsByWorkoutId: (workoutId: number) => WorkoutUnit[];
+    getWorkoutUnitById: (workoutUnitId: string) => WorkoutUnit | undefined;
+    getWorkoutUnitsByWorkoutId: (workoutId: string) => WorkoutUnit[];
     syncWorkoutUnits: (workoutUnits: WorkoutUnit[]) => void;
 }
 
 const useWorkoutUnits = create<WorkoutUnitsStore>((set, get) => ({
     workoutUnits: [],
-    activeWorkoutUnitId: 0,
+    activeWorkoutUnitId: undefined,
     setActiveWorkoutUnitId: (workoutUnitId) =>
         set({ activeWorkoutUnitId: workoutUnitId }),
     addWorkoutUnit: (workoutUnit) =>

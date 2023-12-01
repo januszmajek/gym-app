@@ -4,11 +4,11 @@ import { Set } from "../../../types";
 interface SetStore {
     sets: Set[];
     addSet: (newSet: Set) => void;
-    removeSet: (setId: number) => void;
-    updateSet: (setId: number, updatedSet: Set) => void;
-    getSetById: (setId: number) => Set | undefined;
+    removeSet: (setId: string) => void;
+    updateSet: (setId: string, updatedSet: Set) => void;
+    getSetById: (setId: string) => Set | undefined;
     syncSets: (sets: Set[]) => void;
-    getSetsByWorkoutUnitId: (workoutUnitId: number) => Set[];
+    getSetsByWorkoutUnitId: (workoutUnitId: string) => Set[];
 }
 
 const useSet = create<SetStore>((set, get) => ({
@@ -33,7 +33,7 @@ const useSet = create<SetStore>((set, get) => ({
         return set ? { ...set } : undefined;
     },
     getSetsByWorkoutUnitId: (workoutUnitId) => {
-        const sets = get().sets.filter((w) => w.unit_id === workoutUnitId);
+        const sets = get().sets.filter((w) => w.workout_unit_id === workoutUnitId);
         return sets ? [...sets] : ([] as Set[]);
     },
     syncSets: (sets) => set(() => ({ sets: sets })),
