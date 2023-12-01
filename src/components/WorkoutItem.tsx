@@ -53,6 +53,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
     workoutText: {
       color: colors.primary,
       fontSize: 18,
+      width: "80%",
     },
   });
 
@@ -62,7 +63,9 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
       onPress={handlePressWorkout}
     >
       <View style={styles.workoutContent}>
-        <Text style={styles.workoutText}>{name}</Text>
+        <Text style={styles.workoutText} numberOfLines={1} ellipsizeMode="tail">
+          {name}
+        </Text>
         <TouchableRipple
           borderless
           style={styles.deleteButton}

@@ -78,7 +78,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
       padding: 5,
     },
     renameInputContainer: {
-      flexGrow: 1,
+      flex: 1,
     },
     renameTextInput: {
       flexGrow: 1,
