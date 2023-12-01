@@ -1,40 +1,30 @@
 import * as React from "react";
 import useWorkout from "../hooks/stores/useWorkout";
 import { View, Text, StyleSheet } from "react-native";
-import { Button, Dialog, Portal, useTheme } from "react-native-paper";
-import ExerciseList from "./ExerciseList";
+import { useTheme } from "react-native-paper";
 import WorkoutUnitItem from "./WorkoutUnitItem";
 import { supabase } from "../../supabase/supabase";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useEffect, useState } from "react";
 import { WorkoutUnit } from "../../types";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import WorkoutHeader from "./WorkoutHeader";
+import AddWorkoutUnitButton from "./AddWorkoutUnitButton";
 
 interface WorkoutProps {
   workoutId: string;
 }
 
 const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
-  const { removeWorkout, setActiveWorkoutId, getWorkoutById } = useWorkout();
   const { getWorkoutUnitsByWorkoutId, workoutUnits: workoutUnitsInStore } =
     useWorkoutUnits();
-  const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>([]);
-  const [showExerciseList, setShowExerciseList] = useState(false);
-  const name = getWorkoutById(workoutId)?.name;
+  const { removeWorkout, setActiveWorkoutId, getWorkoutById } = useWorkout();
   const { colors } = useTheme();
+  const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>([]);
+  const name = getWorkoutById(workoutId)?.name;
 
   useEffect(() => {
     setWorkoutUnits(getWorkoutUnitsByWorkoutId(workoutId));
   }, [workoutUnitsInStore]);
-
-  const showAddExercise = () => {
-    setShowExerciseList(true);
-  };
-
-  const hideAddExercise = () => {
-    setShowExerciseList(false);
-  };
 
   const handleRemoveWorkout = async () => {
     console.log("Removing workout:", workoutId);
@@ -68,62 +58,39 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
       marginBottom: 15,
     },
     noExercisesInfo: {
+      color: colors.primary,
       fontSize: 18,
       marginTop: 10,
       textAlign: "center",
     },
-    removeText: {
+    screen: { backgroundColor: colors.background, minHeight: "100%" },
+    workoutError: {
       color: colors.error,
     },
   });
 
-  return (
-    <View>
-      {name ? (
-        <>
-          <WorkoutHeader workoutId={workoutId} workoutName={name} />
-          <View style={styles.buttonsContainer}>
-            <Button onPress={showAddExercise}>
-              <Text>Add exercise</Text>
-            </Button>
-            <Button onPress={handleRemoveWorkout}>
-              <Text style={styles.removeText}>Remove workout</Text>
-            </Button>
-          </View>
-          {workoutUnits.length > 0 ? (
-            workoutUnits.map((workoutUnit, i) => (
-              <WorkoutUnitItem
-                key={i}
-                workoutUnitId={workoutUnit.id}
-                exercise_id={workoutUnit.exercise_id}
-              />
-            ))
-          ) : (
-            <Text style={styles.noExercisesInfo}>No exercises added</Text>
-          )}
-          <Portal>
-            <Dialog
-              visible={showExerciseList}
-              onDismiss={hideAddExercise}
-              style={styles.dialogContainer}
-            >
-              <View style={styles.dialogTitleContainer}>
-                <Icon
-                  name="arrow-left"
-                  size={32}
-                  color={colors.secondary}
-                  onPress={hideAddExercise}
-                />
-                <Text style={styles.dialogTitle}>Add exercise</Text>
-              </View>
-              <ExerciseList />
-            </Dialog>
-          </Portal>
-        </>
+  return name ? (
+    <View style={styles.screen}>
+      <AddWorkoutUnitButton />
+      <WorkoutHeader
+        workoutId={workoutId}
+        workoutName={name}
+        handleRemoveWorkout={handleRemoveWorkout}
+      />
+      {workoutUnits.length > 0 ? (
+        workoutUnits.map((workoutUnit, i) => (
+          <WorkoutUnitItem
+            key={i}
+            workoutUnitId={workoutUnit.id}
+            exerciseId={workoutUnit.exercise_id}
+          />
+        ))
       ) : (
-        <Text>Error: Workout not found</Text>
+        <Text style={styles.noExercisesInfo}>No exercises added</Text>
       )}
     </View>
+  ) : (
+    <Text style={styles.workoutError}>Error: Workout not found</Text>
   );
 };
 

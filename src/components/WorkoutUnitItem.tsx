@@ -8,17 +8,53 @@ import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import useSet from "../hooks/stores/useSet";
 
 interface WorkoutUnitProps {
-  workoutUnitId: number;
-  exercise_id: string;
+  workoutUnitId: string;
+  exerciseId: string;
 }
 
-const WorkoutUnitItem = ({ exercise_id, workoutUnitId }: WorkoutUnitProps) => {
-  const { colors } = useTheme();
-  const [name, setName] = useState("");
+const WorkoutUnitItem = ({ exerciseId, workoutUnitId }: WorkoutUnitProps) => {
+  const { sets: allSets, getSetsByWorkoutUnitId } = useSet();
   const { setActiveWorkoutUnitId } = useWorkoutUnits();
   const { removeWorkoutUnit } = useWorkoutUnits();
-  const { sets: allSets, getSetsByWorkoutUnitId } = useSet();
+  const { colors } = useTheme();
   const [sets, setSets] = useState<Set[]>([]);
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    console.log(getSetsByWorkoutUnitId(workoutUnitId));
+    setSets(getSetsByWorkoutUnitId(workoutUnitId));
+  }, [allSets]);
+
+  const handleDeleteWorkoutUnit = async () => {
+    console.log("Removing Workout Unit:", workoutUnitId);
+    removeWorkoutUnit(workoutUnitId);
+    const { error } = await supabase
+      .from("workout_units")
+      .delete()
+      .eq("id", workoutUnitId);
+    if (error) {
+      console.log(error);
+      return;
+    }
+    console.log("Deleted Workout Unit:", workoutUnitId);
+  };
+
+  useEffect(() => {
+    const getWorkoutUnitName = async (exerciseId: string) => {
+      const { data, error } = await supabase
+        .from("exercises")
+        .select("name")
+        .eq("id", exerciseId);
+
+      if (error) {
+        console.log(error);
+      }
+      console.log(data);
+      data && setName(data[0].name);
+    };
+
+    getWorkoutUnitName(exerciseId);
+  }, []);
 
   const styles = StyleSheet.create({
     buttonsContainer: {
@@ -47,50 +83,25 @@ const WorkoutUnitItem = ({ exercise_id, workoutUnitId }: WorkoutUnitProps) => {
       overflow: "hidden",
       padding: 5,
     },
+    labelContainer: {
+      maxWidth: "80%",
+    },
     setsCount: {
       color: colors.primary,
       fontSize: 15,
     },
   });
 
-  useEffect(() => {
-    console.log(getSetsByWorkoutUnitId(workoutUnitId));
-    setSets(getSetsByWorkoutUnitId(workoutUnitId));
-  }, [allSets]);
-
-  const handleDeleteWorkoutUnit = async () => {
-    const { error } = await supabase
-      .from("workout_units")
-      .delete()
-      .eq("id", workoutUnitId);
-    if (error) {
-      console.log(error);
-      return;
-    }
-    removeWorkoutUnit(workoutUnitId);
-  };
-
-  useEffect(() => {
-    const getWorkoutUnitName = async (exercise_id: string) => {
-      const { data, error } = await supabase
-        .from("exercises")
-        .select("name")
-        .eq("id", exercise_id);
-
-      if (error) {
-        console.log(error);
-      }
-      console.log(data);
-      data && setName(data[0].name);
-    };
-
-    getWorkoutUnitName(exercise_id);
-  }, []);
-
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.exerciseName}>{name}</Text>
+      <View style={styles.labelContainer}>
+        <Text
+          style={styles.exerciseName}
+          numberOfLines={2}
+          ellipsizeMode="tail"
+        >
+          {name}
+        </Text>
         <Text style={styles.setsCount}>{sets.length} sets</Text>
       </View>
       <View style={styles.buttonsContainer}>

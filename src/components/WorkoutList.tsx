@@ -7,11 +7,13 @@ import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import useWorkoutStore from "../hooks/stores/useWorkout";
 import useSet from "../hooks/stores/useSet";
 import WorkoutItem from "./WorkoutItem";
+import useExercise from "../hooks/stores/useExercise";
 
 const WorkoutList = () => {
   const { workouts, syncWorkouts } = useWorkoutStore();
   const { syncWorkoutUnits } = useWorkoutUnits();
   const { syncSets } = useSet();
+  const { syncExercises } = useExercise();
   const { session } = useSession();
 
   useEffect(() => {
@@ -22,32 +24,44 @@ const WorkoutList = () => {
             .from("workouts")
             .select("*")
             .eq("user_id", session.user.id);
-          if (error) return;
-          console.log("Syncing workouts:", data);
-          syncWorkouts(data);
+          if (error) console.log("Error fetching data", error);
+          else {
+            console.log("Syncing workouts:", data);
+            syncWorkouts(data);
+          }
         }
         {
           const { data, error } = await supabase
             .from("workout_units")
             .select("*")
             .eq("user_id", session.user.id);
-          if (error) return;
-          console.log("Syncing workout units:", data);
-          syncWorkoutUnits(data);
+          if (error) console.log("Error fetching data", error);
+          else {
+            console.log("Syncing workout units:", data);
+            syncWorkoutUnits(data);
+          }
         }
         {
           const { data, error } = await supabase
             .from("sets")
             .select("*")
             .eq("user_id", session.user.id);
-          if (error) return;
-          console.log("Syncing sets:", data);
-          syncSets(data);
+          if (error) console.log("Error fetching data", error);
+          else {
+            console.log("Syncing sets:", data);
+            syncSets(data);
+          }
+        }
+        {
+          const { data, error } = await supabase.from("exercises").select("*");
+          if (error) console.log("Error fetching data", error);
+          else {
+            console.log("Syncing exercises");
+            syncExercises(data);
+          }
         }
       }
     };
-
-    setTimeout(() => fetchWorkouts(), 5000);
   }, []);
 
   const styles = StyleSheet.create({
