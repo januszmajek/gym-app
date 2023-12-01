@@ -11,21 +11,35 @@ import {
 import { supabase } from "../../supabase/supabase";
 import useSession from "../hooks/stores/useSession";
 import useWorkoutStore from "../hooks/stores/useWorkout";
+import uuid from "react-native-uuid";
+import { useState } from "react";
 
 const AddWorkoutButton = () => {
-  const [visible, setVisible] = React.useState(false);
-  const [workoutName, setWorkoutName] = React.useState("");
+  const [visible, setVisible] = useState(false);
+  const [workoutName, setWorkoutName] = useState("");
   const { session } = useSession();
-  const { setActiveWorkoutId, addWorkout } = useWorkoutStore();
   const { colors } = useTheme();
+  const { setActiveWorkoutId, addWorkout, workouts } = useWorkoutStore();
+
   const showDialog = () => setVisible(true);
+
   const hideDialog = () => setVisible(false);
 
   const handleCreateWorkout = async () => {
     if (session) {
+      const newWorkout = {
+        id: uuid.v4() as string,
+        user_id: session?.user.id,
+        name: workoutName,
+        order: workouts.length,
+      };
+      console.log("Adding workout:", newWorkout);
+      addWorkout(newWorkout);
+      setActiveWorkoutId(newWorkout.id);
+
       const { data, error: supabaseError } = await supabase
         .from("workouts")
-        .insert({ user_id: session?.user.id, name: workoutName })
+        .insert(newWorkout)
         .select()
         .single();
 
@@ -34,9 +48,7 @@ const AddWorkoutButton = () => {
         return;
       }
       if (data) {
-        console.log(data);
-        addWorkout({ id: data.id, name: data.name });
-        setActiveWorkoutId(data.id);
+        console.log("Added workout:", data);
       }
     }
   };

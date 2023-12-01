@@ -18,44 +18,56 @@ import { Workout as IWorkout, WorkoutUnit } from "../../types";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 
 interface WorkoutProps {
-  id: number;
+  workoutId: string;
+  workoutName: string | undefined;
 }
 
-const Workout = ({ id }: WorkoutProps) => {
+const Workout: React.FC<WorkoutProps> = ({ workoutId, workoutName: name }) => {
   const { getWorkoutById, removeWorkout, setActiveWorkoutId } =
     useWorkoutStore();
   const { getWorkoutUnitsByWorkoutId, workoutUnits: workoutUnitsInStore } =
     useWorkoutUnits();
-  const [showExerciseList, setShowExerciseList] = useState(false);
-  const [renaming, setRenaming] = useState(false);
-  const [workout, setWorkout] = useState<IWorkout>();
   const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>([]);
-  const [workoutName, setWorkoutName] = useState("");
+  const [showExerciseList, setShowExerciseList] = useState(false);
+  const [workoutName, setWorkoutName] = useState(name);
+  const [workout, setWorkout] = useState<IWorkout>();
+  const [renaming, setRenaming] = useState(false);
   const { colors } = useTheme();
 
   useEffect(() => {
-    setWorkout(getWorkoutById(id));
-  }, [id]);
+    setWorkout(getWorkoutById(workoutId));
+  }, []);
 
   useEffect(() => {
-    setWorkoutUnits(getWorkoutUnitsByWorkoutId(id));
-  }, [id, workoutUnitsInStore]);
+    setWorkoutUnits(getWorkoutUnitsByWorkoutId(workoutId));
+  }, [workoutUnitsInStore]);
 
-  useEffect(() => {
-    workout && setWorkoutName(workout.name);
-  }, [workout]);
+  const handleArrowPress = () => {
+    setActiveWorkoutId(undefined);
+  };
 
-  const handleRemoveWorkout = async () => {
-    const { error: supabaseError } = await supabase
-      .from("workouts")
-      .delete()
-      .eq("id", id);
-    if (supabaseError) {
-      console.log(supabaseError.message);
+  const startRenaming = () => {
+    setRenaming(true);
+    console.log("Start renaming...");
+  };
+
+  const finishRenaming = async () => {
+    setRenaming(false);
+    console.log("...Finished renaming");
+    if (workout && workoutName != workout.name) {
+      const { data, error: supabaseError } = await supabase
+        .from("workouts")
+        .update({ name: workoutName })
+        .eq("id", workoutId)
+        .select();
+      if (supabaseError) {
+        console.log(supabaseError.message);
+        return;
+      }
+      console.log("Renamed workout:", data);
       return;
     }
-    removeWorkout(id);
-    setActiveWorkoutId(0);
+    console.log("But input was not changed!");
   };
 
   const showAddExercise = () => {
@@ -66,28 +78,19 @@ const Workout = ({ id }: WorkoutProps) => {
     setShowExerciseList(false);
   };
 
-  const handleArrowPress = () => {
-    setActiveWorkoutId(0);
-  };
-
-  const startRename = () => {
-    setRenaming(true);
-  };
-
-  const endRename = async () => {
-    setRenaming(false);
-    if (workout && workoutName != workout.name) {
-      const { data, error: supabaseError } = await supabase
-        .from("workouts")
-        .update({ name: workoutName })
-        .eq("id", id)
-        .select();
-      if (supabaseError) {
-        console.log(supabaseError.message);
-        return;
-      }
-      console.log(data);
+  const handleRemoveWorkout = async () => {
+    console.log("Removing workout:", workoutId);
+    removeWorkout(workoutId);
+    setActiveWorkoutId(undefined);
+    const { error: supabaseError } = await supabase
+      .from("workouts")
+      .delete()
+      .eq("id", workoutId);
+    if (supabaseError) {
+      console.log(supabaseError.message);
+      return;
     }
+    console.log("Deleted workout:", workoutId);
   };
 
   const styles = StyleSheet.create({
@@ -166,7 +169,7 @@ const Workout = ({ id }: WorkoutProps) => {
                   label="Workout name"
                   onChangeText={(workoutName) => setWorkoutName(workoutName)}
                   style={styles.renameTextInput}
-                  onBlur={endRename}
+                  onBlur={finishRenaming}
                   autoFocus={true}
                 ></TextInput>
                 <TouchableRipple>
@@ -176,7 +179,7 @@ const Workout = ({ id }: WorkoutProps) => {
             ) : (
               <TouchableRipple
                 borderless
-                onPress={startRename}
+                onPress={startRenaming}
                 style={styles.renameButton}
               >
                 <Text style={styles.workoutTitle}>{workoutName}</Text>

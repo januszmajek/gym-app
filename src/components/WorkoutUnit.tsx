@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { Button, TouchableRipple, useTheme } from "react-native-paper";
+import { Appbar, Button, TouchableRipple, useTheme } from "react-native-paper";
 import useSession from "../hooks/stores/useSession";
 import useSet from "../hooks/stores/useSet";
 import { supabase } from "../../supabase/supabase";
@@ -90,7 +90,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
 
   return (
     <View>
-      <View style={styles.dialogTitleContainer}>
+      <Appbar.Header style={styles.dialogTitleContainer}>
         <TouchableRipple
           borderless
           onPress={() => setActiveWorkoutUnitId(0)}
@@ -99,7 +99,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
           <Icon name="arrow-left" size={28} color={colors.secondary} />
         </TouchableRipple>
         <Text style={styles.dialogTitle}>Edit workout unit</Text>
-      </View>
+      </Appbar.Header>
       <View>
         {sets.map((set: Set, i) => (
           <View key={i}>

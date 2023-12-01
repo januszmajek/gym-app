@@ -8,7 +8,7 @@ interface WorkoutStore {
     removeWorkout: (workoutId: string) => void;
     updateWorkout: (workoutId: string, updatedWorkout: Workout) => void;
     getWorkoutById: (workoutId: string) => Workout | undefined;
-    setActiveWorkoutId: (workoutId: string) => void;
+    setActiveWorkoutId: (workoutId: string | undefined) => void;
     syncWorkouts: (workouts: Workout[]) => void;
 }
 

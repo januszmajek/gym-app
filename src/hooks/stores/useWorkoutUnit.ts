@@ -4,7 +4,7 @@ import { WorkoutUnit } from "../../../types";
 interface WorkoutUnitsStore {
     workoutUnits: WorkoutUnit[];
     activeWorkoutUnitId: string | undefined;
-    setActiveWorkoutUnitId: (workoutUnitId: string) => void;
+    setActiveWorkoutUnitId: (workoutUnitId: string | undefined) => void;
     addWorkoutUnit: (workoutUnit: WorkoutUnit) => void;
     removeWorkoutUnit: (workoutUnitId: string) => void;
     updateWorkoutUnit: (
