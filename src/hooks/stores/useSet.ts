@@ -4,8 +4,11 @@ import { Set } from "../../../types";
 interface SetStore {
     sets: Set[];
     addSet: (newSet: Set) => void;
+    addSets: (sets: Set[]) => void;
     removeSet: (setId: string) => void;
-    updateSet: (setId: string, updatedSet: Set) => void;
+    clearSetsByWorkoutUnitId: (workoutUnitId: string) => void;
+    // updateSet: (setId: string, updatedSet: Set) => void;
+    // upsertSet: (setId: string, upsertedSet: Set, flag?: boolean) => void;
     getSetById: (setId: string) => Set | undefined;
     syncSets: (sets: Set[]) => void;
     getSetsByWorkoutUnitId: (workoutUnitId: string) => Set[];
@@ -18,16 +21,35 @@ const useSet = create<SetStore>((set, get) => ({
         set((state) => ({
             sets: [...state.sets, newSet],
         })),
+    addSets: (sets) =>
+        set((state) => ({
+            sets: [...state.sets, ...sets],
+        })),
     removeSet: (setId) =>
         set((state) => ({
             sets: state.sets.filter((set) => set.id !== setId),
         })),
-    updateSet: (setId, updatedset) =>
-        set((state) => ({
-            sets: state.sets.map((set) =>
-                set.id === setId ? { ...set, ...updatedset } : set,
-            ),
-        })),
+    // updateSet: (setId, updatedset) =>
+    //     set((state) => ({
+    //         sets: state.sets.map((set) =>
+    //             set.id === setId ? { ...set, ...updatedset } : set,
+    //         ),
+    //     })),
+    // upsertSet: (setId, upsertedSet, flag = false) => {
+    //     set((state) => ({
+    //         sets: state.sets.map((set) => {
+    //             if (set.id === setId) {
+    //                 flag = true;
+    //                 return { ...set, ...upsertedSet };
+    //             } else {
+    //                 return set;
+    //             }
+    //         }),
+    // }));
+    //     set((state) => ({
+    //         sets: flag ? state.sets : [...state.sets, upsertedSet],
+    //     }));
+    // },
     getSetById: (setId) => {
         const set = get().sets.find((w) => w.id === setId);
         return set ? { ...set } : undefined;
@@ -35,6 +57,11 @@ const useSet = create<SetStore>((set, get) => ({
     getSetsByWorkoutUnitId: (workoutUnitId) => {
         const sets = get().sets.filter((w) => w.workout_unit_id === workoutUnitId);
         return sets ? [...sets] : ([] as Set[]);
+    },
+    clearSetsByWorkoutUnitId: (workoutUnitId) => {
+        set((state) => ({
+            sets: state.sets.filter((set) => set.workout_unit_id !== workoutUnitId),
+        }));
     },
     syncSets: (sets) => set(() => ({ sets: sets })),
 }));

@@ -7,7 +7,6 @@ import { supabase } from "../../supabase/supabase";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import SetItem from "./SetItem";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Set } from "../../types";
 import uuid from "react-native-uuid";
 
 interface WorkoutUnitProps {
@@ -18,11 +17,27 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
   const { session } = useSession();
   const { colors } = useTheme();
   const { setActiveWorkoutUnitId } = useWorkoutUnits();
-  const { addSet } = useSet();
-  const { getSetsByWorkoutUnitId } = useSet();
-  const [sets, setSets] = useState<Set[]>(
-    getSetsByWorkoutUnitId(workoutUnitId),
-  );
+  const {
+    sets: allSets,
+    addSet,
+    getSetsByWorkoutUnitId,
+    addSets,
+    clearSetsByWorkoutUnitId,
+  } = useSet();
+
+  const [sets, setSets] = useState(getSetsByWorkoutUnitId(workoutUnitId));
+
+  useEffect(() => {
+    const newSets = getSetsByWorkoutUnitId(workoutUnitId);
+    console.log("WorkoutUnit useEffect[allSets]:\nsetSets:", newSets);
+    setSets(newSets);
+  }, [allSets]);
+
+  const saveSets = () => {
+    clearSetsByWorkoutUnitId(workoutUnitId);
+    addSets(sets);
+    setActiveWorkoutUnitId(undefined);
+  };
 
   const handleAddSet = async () => {
     if (session) {
@@ -50,9 +65,6 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
       console.log("Added set:", data[0]);
     }
   };
-
-  const saveSets = () => {};
-
   const styles = StyleSheet.create({
     addUnitButton: {
       backgroundColor: colors.primary,
@@ -121,14 +133,15 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
         </TouchableRipple>
       </Appbar.Header>
       <View>
-        {sets.map((set: Set, i) => (
+        {sets.map((set, i) => (
           <View key={i}>
             <Text style={styles.setLabel}>
-              {i + 1}
+              {/* {i + 1}
               {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}
-              {" set"}
+              {" set"} */}
+              {set.id}
             </Text>
-            <SetItem setId={set.id} />
+            <SetItem key={i} set={set} sets={sets} setSets={setSets} />
           </View>
         ))}
       </View>

@@ -3,13 +3,20 @@ import React, { useEffect, useState } from "react";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import useWeight from "../hooks/stores/useWeight";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import useSet from "../hooks/stores/useSet";
+import { Set } from "../../types";
+import uuid from "react-native-uuid";
 
 interface SetItemProps {
-  setId: string;
+  set: Set;
+  sets: Set[];
+  setSets: React.Dispatch<React.SetStateAction<Set[]>>;
 }
 
-const SetItem: React.FC<SetItemProps> = ({ setId }) => {
+const SetItem: React.FC<SetItemProps> = ({
+  set: { id, workout_unit_id, weight, repetitions, pause },
+  sets,
+  setSets,
+}) => {
   const weightValues = [
     0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5,
     7, 7.5, 8, 10, 12, 14, 16, 18, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40,
@@ -24,88 +31,137 @@ const SetItem: React.FC<SetItemProps> = ({ setId }) => {
   ];
 
   const { colors } = useTheme();
-  const { sets: allSets, getSetById, removeSet, addSet } = useSet();
-  const [set, setSet] = useState(getSetById(setId));
-  const [weightValue, setWeightValue] = useState(
-    set ? set.weight : weightValues[0],
-  );
-  const [repetitionsValue, setRepetitionsValue] = useState(
-    set ? set.repetitions : 1,
-  );
-  const [pauseValue, setPauseValue] = useState(
-    set ? set.pause : pauseValues[0],
-  );
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
-
-  useEffect(() => {
-    console.log(getSetById(setId));
-    setSet(getSetById(setId));
-  }, [allSets]);
-
-  useEffect(() => {
-    if (set) {
-      setWeightValue(set.weight);
-      setPauseValue(set.pause);
-      setRepetitionsValue(set.repetitions);
-    }
-  }, [set]);
-
   const { value: weightUnit } = useWeight();
 
+  const handleDeleteSet = () => {
+    console.log("Removing set:", id);
+    const newSets = sets.filter((set) => set.id !== id);
+    console.log("New sets:", newSets);
+    setSets([...newSets]);
+    return;
+  };
+
+  const handleCopySet = () => {
+    const newSet: Set = {
+      id: uuid.v4() as string,
+      weight: weight,
+      repetitions: repetitions,
+      pause: pause,
+      workout_unit_id: workout_unit_id,
+      order: 0,
+    };
+    console.log("Copying set:", newSet);
+    setSets([...sets, newSet]);
+    return;
+  };
+
   const incrementWeight = () => {
-    const currentIndex = weightValues.indexOf(weightValue);
+    const currentIndex = weightValues.indexOf(weight);
+
     if (currentIndex < weightValues.length - 1) {
-      setWeightValue(weightValues[currentIndex + 1]);
+      const setIndex = sets.findIndex((set) => set.id === id);
+
+      if (setIndex !== -1) {
+        const updatedSets = [...sets];
+        updatedSets[setIndex] = {
+          ...sets[setIndex],
+          weight: weightValues[currentIndex + 1],
+        };
+
+        setSets(updatedSets);
+      }
     }
   };
 
   const decrementWeight = () => {
-    const currentIndex = weightValues.indexOf(weightValue);
+    const currentIndex = weightValues.indexOf(weight);
+
     if (currentIndex > 0) {
-      setWeightValue(weightValues[currentIndex - 1]);
+      const setIndex = sets.findIndex((set) => set.id === id);
+
+      if (setIndex !== -1) {
+        const updatedSets = [...sets];
+        updatedSets[setIndex] = {
+          ...sets[setIndex],
+          weight: weightValues[currentIndex - 1],
+        };
+
+        setSets(updatedSets);
+      }
     }
   };
 
   const incrementRepetitions = () => {
-    setRepetitionsValue(repetitionsValue + 1);
+    const setIndex = sets.findIndex((set) => set.id === id);
+    if (setIndex !== -1) {
+      const updatedSets = [...sets];
+      updatedSets[setIndex] = {
+        ...sets[setIndex],
+        repetitions: repetitions + 1,
+      };
+
+      setSets(updatedSets);
+    }
   };
 
   const decrementRepetitions = () => {
-    if (repetitionsValue <= 1) return;
-    setRepetitionsValue(repetitionsValue - 1);
+    const setIndex = sets.findIndex((set) => set.id === id);
+
+    if (setIndex !== -1 && repetitions > 1) {
+      const updatedSets = [...sets];
+      updatedSets[setIndex] = {
+        ...sets[setIndex],
+        repetitions: repetitions - 1,
+      };
+
+      setSets(updatedSets);
+    }
   };
 
   const incrementPause = () => {
-    const currentIndex = pauseValues.indexOf(pauseValue);
+    const currentIndex = pauseValues.indexOf(pause);
+
     if (currentIndex < pauseValues.length - 1) {
-      setPauseValue(pauseValues[currentIndex + 1]);
+      const setIndex = sets.findIndex((set) => set.id === id);
+
+      if (setIndex !== -1) {
+        const updatedSets = [...sets];
+        updatedSets[setIndex] = {
+          ...sets[setIndex],
+          pause: pauseValues[currentIndex + 1],
+        };
+
+        setSets(updatedSets);
+      }
     }
   };
 
   const decrementPuase = () => {
-    const currentIndex = pauseValues.indexOf(pauseValue);
+    const currentIndex = pauseValues.indexOf(pause);
+
     if (currentIndex > 0) {
-      setPauseValue(pauseValues[currentIndex - 1]);
+      const setIndex = sets.findIndex((set) => set.id === id);
+
+      if (setIndex !== -1) {
+        const updatedSets = [...sets];
+        updatedSets[setIndex] = {
+          ...sets[setIndex],
+          pause: pauseValues[currentIndex - 1],
+        };
+
+        setSets(updatedSets);
+      }
     }
   };
 
   useEffect(() => {
-    const m = String(Math.floor(pauseValue / 60)).padStart(2, "0");
-    const s = String(pauseValue % 60).padStart(2, "0");
+    const m = String(Math.floor(pause / 60)).padStart(2, "0");
+    const s = String(pause % 60).padStart(2, "0");
     setMinutes(m);
     setSeconds(s);
-  }, [pauseValue]);
-
-  const handleDeleteSet = () => {
-    if (set) {
-      removeSet(set.id);
-    }
-  };
-
-  const handleCopySet = () => {
-    if (set) addSet({ ...set });
-  };
+  }, [pause]);
 
   const styles = StyleSheet.create({
     actionsContainer: {
@@ -164,7 +220,7 @@ const SetItem: React.FC<SetItemProps> = ({ setId }) => {
     },
   });
 
-  return set ? (
+  return (
     <View style={styles.setContainer}>
       <View style={styles.buttonsContainer}>
         <View style={styles.firstRowContainer}>
@@ -179,7 +235,7 @@ const SetItem: React.FC<SetItemProps> = ({ setId }) => {
             <View style={styles.buttonContainer}>
               <Text style={styles.buttonLabel}>Weight</Text>
               <Text style={styles.buttonValue}>
-                {weightValue} {weightUnit === "Kilogram" ? "kg" : "lbs"}
+                {weight} {weightUnit === "Kilogram" ? "kg" : "lbs"}
               </Text>
             </View>
             <TouchableRipple
@@ -200,7 +256,7 @@ const SetItem: React.FC<SetItemProps> = ({ setId }) => {
             </TouchableRipple>
             <View style={styles.buttonContainer}>
               <Text style={styles.buttonLabel}>Reps</Text>
-              <Text style={styles.buttonValue}>{repetitionsValue}</Text>
+              <Text style={styles.buttonValue}>{repetitions}</Text>
             </View>
             <TouchableRipple
               borderless
@@ -253,8 +309,6 @@ const SetItem: React.FC<SetItemProps> = ({ setId }) => {
         </TouchableRipple>
       </View>
     </View>
-  ) : (
-    <Text>Error: set not found</Text>
   );
 };
 export default SetItem;
