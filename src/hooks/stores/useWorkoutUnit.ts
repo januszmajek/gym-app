@@ -7,6 +7,7 @@ interface WorkoutUnitsStore {
     setActiveWorkoutUnitId: (workoutUnitId: string | undefined) => void;
     addWorkoutUnit: (workoutUnit: WorkoutUnit) => void;
     removeWorkoutUnit: (workoutUnitId: string) => void;
+    removeWorkoutUnitsByWorkoutId: (workoutId: string) => void;
     updateWorkoutUnit: (
         workoutUnitId: string,
         updatedWorkoutUnit: WorkoutUnit,
@@ -40,14 +41,23 @@ const useWorkoutUnits = create<WorkoutUnitsStore>((set, get) => ({
             ),
         })),
     getWorkoutUnitById: (workoutUnitId) => {
-        const workoutUnit = get().workoutUnits.find((w) => w.id === workoutUnitId);
+        const workoutUnit = get().workoutUnits.find(
+            (workoutUnit) => workoutUnit.id === workoutUnitId,
+        );
         return workoutUnit ? { ...workoutUnit } : undefined;
     },
     getWorkoutUnitsByWorkoutId: (workoutId) => {
         const workoutUnits = get().workoutUnits.filter(
-            (w) => w.workout_id === workoutId,
+            (workoutUnit) => workoutUnit.workout_id === workoutId,
         );
         return workoutUnits ? [...workoutUnits] : [];
+    },
+    removeWorkoutUnitsByWorkoutId: (workoutId) => {
+        set((state) => ({
+            workoutUnits: state.workoutUnits.filter(
+                (workoutUnit) => workoutUnit.workout_id !== workoutId,
+            ),
+        }));
     },
     syncWorkoutUnits: (workoutUnits) =>
         set(() => ({ workoutUnits: workoutUnits })),
