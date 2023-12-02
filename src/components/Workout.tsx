@@ -9,6 +9,8 @@ import { WorkoutUnit } from "../../types";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import WorkoutHeader from "./WorkoutHeader";
 import AddWorkoutUnitButton from "./AddWorkoutUnitButton";
+import useSet from "../hooks/stores/useSet";
+import useExercise from "../hooks/stores/useExercise";
 
 interface WorkoutProps {
   workoutId: string;
@@ -18,6 +20,8 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
   const { getWorkoutUnitsByWorkoutId, workoutUnits: workoutUnitsInStore } =
     useWorkoutUnits();
   const { removeWorkout, setActiveWorkoutId, getWorkoutById } = useWorkout();
+  const { sets: allSets, getSetsByWorkoutUnitId } = useSet();
+  const { getExerciseById } = useExercise();
   const { colors } = useTheme();
   const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>([]);
   const name = getWorkoutById(workoutId)?.name;
@@ -82,7 +86,8 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
           <WorkoutUnitItem
             key={i}
             workoutUnitId={workoutUnit.id}
-            exerciseId={workoutUnit.exercise_id}
+            sets={getSetsByWorkoutUnitId(workoutUnit.id)}
+            name={getExerciseById(workoutUnit.exercise_id)?.name}
           />
         ))
       ) : (

@@ -62,6 +62,8 @@ const WorkoutList = () => {
         }
       }
     };
+
+    setTimeout(() => fetchWorkouts(), 5000);
   }, []);
 
   const styles = StyleSheet.create({

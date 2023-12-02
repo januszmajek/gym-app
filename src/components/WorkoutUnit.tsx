@@ -8,9 +8,10 @@ import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import SetItem from "./SetItem";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Set } from "../../types";
+import uuid from "react-native-uuid";
 
 interface WorkoutUnitProps {
-  workoutUnitId: number;
+  workoutUnitId: string;
 }
 
 const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
@@ -18,37 +19,39 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
   const { colors } = useTheme();
   const { setActiveWorkoutUnitId } = useWorkoutUnits();
   const { addSet } = useSet();
-  const { sets: allSets, getSetsByWorkoutUnitId } = useSet();
-  const [sets, setSets] = useState<Set[]>([]);
-
-  useEffect(() => {
-    console.log(getSetsByWorkoutUnitId(workoutUnitId));
-    setSets(getSetsByWorkoutUnitId(workoutUnitId));
-  }, [allSets]);
+  const { getSetsByWorkoutUnitId } = useSet();
+  const [sets, setSets] = useState<Set[]>(
+    getSetsByWorkoutUnitId(workoutUnitId),
+  );
 
   const handleAddSet = async () => {
     if (session) {
+      const newSet = {
+        id: uuid.v4() as string,
+        workout_unit_id: workoutUnitId,
+        user_id: session.user.id,
+        weight: 0.5,
+        repetitions: 1,
+        pause: 0,
+        order: 0,
+      };
+      addSet(newSet);
+      console.log("Adding set:", newSet);
+
       const { data, error } = await supabase
         .from("sets")
-        .insert({
-          user_id: session.user.id,
-          unit_id: workoutUnitId,
-          weight: 0,
-          repetitions: 0,
-          pause: 0,
-          order: 0,
-        })
+        .insert(newSet)
         .select();
 
       if (error) {
         console.log(error);
+        return;
       }
-      console.log("add set", data);
-      if (data) {
-        addSet(data[0]);
-      }
+      console.log("Added set:", data[0]);
     }
   };
+
+  const saveSets = () => {};
 
   const styles = StyleSheet.create({
     addUnitButton: {
@@ -64,6 +67,11 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     addUnitText: {
       color: colors.primaryContainer,
     },
+    arrowContainer: {
+      backgroundColor: colors.primaryContainer,
+      borderRadius: 15,
+      padding: 7,
+    },
     dialogTitle: {
       color: colors.primary,
       fontSize: 20,
@@ -76,9 +84,10 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
       marginBottom: 10,
       marginLeft: 20,
     },
-    hidePortalButton: {
+    saveContainer: {
+      backgroundColor: colors.primaryContainer,
       borderRadius: 15,
-      padding: 5,
+      padding: 7,
     },
     setLabel: {
       backgroundColor: colors.primary,
@@ -93,12 +102,23 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
       <Appbar.Header style={styles.dialogTitleContainer}>
         <TouchableRipple
           borderless
-          onPress={() => setActiveWorkoutUnitId(0)}
-          style={styles.hidePortalButton}
+          onPress={() => setActiveWorkoutUnitId(undefined)}
+          style={styles.arrowContainer}
         >
           <Icon name="arrow-left" size={28} color={colors.secondary} />
         </TouchableRipple>
         <Text style={styles.dialogTitle}>Edit workout unit</Text>
+        <TouchableRipple
+          borderless
+          onPress={saveSets}
+          style={styles.saveContainer}
+        >
+          <Icon
+            name="content-save-outline"
+            size={28}
+            color={colors.secondary}
+          />
+        </TouchableRipple>
       </Appbar.Header>
       <View>
         {sets.map((set: Set, i) => (
@@ -108,7 +128,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
               {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}
               {" set"}
             </Text>
-            <SetItem key={i} setId={set.id} />
+            <SetItem setId={set.id} />
           </View>
         ))}
       </View>

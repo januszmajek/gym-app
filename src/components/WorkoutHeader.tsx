@@ -65,6 +65,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
     removeContainer: {
       backgroundColor: colors.primaryContainer,
       borderRadius: 15,
+      marginLeft: "auto",
       padding: 7,
     },
     renameContainer: {
@@ -72,6 +73,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
       display: "flex",
       flexDirection: "row",
       gap: 10,
+      marginBottom: 8,
       paddingHorizontal: 10,
       paddingTop: 2,
     },
@@ -90,6 +92,8 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
     renameTouch: {
       borderRadius: 10,
       flexGrow: 1,
+      marginHorizontal: 15,
+      maxWidth: "70%",
       paddingHorizontal: 15,
       paddingVertical: 8,
     },
@@ -97,7 +101,6 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
       alignItems: "center",
       display: "flex",
       flexDirection: "row",
-      gap: 10,
       paddingHorizontal: 10,
       paddingVertical: 5,
     },

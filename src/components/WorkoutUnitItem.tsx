@@ -5,25 +5,17 @@ import { TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../supabase/supabase";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
-import useSet from "../hooks/stores/useSet";
 
 interface WorkoutUnitProps {
+  name?: string;
   workoutUnitId: string;
-  exerciseId: string;
+  sets: Set[];
 }
 
-const WorkoutUnitItem = ({ exerciseId, workoutUnitId }: WorkoutUnitProps) => {
-  const { sets: allSets, getSetsByWorkoutUnitId } = useSet();
+const WorkoutUnitItem = ({ name, workoutUnitId, sets }: WorkoutUnitProps) => {
   const { setActiveWorkoutUnitId } = useWorkoutUnits();
   const { removeWorkoutUnit } = useWorkoutUnits();
   const { colors } = useTheme();
-  const [sets, setSets] = useState<Set[]>([]);
-  const [name, setName] = useState("");
-
-  useEffect(() => {
-    console.log(getSetsByWorkoutUnitId(workoutUnitId));
-    setSets(getSetsByWorkoutUnitId(workoutUnitId));
-  }, [allSets]);
 
   const handleDeleteWorkoutUnit = async () => {
     console.log("Removing Workout Unit:", workoutUnitId);
@@ -38,23 +30,6 @@ const WorkoutUnitItem = ({ exerciseId, workoutUnitId }: WorkoutUnitProps) => {
     }
     console.log("Deleted Workout Unit:", workoutUnitId);
   };
-
-  useEffect(() => {
-    const getWorkoutUnitName = async (exerciseId: string) => {
-      const { data, error } = await supabase
-        .from("exercises")
-        .select("name")
-        .eq("id", exerciseId);
-
-      if (error) {
-        console.log(error);
-      }
-      console.log(data);
-      data && setName(data[0].name);
-    };
-
-    getWorkoutUnitName(exerciseId);
-  }, []);
 
   const styles = StyleSheet.create({
     buttonsContainer: {
