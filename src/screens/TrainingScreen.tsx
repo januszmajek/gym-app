@@ -1,12 +1,12 @@
 import { View, StyleSheet, SafeAreaView } from "react-native";
-import WorkoutList from "../components/WorkoutList";
-import AddWorkoutButton from "../components/AddWorkoutButton";
+import WorkoutList from "../components/workouts/WorkoutList";
+import AddWorkoutButton from "../components/workouts/AddWorkoutButton";
 import useWorkout from "../hooks/stores/useWorkout";
-import Workout from "../components/Workout";
+import Workout from "../components/workouts/Workout";
 import React from "react";
 import { useTheme } from "react-native-paper";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
-import WorkoutUnit from "../components/WorkoutUnit";
+import WorkoutUnit from "../components/workouts/WorkoutUnit";
 
 export default function TrainingScreen() {
   const { activeWorkoutId } = useWorkout();

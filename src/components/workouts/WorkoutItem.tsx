@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
-import { Workout } from "../../types";
-import { supabase } from "../../supabase/supabase";
-import useWorkout from "../hooks/stores/useWorkout";
+import { Workout } from "../../../types";
+import { supabase } from "../../../supabase/supabase";
+import useWorkout from "../../hooks/stores/useWorkout";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface WorkoutItemProps {

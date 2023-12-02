@@ -8,9 +8,9 @@ import {
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
-import { supabase } from "../../supabase/supabase";
-import useSession from "../hooks/stores/useSession";
-import useWorkoutStore from "../hooks/stores/useWorkout";
+import { supabase } from "../../../supabase/supabase";
+import useSession from "../../hooks/stores/useSession";
+import useWorkoutStore from "../../hooks/stores/useWorkout";
 import uuid from "react-native-uuid";
 import { useState } from "react";
 

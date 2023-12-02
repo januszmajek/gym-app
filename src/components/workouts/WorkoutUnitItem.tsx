@@ -1,10 +1,10 @@
 import { Text, StyleSheet, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Set } from "../../types";
+import React from "react";
+import { Set } from "../../../types";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { supabase } from "../../supabase/supabase";
-import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
+import { supabase } from "../../../supabase/supabase";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 
 interface WorkoutUnitProps {
   name?: string;

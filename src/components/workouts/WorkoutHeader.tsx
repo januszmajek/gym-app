@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import useWorkout from "../hooks/stores/useWorkout";
-import { supabase } from "../../supabase/supabase";
+import useWorkout from "../../hooks/stores/useWorkout";
+import { supabase } from "../../../supabase/supabase";
 
 interface WorkoutHeaderProps {
   workoutName: string;

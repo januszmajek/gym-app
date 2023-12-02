@@ -1,16 +1,16 @@
 import * as React from "react";
-import useWorkout from "../hooks/stores/useWorkout";
+import useWorkout from "../../hooks/stores/useWorkout";
 import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 import WorkoutUnitItem from "./WorkoutUnitItem";
-import { supabase } from "../../supabase/supabase";
+import { supabase } from "../../../supabase/supabase";
 import { useEffect, useState } from "react";
-import { WorkoutUnit } from "../../types";
-import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
+import { WorkoutUnit } from "../../../types";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import WorkoutHeader from "./WorkoutHeader";
 import AddWorkoutUnitButton from "./AddWorkoutUnitButton";
-import useSet from "../hooks/stores/useSet";
-import useExercise from "../hooks/stores/useExercise";
+import useSet from "../../hooks/stores/useSet";
+import useExercise from "../../hooks/stores/useExercise";
 
 interface WorkoutProps {
   workoutId: string;
@@ -20,7 +20,7 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
   const { getWorkoutUnitsByWorkoutId, workoutUnits: workoutUnitsInStore } =
     useWorkoutUnits();
   const { removeWorkout, setActiveWorkoutId, getWorkoutById } = useWorkout();
-  const { sets: allSets, getSetsByWorkoutUnitId } = useSet();
+  const { getSetsByWorkoutUnitId } = useSet();
   const { getExerciseById } = useExercise();
   const { colors } = useTheme();
   const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>([]);

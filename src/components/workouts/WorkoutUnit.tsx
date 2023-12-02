@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Button, useTheme } from "react-native-paper";
-import useSession from "../hooks/stores/useSession";
-import useSet from "../hooks/stores/useSet";
-import { supabase } from "../../supabase/supabase";
-import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
+import useSession from "../../hooks/stores/useSession";
+import useSet from "../../hooks/stores/useSet";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import SetItem from "./SetItem";
 import uuid from "react-native-uuid";
 import WorkoutUnitHeader from "./WorkoutUnitHeader";
@@ -19,7 +18,6 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
   const { setActiveWorkoutUnitId } = useWorkoutUnits();
   const {
     sets: allSets,
-    addSet,
     getSetsByWorkoutUnitId,
     addSets,
     clearSetsByWorkoutUnitId,

@@ -2,8 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
-import useExercise from "../hooks/stores/useExercise";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import useExercise from "../../hooks/stores/useExercise";
 
 interface WorkoutUnitHeaderProps {
   workoutUnitId: string;

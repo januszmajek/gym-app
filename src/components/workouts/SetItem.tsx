@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { TouchableRipple, useTheme } from "react-native-paper";
-import useWeight from "../hooks/stores/useWeight";
+import useWeight from "../../hooks/stores/useWeight";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Set } from "../../types";
+import { Set } from "../../../types";
 import uuid from "react-native-uuid";
 
 interface SetItemProps {

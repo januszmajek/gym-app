@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { List } from "react-native-paper";
-import { Exercise } from "../../types";
+import { Exercise } from "../../../types";
 
 interface ExerciseProps {
   exercise: Exercise | undefined;

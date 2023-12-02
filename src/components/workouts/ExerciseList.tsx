@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, Text, StyleSheet, View } from "react-native";
-import { supabase } from "../../supabase/supabase";
-import { Exercise } from "../../types";
-import useWorkout from "../hooks/stores/useWorkout";
+import { supabase } from "../../../supabase/supabase";
+import { Exercise } from "../../../types";
+import useWorkout from "../../hooks/stores/useWorkout";
 import { TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import useDebounce from "../hooks/useDebounce";
+import useDebounce from "../../hooks/useDebounce";
 import ExerciseDescription from "./ExerciseDescription";
-import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
-import useSession from "../hooks/stores/useSession";
-import useExercise from "../hooks/stores/useExercise";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import useSession from "../../hooks/stores/useSession";
+import useExercise from "../../hooks/stores/useExercise";
 import uuid from "react-native-uuid";
 
 const ExerciseList = () => {
@@ -68,7 +68,7 @@ const ExerciseList = () => {
   });
 
   useEffect(() => {
-    const filtered = exercises.filter((exercise) =>
+    const filtered = exercises.filter((exercise: Exercise) =>
       exercise.name.toLowerCase().includes(searchText.toLowerCase()),
     );
     setFilteredExercises(filtered);
