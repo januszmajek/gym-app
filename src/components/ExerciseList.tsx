@@ -3,12 +3,7 @@ import { FlatList, Text, StyleSheet, View } from "react-native";
 import { supabase } from "../../supabase/supabase";
 import { Exercise } from "../../types";
 import useWorkout from "../hooks/stores/useWorkout";
-import {
-  ActivityIndicator,
-  TextInput,
-  TouchableRipple,
-  useTheme,
-} from "react-native-paper";
+import { TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useDebounce from "../hooks/useDebounce";
 import ExerciseDescription from "./ExerciseDescription";
@@ -20,7 +15,6 @@ import uuid from "react-native-uuid";
 const ExerciseList = () => {
   const { exercises } = useExercise();
   const { session } = useSession();
-  const [loading, setLoading] = useState(false);
   const { activeWorkoutId } = useWorkout();
   const { addWorkoutUnit } = useWorkoutUnits();
   const [activeExerciseDescription, setActiveExerciseDescription] =
@@ -30,21 +24,6 @@ const ExerciseList = () => {
   const [searchText, setSearchText] = useState("");
   const debouncedValue = useDebounce(searchText, 250);
   const { colors } = useTheme();
-
-  // useEffect(() => {
-  //   const fetchExercises = async () => {
-  //     setLoading(true);
-  //     const { data, error } = await supabase.from("exercises").select("*");
-  //     if (error) console.log("Error fetching data", error);
-  //     else {
-  //       setExercises(data);
-  //       setFilteredExercises(data);
-  //     }
-  //     setLoading(false);
-  //   };
-
-  //   fetchExercises();
-  // }, []);
 
   const styles = StyleSheet.create({
     addContainer: {
@@ -62,9 +41,6 @@ const ExerciseList = () => {
     exerciseName: {
       color: colors.tertiary,
       fontSize: 16,
-    },
-    indicatorContainer: {
-      paddingVertical: 220,
     },
     item: {
       paddingHorizontal: 10,

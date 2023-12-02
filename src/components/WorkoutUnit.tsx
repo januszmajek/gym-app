@@ -8,7 +8,6 @@ import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import SetItem from "./SetItem";
 import uuid from "react-native-uuid";
 import WorkoutUnitHeader from "./WorkoutUnitHeader";
-import useExercise from "../hooks/stores/useExercise";
 
 interface WorkoutUnitProps {
   workoutUnitId: string;
@@ -51,19 +50,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
         pause: 0,
         order: 0,
       };
-      addSet(newSet);
-      console.log("Adding set:", newSet);
-
-      const { data, error } = await supabase
-        .from("sets")
-        .insert(newSet)
-        .select();
-
-      if (error) {
-        console.log(error);
-        return;
-      }
-      console.log("Added set:", data[0]);
+      setSets([...sets, newSet]);
     }
   };
   const styles = StyleSheet.create({
@@ -113,27 +100,6 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
   return (
     <View>
       <WorkoutUnitHeader workoutUnitId={workoutUnitId} saveSets={saveSets} />
-      {/* <Appbar.Header style={styles.dialogTitleContainer}>
-        <TouchableRipple
-          borderless
-          onPress={() => setActiveWorkoutUnitId(undefined)}
-          style={styles.arrowContainer}
-        >
-          <Icon name="arrow-left" size={28} color={colors.secondary} />
-        </TouchableRipple>
-        <Text style={styles.dialogTitle}>Edit workout unit</Text>
-        <TouchableRipple
-          borderless
-          onPress={saveSets}
-          style={styles.saveContainer}
-        >
-          <Icon
-            name="content-save-outline"
-            size={28}
-            color={colors.secondary}
-          />
-        </TouchableRipple>
-      </Appbar.Header> */}
       <View>
         {sets.map((set, i) => (
           <View key={i}>
