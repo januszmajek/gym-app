@@ -34,41 +34,43 @@ const SyncButton = () => {
   const handleSync = async () => {
     if (session) {
       {
-        const { data, error } = await supabase
+        const { data, error: supabaseError } = await supabase
           .from("workouts")
           .select("*")
           .eq("user_id", session.user.id);
-        if (error) console.log("Error fetching data", error);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
           console.log("Syncing workouts:", data);
           syncWorkouts(data);
         }
       }
       {
-        const { data, error } = await supabase
+        const { data, error: supabaseError } = await supabase
           .from("workout_units")
           .select("*")
           .eq("user_id", session.user.id);
-        if (error) console.log("Error fetching data", error);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
           console.log("Syncing workout units:", data);
           syncWorkoutUnits(data);
         }
       }
       {
-        const { data, error } = await supabase
+        const { data, error: supabaseError } = await supabase
           .from("sets")
           .select("*")
           .eq("user_id", session.user.id);
-        if (error) console.log("Error fetching data", error);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
           console.log("Syncing sets:", data);
           syncSets(data);
         }
       }
       {
-        const { data, error } = await supabase.from("exercises").select("*");
-        if (error) console.log("Error fetching data", error);
+        const { data, error: supabaseError } = await supabase
+          .from("exercises")
+          .select("*");
+        if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
           console.log("Syncing exercises");
           syncExercises(data);

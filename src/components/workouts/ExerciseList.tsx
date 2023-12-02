@@ -3,7 +3,12 @@ import { FlatList, Text, StyleSheet, View } from "react-native";
 import { supabase } from "../../../supabase/supabase";
 import { Exercise } from "../../../types";
 import useWorkout from "../../hooks/stores/useWorkout";
-import { TextInput, TouchableRipple, useTheme } from "react-native-paper";
+import {
+  ActivityIndicator,
+  TextInput,
+  TouchableRipple,
+  useTheme,
+} from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useDebounce from "../../hooks/useDebounce";
 import ExerciseDescription from "./ExerciseDescription";
@@ -23,49 +28,25 @@ const ExerciseList = () => {
     useState<Exercise[]>(exercises);
   const [searchText, setSearchText] = useState("");
   const debouncedValue = useDebounce(searchText, 250);
+  const { syncExercises } = useExercise();
   const { colors } = useTheme();
+  const [loading, setLoading] = useState(false);
 
-  const styles = StyleSheet.create({
-    addContainer: {
-      backgroundColor: colors.inversePrimary,
-      borderRadius: 5,
-      padding: 5,
-    },
-    container: {
-      alignItems: "center",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      overflow: "hidden",
-      paddingRight: 15,
-    },
-    exerciseName: {
-      color: colors.tertiary,
-      fontSize: 16,
-    },
-    item: {
-      paddingHorizontal: 10,
-      paddingVertical: 20,
-      width: "75%",
-    },
-    muscle: {
-      color: colors.primary,
-      fontSize: 14,
-      textTransform: "capitalize",
-    },
-    searchInput: {
-      backgroundColor: colors.primary,
-      borderColor: colors.secondary,
-      borderRadius: 5,
-      borderWidth: 1,
-      color: colors.primaryContainer,
-      height: 40,
-      marginBottom: 10,
-      paddingLeft: 10,
-    },
-    searchInputContent: {
-      color: colors.primaryContainer,
-    },
-  });
+  useEffect(() => {
+    if (exercises.length < 1) {
+      setLoading(true);
+      const fetchExercises = async () => {
+        const { data, error: supabaseError } = await supabase
+          .from("exercises")
+          .select("*");
+
+        if (supabaseError) return;
+        syncExercises(data);
+      };
+      fetchExercises();
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const filtered = exercises.filter((exercise: Exercise) =>
@@ -98,6 +79,51 @@ const ExerciseList = () => {
       }
     }
   };
+
+  const styles = StyleSheet.create({
+    addContainer: {
+      backgroundColor: colors.inversePrimary,
+      borderRadius: 5,
+      padding: 5,
+    },
+    container: {
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      overflow: "hidden",
+      paddingRight: 15,
+    },
+    exerciseName: {
+      color: colors.tertiary,
+      fontSize: 16,
+    },
+    indicatorContainer: {
+      paddingVertical: 220,
+    },
+    item: {
+      paddingHorizontal: 10,
+      paddingVertical: 20,
+      width: "75%",
+    },
+    muscle: {
+      color: colors.primary,
+      fontSize: 14,
+      textTransform: "capitalize",
+    },
+    searchInput: {
+      backgroundColor: colors.primary,
+      borderColor: colors.secondary,
+      borderRadius: 5,
+      borderWidth: 1,
+      color: colors.primaryContainer,
+      height: 40,
+      marginBottom: 10,
+      paddingLeft: 10,
+    },
+    searchInputContent: {
+      color: colors.primaryContainer,
+    },
+  });
 
   const renderItem = ({ item }: { item: Exercise }) => (
     <TouchableRipple
@@ -135,11 +161,17 @@ const ExerciseList = () => {
         placeholder="Search by exercise name..."
         onChangeText={(text) => setSearchText(text)}
       />
-      <FlatList
-        data={filteredExercises}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      {loading ? (
+        <View style={styles.indicatorContainer}>
+          <ActivityIndicator color={colors.primary} size={128} />
+        </View>
+      ) : (
+        <FlatList
+          data={filteredExercises}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </View>
   );
 };
