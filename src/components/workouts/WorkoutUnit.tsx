@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button, FAB, useTheme } from "react-native-paper";
 import useSession from "../../hooks/stores/useSession";
 import useSet from "../../hooks/stores/useSet";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
@@ -52,40 +52,20 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     }
   };
   const styles = StyleSheet.create({
-    addUnitButton: {
-      backgroundColor: colors.primary,
-      width: "50%",
+    fab: {
+      bottom: 0,
+      margin: 16,
+      position: "absolute",
+      right: 0,
     },
-    addUnitButtonContainer: {
-      alignItems: "center",
-      display: "flex",
-      justifyContent: "center",
-      paddingTop: 10,
-    },
-    addUnitText: {
-      color: colors.primaryContainer,
-    },
-    arrowContainer: {
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 15,
-      padding: 7,
-    },
-    dialogTitle: {
+    noSetsInfo: {
       color: colors.primary,
-      fontSize: 20,
+      fontSize: 18,
+      marginTop: 10,
+      textAlign: "center",
     },
-    dialogTitleContainer: {
-      alignItems: "center",
-      display: "flex",
-      flexDirection: "row",
-      gap: 10,
-      marginBottom: 10,
-      marginLeft: 20,
-    },
-    saveContainer: {
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 15,
-      padding: 7,
+    screen: {
+      minHeight: "100%",
     },
     setLabel: {
       backgroundColor: colors.primary,
@@ -96,7 +76,8 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
   });
 
   return (
-    <View>
+    <View style={styles.screen}>
+      <FAB icon="plus" style={styles.fab} onPress={handleAddSet} />
       <WorkoutUnitHeader workoutUnitId={workoutUnitId} saveSets={saveSets} />
       <View>
         {sets.map((set, i) => (
@@ -109,11 +90,9 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
             <SetItem key={i} set={set} sets={sets} setSets={setSets} />
           </View>
         ))}
-      </View>
-      <View style={styles.addUnitButtonContainer}>
-        <Button style={styles.addUnitButton} onPress={handleAddSet}>
-          <Text style={styles.addUnitText}>Add set</Text>
-        </Button>
+        {sets.length === 0 && (
+          <Text style={styles.noSetsInfo}>No sets added</Text>
+        )}
       </View>
     </View>
   );
