@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { Appbar, Button, TouchableRipple, useTheme } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
 import useSession from "../hooks/stores/useSession";
 import useSet from "../hooks/stores/useSet";
 import { supabase } from "../../supabase/supabase";
 import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import SetItem from "./SetItem";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import uuid from "react-native-uuid";
+import WorkoutUnitHeader from "./WorkoutUnitHeader";
+import useExercise from "../hooks/stores/useExercise";
 
 interface WorkoutUnitProps {
   workoutUnitId: string;
@@ -111,7 +112,8 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
 
   return (
     <View>
-      <Appbar.Header style={styles.dialogTitleContainer}>
+      <WorkoutUnitHeader workoutUnitId={workoutUnitId} saveSets={saveSets} />
+      {/* <Appbar.Header style={styles.dialogTitleContainer}>
         <TouchableRipple
           borderless
           onPress={() => setActiveWorkoutUnitId(undefined)}
@@ -131,15 +133,14 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
             color={colors.secondary}
           />
         </TouchableRipple>
-      </Appbar.Header>
+      </Appbar.Header> */}
       <View>
         {sets.map((set, i) => (
           <View key={i}>
             <Text style={styles.setLabel}>
-              {/* {i + 1}
+              {i + 1}
               {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}
-              {" set"} */}
-              {set.id}
+              {" set"}
             </Text>
             <SetItem key={i} set={set} sets={sets} setSets={setSets} />
           </View>
