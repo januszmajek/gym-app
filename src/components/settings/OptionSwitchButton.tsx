@@ -3,8 +3,8 @@ import { View, Text, StyleSheet } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import { Switch } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import useVibrateStore from "../hooks/stores/useVibrate";
-import useKeepScreenOnStore from "../hooks/stores/useKeepScreenOn";
+import useVibrateStore from "../../hooks/stores/useVibrate";
+import useKeepScreenOnStore from "../../hooks/stores/useKeepScreenOn";
 
 interface OptionSwitchButtonProps {
   type: string;

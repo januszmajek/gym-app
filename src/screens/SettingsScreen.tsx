@@ -1,11 +1,11 @@
 import { View, StyleSheet } from "react-native";
 import AppBar from "../components/AppBar";
-import OptionRadioButton from "../components/OptionRadioButton";
-import OptionSwitchButton from "../components/OptionSwitchButton";
-import LogoutButton from "../components/LogoutButton";
+import OptionRadioButton from "../components/settings/OptionRadioButton";
+import OptionSwitchButton from "../components/settings/OptionSwitchButton";
+import LogoutButton from "../components/settings/LogoutButton";
 import { useTheme } from "react-native-paper";
 import React from "react";
-import SyncButton from "../components/SyncButton";
+import SyncButton from "../components/settings/SyncButton";
 
 export default function SettingsScreen() {
   const distance = {

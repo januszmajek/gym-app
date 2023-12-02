@@ -2,12 +2,12 @@ import { View, Text, StyleSheet } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import React from "react";
-import useWorkout from "../hooks/stores/useWorkout";
-import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
-import useExercise from "../hooks/stores/useExercise";
-import { supabase } from "../../supabase/supabase";
-import useSession from "../hooks/stores/useSession";
-import useSet from "../hooks/stores/useSet";
+import useWorkout from "../../hooks/stores/useWorkout";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import useExercise from "../../hooks/stores/useExercise";
+import { supabase } from "../../../supabase/supabase";
+import useSession from "../../hooks/stores/useSession";
+import useSet from "../../hooks/stores/useSet";
 
 const SyncButton = () => {
   const { colors } = useTheme();

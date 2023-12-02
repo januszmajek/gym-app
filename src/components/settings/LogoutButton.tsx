@@ -2,9 +2,9 @@ import { View, Text, StyleSheet } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { supabase } from "../../supabase/supabase";
+import { supabase } from "../../../supabase/supabase";
 import React from "react";
-import useSession from "../hooks/stores/useSession";
+import useSession from "../../hooks/stores/useSession";
 
 const LogoutButton = () => {
   const { colors } = useTheme();

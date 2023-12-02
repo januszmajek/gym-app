@@ -2,10 +2,10 @@ import * as React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Dialog, Portal, TouchableRipple } from "react-native-paper";
 import Radio from "./Radio";
-import useWeight from "../hooks/stores/useWeight";
-import useDistance from "../hooks/stores/useDistance";
-import useThemeStore from "../hooks/stores/useThemeStore";
-import useLength from "../hooks/stores/useLength";
+import useWeight from "../../hooks/stores/useWeight";
+import useDistance from "../../hooks/stores/useDistance";
+import useThemeStore from "../../hooks/stores/useThemeStore";
+import useLength from "../../hooks/stores/useLength";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
 
