@@ -5,6 +5,7 @@ import OptionSwitchButton from "../components/OptionSwitchButton";
 import LogoutButton from "../components/LogoutButton";
 import { useTheme } from "react-native-paper";
 import React from "react";
+import SyncButton from "../components/SyncButton";
 
 export default function SettingsScreen() {
   const distance = {
@@ -87,6 +88,7 @@ export default function SettingsScreen() {
           iconName={icon}
         />
       ))}
+      <SyncButton />
       <LogoutButton />
     </View>
   );
