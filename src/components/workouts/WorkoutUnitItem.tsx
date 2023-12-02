@@ -5,6 +5,7 @@ import { TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../../supabase/supabase";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import useSet from "../../hooks/stores/useSet";
 
 interface WorkoutUnitProps {
   name?: string;
@@ -15,10 +16,12 @@ interface WorkoutUnitProps {
 const WorkoutUnitItem = ({ name, workoutUnitId, sets }: WorkoutUnitProps) => {
   const { setActiveWorkoutUnitId } = useWorkoutUnits();
   const { removeWorkoutUnit } = useWorkoutUnits();
+  const { clearSetsByWorkoutUnitId } = useSet();
   const { colors } = useTheme();
 
   const handleDeleteWorkoutUnit = async () => {
     console.log("Removing Workout Unit:", workoutUnitId);
+    clearSetsByWorkoutUnitId(workoutUnitId);
     removeWorkoutUnit(workoutUnitId);
     const { error } = await supabase
       .from("workout_units")

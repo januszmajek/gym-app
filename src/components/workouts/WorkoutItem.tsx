@@ -5,6 +5,8 @@ import { Workout } from "../../../types";
 import { supabase } from "../../../supabase/supabase";
 import useWorkout from "../../hooks/stores/useWorkout";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import useSet from "../../hooks/stores/useSet";
 
 interface WorkoutItemProps {
   workout: Workout;
@@ -14,9 +16,16 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   const { id, name } = workout;
   const { colors } = useTheme();
   const { removeWorkout, setActiveWorkoutId } = useWorkout();
+  const { getWorkoutUnitsByWorkoutId, removeWorkoutUnitsByWorkoutId } =
+    useWorkoutUnits();
+  const { clearSetsByWorkoutUnitId } = useSet();
 
   const handleDeleteWorkout = async () => {
-    console.log("Removing workout:", id);
+    const workoutUnits = getWorkoutUnitsByWorkoutId(id);
+    workoutUnits.map((workoutUnit) => {
+      clearSetsByWorkoutUnitId(workoutUnit.id);
+    });
+    removeWorkoutUnitsByWorkoutId(id);
     removeWorkout(id);
     const { error: supabaseError } = await supabase
       .from("workouts")

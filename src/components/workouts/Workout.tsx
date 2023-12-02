@@ -17,9 +17,13 @@ interface WorkoutProps {
 }
 
 const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
-  const { getWorkoutUnitsByWorkoutId, workoutUnits: workoutUnitsInStore } =
-    useWorkoutUnits();
   const { removeWorkout, setActiveWorkoutId, getWorkoutById } = useWorkout();
+  const {
+    getWorkoutUnitsByWorkoutId,
+    removeWorkoutUnitsByWorkoutId,
+    workoutUnits: workoutUnitsInStore,
+  } = useWorkoutUnits();
+  const { clearSetsByWorkoutUnitId } = useSet();
   const { getSetsByWorkoutUnitId } = useSet();
   const { getExerciseById } = useExercise();
   const { colors } = useTheme();
@@ -30,8 +34,12 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
     setWorkoutUnits(getWorkoutUnitsByWorkoutId(workoutId));
   }, [workoutUnitsInStore]);
 
-  const handleRemoveWorkout = async () => {
-    console.log("Removing workout:", workoutId);
+  const handleDeleteWorkout = async () => {
+    const workoutUnits = getWorkoutUnitsByWorkoutId(workoutId);
+    workoutUnits.map((workoutUnit) => {
+      clearSetsByWorkoutUnitId(workoutUnit.id);
+    });
+    removeWorkoutUnitsByWorkoutId(workoutId);
     removeWorkout(workoutId);
     setActiveWorkoutId(undefined);
     const { error: supabaseError } = await supabase
@@ -42,7 +50,7 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
       console.log(supabaseError.message);
       return;
     }
-    console.log("Deleted workout:", workoutId);
+    console.log("Deleted Workout:", workoutId);
   };
 
   const styles = StyleSheet.create({
@@ -79,7 +87,7 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
       <WorkoutHeader
         workoutId={workoutId}
         workoutName={name}
-        handleRemoveWorkout={handleRemoveWorkout}
+        handleRemoveWorkout={handleDeleteWorkout}
       />
       {workoutUnits.length > 0 ? (
         workoutUnits.map((workoutUnit, i) => (
