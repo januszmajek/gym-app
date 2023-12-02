@@ -1,8 +1,11 @@
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import AppBar from "../components/AppBar";
-import OptionRadioButton from "../components/OptionRadioButton";
-import OptionSwitchButton from "../components/OptionSwitchButton";
-import LogoutButton from "../components/LogoutButton";
+import OptionRadioButton from "../components/settings/OptionRadioButton";
+import OptionSwitchButton from "../components/settings/OptionSwitchButton";
+import LogoutButton from "../components/settings/LogoutButton";
+import { useTheme } from "react-native-paper";
+import React from "react";
+import SyncButton from "../components/settings/SyncButton";
 
 export default function SettingsScreen() {
   const distance = {
@@ -60,8 +63,13 @@ export default function SettingsScreen() {
   const radioButtons = [distance, weight, size, theme];
   const switchButtons = [vibrate, keepScreenOn];
 
+  const { colors } = useTheme();
+  const styles = StyleSheet.create({
+    screen: { backgroundColor: colors.background, minHeight: "100%" },
+  });
+
   return (
-    <View>
+    <View style={styles.screen}>
       <AppBar title="Ustawienia" />
       {radioButtons.map(({ type, label, options, icon }, key) => (
         <OptionRadioButton
@@ -80,6 +88,7 @@ export default function SettingsScreen() {
           iconName={icon}
         />
       ))}
+      <SyncButton />
       <LogoutButton />
     </View>
   );

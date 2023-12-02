@@ -61,10 +61,10 @@ export default function Navigation() {
       )}
     >
       <Tab.Screen
-        name="Trening"
+        name="Workout"
         component={TrainingScreen}
         options={{
-          tabBarLabel: "Trening",
+          tabBarLabel: "Workout",
           tabBarIcon: ({ color, size }) => {
             return <Icon name="arm-flex" size={size} color={color} />;
           },
@@ -74,7 +74,7 @@ export default function Navigation() {
         name="History"
         component={HistoryScreen}
         options={{
-          tabBarLabel: "Historia",
+          tabBarLabel: "History",
           tabBarIcon: ({ color, size }) => {
             return <Icon name="history" size={size} color={color} />;
           },
@@ -84,7 +84,7 @@ export default function Navigation() {
         name="Statistics"
         component={StatisticsScreen}
         options={{
-          tabBarLabel: "Statystyki",
+          tabBarLabel: "Statistics",
           tabBarIcon: ({ color, size }) => {
             return <Icon name="chart-line" size={size} color={color} />;
           },
@@ -94,7 +94,7 @@ export default function Navigation() {
         name="Settings"
         component={SettingsScreen}
         options={{
-          tabBarLabel: "Ustawienia",
+          tabBarLabel: "Settings",
           tabBarIcon: ({ color, size }) => {
             return <Icon name="cog" size={size} color={color} />;
           },

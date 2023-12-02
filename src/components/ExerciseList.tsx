@@ -1,50 +1,146 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, Text, StyleSheet } from "react-native";
+import { FlatList, Text, StyleSheet, View } from "react-native";
 import { supabase } from "../../supabase/supabase";
-
-interface Exercise {
-  id: string;
-  name: string;
-  primary_muscles: string[];
-  secondary_muscles: string[];
-  force: string;
-  level: string;
-  mechanic: string;
-  equipment: string;
-  category: string;
-  instructions: string[];
-}
+import { Exercise } from "../../types";
+import useWorkout from "../hooks/stores/useWorkout";
+import { TextInput, TouchableRipple, useTheme } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import useDebounce from "../hooks/useDebounce";
+import ExerciseDescription from "./ExerciseDescription";
+import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
+import useSession from "../hooks/stores/useSession";
+import useExercise from "../hooks/stores/useExercise";
+import uuid from "react-native-uuid";
 
 const ExerciseList = () => {
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const { exercises } = useExercise();
+  const { session } = useSession();
+  const { activeWorkoutId } = useWorkout();
+  const { addWorkoutUnit } = useWorkoutUnits();
+  const [activeExerciseDescription, setActiveExerciseDescription] =
+    useState<string>();
+  const [filteredExercises, setFilteredExercises] =
+    useState<Exercise[]>(exercises);
+  const [searchText, setSearchText] = useState("");
+  const debouncedValue = useDebounce(searchText, 250);
+  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    addContainer: {
+      backgroundColor: colors.inversePrimary,
+      borderRadius: 5,
+      padding: 5,
+    },
+    container: {
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      overflow: "hidden",
+      paddingRight: 15,
+    },
+    exerciseName: {
+      color: colors.tertiary,
+      fontSize: 16,
+    },
+    item: {
+      paddingHorizontal: 10,
+      paddingVertical: 20,
+      width: "75%",
+    },
+    muscle: {
+      color: colors.primary,
+      fontSize: 14,
+      textTransform: "capitalize",
+    },
+    searchInput: {
+      backgroundColor: colors.primary,
+      borderColor: colors.secondary,
+      borderRadius: 5,
+      borderWidth: 1,
+      color: colors.primaryContainer,
+      height: 40,
+      marginBottom: 10,
+      paddingLeft: 10,
+    },
+    searchInputContent: {
+      color: colors.primaryContainer,
+    },
+  });
 
   useEffect(() => {
-    const fetchExercises = async () => {
-      const { data, error } = await supabase.from("exercises").select("*");
-      if (error) console.log("Error fetching data", error);
-      else setExercises(data);
-    };
+    const filtered = exercises.filter((exercise) =>
+      exercise.name.toLowerCase().includes(searchText.toLowerCase()),
+    );
+    setFilteredExercises(filtered);
+  }, [debouncedValue]);
 
-    fetchExercises();
-  }, []);
+  const handleAddWorkoutUnit = async (exercise_id: string) => {
+    if (session && activeWorkoutId) {
+      const newUnit = {
+        id: uuid.v4() as string,
+        workout_id: activeWorkoutId,
+        exercise_id: exercise_id,
+        order: 0,
+        user_id: session.user.id,
+      };
+      addWorkoutUnit(newUnit);
+      const { data, error: supabaseError } = await supabase
+        .from("workout_units")
+        .insert(newUnit)
+        .select();
+
+      if (supabaseError) {
+        console.log(supabaseError);
+        return;
+      }
+      if (data) {
+        console.log("Added new workout unit:", data[0]);
+      }
+    }
+  };
 
   const renderItem = ({ item }: { item: Exercise }) => (
-    <Text style={styles.item}>{item.name}</Text>
+    <TouchableRipple
+      key={item.id}
+      style={styles.container}
+      onPress={() => setActiveExerciseDescription(item.id)}
+    >
+      <>
+        <View style={styles.item}>
+          <Text style={styles.exerciseName}>{item.name}</Text>
+          <Text style={styles.muscle}>{item.primary_muscles}</Text>
+        </View>
+        <TouchableRipple
+          style={styles.addContainer}
+          onPress={() => handleAddWorkoutUnit(item.id)}
+        >
+          <Icon name={"plus"} size={32} color={colors.primary} />
+        </TouchableRipple>
+      </>
+    </TouchableRipple>
   );
 
-  return (
-    <FlatList
-      data={exercises}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
+  return activeExerciseDescription ? (
+    <ExerciseDescription
+      exercise={exercises.find(
+        (e: Exercise) => e.id === activeExerciseDescription,
+      )}
     />
+  ) : (
+    <View>
+      <TextInput
+        style={styles.searchInput}
+        contentStyle={styles.searchInputContent}
+        placeholderTextColor={colors.primaryContainer}
+        placeholder="Search by exercise name..."
+        onChangeText={(text) => setSearchText(text)}
+      />
+      <FlatList
+        data={filteredExercises}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  item: {
-    padding: 20,
-  },
-});
-
 export default ExerciseList;
