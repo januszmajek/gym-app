@@ -31,7 +31,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     setSets(newSets);
   }, [allSets]);
 
-  const saveSets = () => {
+  const saveSets = async () => {
     clearSetsByWorkoutUnitId(workoutUnitId);
     addSets(sets);
     setActiveWorkoutUnitId(undefined);
