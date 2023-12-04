@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { Button, FAB, useTheme } from "react-native-paper";
+import { FAB, useTheme } from "react-native-paper";
+import { Set } from "../../../types";
 import useSession from "../../hooks/stores/useSession";
 import useSet from "../../hooks/stores/useSet";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import SetItem from "./SetItem";
 import uuid from "react-native-uuid";
 import WorkoutUnitHeader from "./WorkoutUnitHeader";
+import { FlashList } from "@shopify/flash-list";
 
 interface WorkoutUnitProps {
   workoutUnitId: string;
@@ -58,6 +60,9 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
       position: "absolute",
       right: 0,
     },
+    listPadding: {
+      paddingVertical: 69,
+    },
     noSetsInfo: {
       color: colors.primary,
       fontSize: 18,
@@ -75,12 +80,31 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     },
   });
 
+  const renderItem = ({ item, index: i }: { item: Set; index: number }) => (
+    <View>
+      <Text style={styles.setLabel}>
+        {i + 1}
+        {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}
+        {" set"}
+      </Text>
+      <SetItem set={item} sets={sets} setSets={setSets} />
+    </View>
+  );
+  const listFooter = () => <View style={styles.listPadding} />;
+
   return (
     <View style={styles.screen}>
-      <FAB icon="plus" style={styles.fab} onPress={handleAddSet} />
       <WorkoutUnitHeader workoutUnitId={workoutUnitId} saveSets={saveSets} />
-      <View>
-        {sets.map((set, i) => (
+      {sets.length > 0 && (
+        <FlashList
+          data={sets}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          estimatedItemSize={116}
+          ListFooterComponent={listFooter}
+        />
+      )}
+      {/* {sets.map((set, i) => (
           <View key={i}>
             <Text style={styles.setLabel}>
               {i + 1}
@@ -92,8 +116,8 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
         ))}
         {sets.length === 0 && (
           <Text style={styles.noSetsInfo}>No sets added</Text>
-        )}
-      </View>
+        )} */}
+      <FAB icon="plus" style={styles.fab} onPress={handleAddSet} />
     </View>
   );
 };

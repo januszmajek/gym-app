@@ -11,6 +11,7 @@ import WorkoutHeader from "./WorkoutHeader";
 import AddWorkoutUnitButton from "./AddWorkoutUnitButton";
 import useSet from "../../hooks/stores/useSet";
 import useExercise from "../../hooks/stores/useExercise";
+import { FlashList } from "@shopify/flash-list";
 
 interface WorkoutProps {
   workoutId: string;
@@ -27,7 +28,9 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
   const { getSetsByWorkoutUnitId } = useSet();
   const { getExerciseById } = useExercise();
   const { colors } = useTheme();
-  const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>([]);
+  const [workoutUnits, setWorkoutUnits] = useState<WorkoutUnit[]>(
+    getWorkoutUnitsByWorkoutId(workoutId),
+  );
   const name = getWorkoutById(workoutId)?.name;
 
   useEffect(() => {
@@ -54,20 +57,8 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
   };
 
   const styles = StyleSheet.create({
-    buttonsContainer: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-around",
-    },
-    dialogContainer: { paddingHorizontal: 10 },
-    dialogTitle: { fontSize: 20, textAlign: "center" },
-    dialogTitleContainer: {
-      alignItems: "center",
-      display: "flex",
-      flexDirection: "row",
-      gap: 10,
-      justifyContent: "flex-start",
-      marginBottom: 15,
+    listPadding: {
+      paddingVertical: 69,
     },
     noExercisesInfo: {
       color: colors.primary,
@@ -75,32 +66,45 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
       marginTop: 10,
       textAlign: "center",
     },
-    screen: { backgroundColor: colors.background, minHeight: "100%" },
+    screen: {
+      backgroundColor: colors.background,
+      minHeight: "100%",
+    },
     workoutError: {
       color: colors.error,
     },
   });
 
+  const renderItem = ({ item }: { item: WorkoutUnit }) => (
+    <WorkoutUnitItem
+      key={item.id}
+      workoutUnitId={item.id}
+      sets={getSetsByWorkoutUnitId(item.id)}
+      name={getExerciseById(item.exercise_id)?.name}
+    />
+  );
+
+  const listFooter = () => <View style={styles.listPadding} />;
+
   return name ? (
     <View style={styles.screen}>
-      <AddWorkoutUnitButton />
       <WorkoutHeader
         workoutId={workoutId}
         workoutName={name}
         handleRemoveWorkout={handleDeleteWorkout}
       />
       {workoutUnits.length > 0 ? (
-        workoutUnits.map((workoutUnit, i) => (
-          <WorkoutUnitItem
-            key={i}
-            workoutUnitId={workoutUnit.id}
-            sets={getSetsByWorkoutUnitId(workoutUnit.id)}
-            name={getExerciseById(workoutUnit.exercise_id)?.name}
-          />
-        ))
+        <FlashList
+          data={workoutUnits}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          estimatedItemSize={18}
+          ListFooterComponent={listFooter}
+        />
       ) : (
         <Text style={styles.noExercisesInfo}>No exercises added</Text>
       )}
+      <AddWorkoutUnitButton />
     </View>
   ) : (
     <Text style={styles.workoutError}>Error: Workout not found</Text>
