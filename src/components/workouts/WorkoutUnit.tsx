@@ -104,19 +104,6 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
           ListFooterComponent={listFooter}
         />
       )}
-      {/* {sets.map((set, i) => (
-          <View key={i}>
-            <Text style={styles.setLabel}>
-              {i + 1}
-              {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}
-              {" set"}
-            </Text>
-            <SetItem key={i} set={set} sets={sets} setSets={setSets} />
-          </View>
-        ))}
-        {sets.length === 0 && (
-          <Text style={styles.noSetsInfo}>No sets added</Text>
-        )} */}
       <FAB icon="plus" style={styles.fab} onPress={handleAddSet} />
     </View>
   );

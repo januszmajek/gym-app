@@ -1,6 +1,5 @@
 import { View, StyleSheet, SafeAreaView } from "react-native";
 import WorkoutList from "../components/workouts/WorkoutList";
-import AddWorkoutButton from "../components/workouts/AddWorkoutButton";
 import useWorkout from "../hooks/stores/useWorkout";
 import Workout from "../components/workouts/Workout";
 import React from "react";
@@ -27,10 +26,7 @@ export default function TrainingScreen() {
           <Workout workoutId={activeWorkoutId} />
         </SafeAreaView>
       ) : (
-        <>
-          <WorkoutList />
-          <AddWorkoutButton />
-        </>
+        <WorkoutList />
       )}
     </View>
   );
