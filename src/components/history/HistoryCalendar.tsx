@@ -328,7 +328,7 @@ const HistoryCalendar = () => {
         sections={data}
         renderItem={renderItem}
         // doesn't work with dots, need to handle it differently
-        avoidDateUpdates={true}
+        avoidDateUpdates={false}
       />
     </CalendarProvider>
   );
