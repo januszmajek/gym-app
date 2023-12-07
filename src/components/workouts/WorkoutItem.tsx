@@ -4,6 +4,9 @@ import { TouchableRipple, useTheme } from "react-native-paper";
 import { Workout } from "../../../types";
 import useWorkout from "../../hooks/stores/useWorkout";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import useTraining from "../../hooks/stores/useTraining";
+import Training from "../../../types";
+import uuid from "react-native-uuid";
 
 interface WorkoutItemProps {
   workout: Workout;
@@ -13,9 +16,21 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   const { id, name } = workout;
   const { colors } = useTheme();
   const { setActiveWorkoutId } = useWorkout();
+  const { addTraining, setActiveTrainingId } = useTraining();
 
   const handlePressEditWorkout = () => {
     setActiveWorkoutId(id);
+  };
+
+  const handlePressStartTraining = () => {
+    const newTraining: Training = {
+      id: uuid.v4() as string,
+      date_start: Date.now(),
+      name: name,
+      exercise_done: [],
+    };
+    addTraining(newTraining);
+    setActiveTrainingId(newTraining);
   };
 
   const styles = StyleSheet.create({
@@ -55,7 +70,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
         <TouchableRipple
           borderless
           style={styles.iconContainer}
-          onPress={handlePressEditWorkout}
+          onPress={handlePressStartTraining}
         >
           <Icon name="play" size={28} color={colors.primary} />
         </TouchableRipple>
