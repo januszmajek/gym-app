@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { TouchableRipple, useTheme } from "react-native-paper";
-import useWeight from "../../hooks/stores/useWeight";
+import useSettings from "../../hooks/stores/useSettings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Set } from "../../../types";
 import uuid from "react-native-uuid";
@@ -33,7 +33,7 @@ const SetItem: React.FC<SetItemProps> = ({
   const { colors } = useTheme();
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
-  const { value: weightUnit } = useWeight();
+  const { weightUnit } = useSettings();
 
   const handleDeleteSet = () => {
     console.log("Removing set:", id);

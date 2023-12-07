@@ -3,8 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import { Switch } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import useVibrateStore from "../../hooks/stores/useVibrate";
-import useKeepScreenOnStore from "../../hooks/stores/useKeepScreenOn";
+import useSettings from "../../hooks/stores/useSettings";
 
 interface OptionSwitchButtonProps {
   type: string;
@@ -18,16 +17,18 @@ const OptionSwitchButton = ({
   iconName,
 }: OptionSwitchButtonProps) => {
   const { colors } = useTheme();
+  const { vibrate, switchVibrate, keepScreenOn, switchKeepScreenOn } =
+    useSettings();
 
-  const store = () => {
+  const store: () => [boolean, () => void] = () => {
     if (type === "vibrate") {
-      return useVibrateStore();
+      return [vibrate, switchVibrate];
     } else {
-      return useKeepScreenOnStore();
+      return [keepScreenOn, switchKeepScreenOn];
     }
   };
 
-  const { value, switchValue } = store();
+  const [value, switchValue] = store();
   const onToggleSwitch = () => switchValue();
 
   const styles = StyleSheet.create({

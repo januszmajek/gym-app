@@ -2,12 +2,10 @@ import * as React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Dialog, Portal, TouchableRipple } from "react-native-paper";
 import Radio from "./Radio";
-import useWeight from "../../hooks/stores/useWeight";
-import useDistance from "../../hooks/stores/useDistance";
 import useThemeStore from "../../hooks/stores/useThemeStore";
-import useLength from "../../hooks/stores/useLength";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
+import useSettings from "../../hooks/stores/useSettings";
 
 interface Option {
   label: string;
@@ -29,20 +27,31 @@ const OptionRadioButton = ({
 }: OptionRadioButtonProps) => {
   const [visible, setVisible] = React.useState(false);
   const { colors } = useTheme();
+  const {
+    distanceUnit,
+    changeDistanceUnit,
+    weightUnit,
+    changeWeightUnit,
+    lengthUnit,
+    changeLengthUnit,
+  } = useSettings();
 
-  const store = () => {
+  const { value: theme, changeValue: changeTheme } = useThemeStore();
+
+  const store: () => [string, (unit: string) => void] = () => {
     if (type === "weight") {
-      return useWeight();
+      return [weightUnit, changeWeightUnit];
     } else if (type === "distance") {
-      return useDistance();
+      return [distanceUnit, changeDistanceUnit];
     } else if (type === "length") {
-      return useLength();
+      return [lengthUnit, changeLengthUnit];
     } else {
-      return useThemeStore();
+      return [theme, changeTheme];
     }
   };
 
-  const { value, changeValue } = store();
+  const [value, changeValue] = store();
+
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
