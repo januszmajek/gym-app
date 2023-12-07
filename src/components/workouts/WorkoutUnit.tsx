@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { FAB, useTheme } from "react-native-paper";
+import { Set } from "../../../types";
 import useSession from "../../hooks/stores/useSession";
 import useSet from "../../hooks/stores/useSet";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import SetItem from "./SetItem";
 import uuid from "react-native-uuid";
 import WorkoutUnitHeader from "./WorkoutUnitHeader";
+import { FlashList } from "@shopify/flash-list";
 
 interface WorkoutUnitProps {
   workoutUnitId: string;
@@ -31,7 +33,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     setSets(newSets);
   }, [allSets]);
 
-  const saveSets = () => {
+  const saveSets = async () => {
     clearSetsByWorkoutUnitId(workoutUnitId);
     addSets(sets);
     setActiveWorkoutUnitId(undefined);
@@ -52,40 +54,23 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     }
   };
   const styles = StyleSheet.create({
-    addUnitButton: {
-      backgroundColor: colors.primary,
-      width: "50%",
+    fab: {
+      bottom: 0,
+      margin: 16,
+      position: "absolute",
+      right: 0,
     },
-    addUnitButtonContainer: {
-      alignItems: "center",
-      display: "flex",
-      justifyContent: "center",
-      paddingTop: 10,
+    listPadding: {
+      paddingVertical: 69,
     },
-    addUnitText: {
-      color: colors.primaryContainer,
-    },
-    arrowContainer: {
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 15,
-      padding: 7,
-    },
-    dialogTitle: {
+    noSetsInfo: {
       color: colors.primary,
-      fontSize: 20,
+      fontSize: 18,
+      marginTop: 10,
+      textAlign: "center",
     },
-    dialogTitleContainer: {
-      alignItems: "center",
-      display: "flex",
-      flexDirection: "row",
-      gap: 10,
-      marginBottom: 10,
-      marginLeft: 20,
-    },
-    saveContainer: {
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 15,
-      padding: 7,
+    screen: {
+      minHeight: "100%",
     },
     setLabel: {
       backgroundColor: colors.primary,
@@ -95,26 +80,31 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     },
   });
 
-  return (
+  const renderItem = ({ item, index: i }: { item: Set; index: number }) => (
     <View>
+      <Text style={styles.setLabel}>
+        {i + 1}
+        {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}
+        {" set"}
+      </Text>
+      <SetItem set={item} sets={sets} setSets={setSets} />
+    </View>
+  );
+  const listFooter = () => <View style={styles.listPadding} />;
+
+  return (
+    <View style={styles.screen}>
       <WorkoutUnitHeader workoutUnitId={workoutUnitId} saveSets={saveSets} />
-      <View>
-        {sets.map((set, i) => (
-          <View key={i}>
-            <Text style={styles.setLabel}>
-              {i + 1}
-              {i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"}
-              {" set"}
-            </Text>
-            <SetItem key={i} set={set} sets={sets} setSets={setSets} />
-          </View>
-        ))}
-      </View>
-      <View style={styles.addUnitButtonContainer}>
-        <Button style={styles.addUnitButton} onPress={handleAddSet}>
-          <Text style={styles.addUnitText}>Add set</Text>
-        </Button>
-      </View>
+      {sets.length > 0 && (
+        <FlashList
+          data={sets}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          estimatedItemSize={116}
+          ListFooterComponent={listFooter}
+        />
+      )}
+      <FAB icon="plus" style={styles.fab} onPress={handleAddSet} />
     </View>
   );
 };

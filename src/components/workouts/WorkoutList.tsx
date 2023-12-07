@@ -5,6 +5,9 @@ import useWorkout from "../../hooks/stores/useWorkout";
 import WorkoutItem from "./WorkoutItem";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import useSet from "../../hooks/stores/useSet";
+import { Workout } from "../../../types";
+import { FlashList } from "@shopify/flash-list";
+import AddWorkoutButton from "./AddWorkoutButton";
 
 const WorkoutList = () => {
   const { workouts } = useWorkout();
@@ -18,18 +21,31 @@ const WorkoutList = () => {
   });
 
   const styles = StyleSheet.create({
-    view: {
-      maxHeight: "100%",
-      overflow: "scroll",
+    listPadding: {
+      paddingVertical: 69,
+    },
+    screen: {
+      minHeight: "100%",
     },
   });
 
+  const renderItem = ({ item }: { item: Workout }) => (
+    <WorkoutItem key={item.id} workout={item} />
+  );
+
+  const listFooter = () => <View style={styles.listPadding} />;
+
   return (
-    <View style={styles.view}>
+    <View style={styles.screen}>
       <AppBar title={"Workout List"} />
-      {workouts.map((workout) => (
-        <WorkoutItem key={workout.id} workout={workout} />
-      ))}
+      <FlashList
+        data={workouts}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        estimatedItemSize={18}
+        ListFooterComponent={listFooter}
+      />
+      <AddWorkoutButton />
     </View>
   );
 };

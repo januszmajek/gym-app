@@ -7,13 +7,17 @@ import { supabase } from "../../../supabase/supabase";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import useSet from "../../hooks/stores/useSet";
 
-interface WorkoutUnitProps {
+export interface WorkoutUnitItemProps {
   name?: string;
   workoutUnitId: string;
   sets: Set[];
 }
 
-const WorkoutUnitItem = ({ name, workoutUnitId, sets }: WorkoutUnitProps) => {
+const WorkoutUnitItem = ({
+  name,
+  workoutUnitId,
+  sets,
+}: WorkoutUnitItemProps) => {
   const { setActiveWorkoutUnitId } = useWorkoutUnits();
   const { removeWorkoutUnit } = useWorkoutUnits();
   const { clearSetsByWorkoutUnitId } = useSet();

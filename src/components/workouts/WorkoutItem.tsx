@@ -38,49 +38,57 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
     console.log("Deleted Workout:", id);
   };
 
-  const handlePressWorkout = () => {
+  const handlePressEditWorkout = () => {
     setActiveWorkoutId(id);
   };
 
   const styles = StyleSheet.create({
-    deleteButton: {
-      borderRadius: 12,
-      padding: 8,
+    iconContainer: {
+      backgroundColor: colors.inversePrimary,
+      borderRadius: 15,
+      overflow: "hidden",
+      padding: 5,
     },
     workoutContainer: {
       backgroundColor: colors.primaryContainer,
       marginBottom: 5,
       paddingHorizontal: 20,
-      paddingVertical: 10,
+      paddingVertical: 8,
     },
     workoutContent: {
       alignItems: "center",
       display: "flex",
       flexDirection: "row",
+      gap: 5,
       justifyContent: "space-between",
     },
     workoutText: {
       color: colors.primary,
+      flex: 1,
       fontSize: 18,
-      width: "80%",
+      marginRight: 10,
     },
   });
 
   return (
-    <TouchableRipple
-      style={styles.workoutContainer}
-      onPress={handlePressWorkout}
-    >
+    <TouchableRipple style={styles.workoutContainer}>
       <View style={styles.workoutContent}>
         <Text style={styles.workoutText} numberOfLines={1} ellipsizeMode="tail">
           {name}
         </Text>
         <TouchableRipple
           borderless
-          style={styles.deleteButton}
-          onPress={handleDeleteWorkout}
+          style={styles.iconContainer}
+          onPress={handlePressEditWorkout}
         >
-          <Icon name="delete" size={28} color={colors.error} />
+          <Icon name="play" size={28} color={colors.primary} />
+        </TouchableRipple>
+        <TouchableRipple
+          borderless
+          style={styles.iconContainer}
+          onPress={handlePressEditWorkout}
+        >
+          <Icon name="lead-pencil" size={28} color={colors.primary} />
         </TouchableRipple>
       </View>
     </TouchableRipple>

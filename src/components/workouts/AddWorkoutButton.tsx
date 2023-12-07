@@ -72,6 +72,9 @@ const AddWorkoutButton = () => {
       color: colors.primary,
       fontSize: 21,
     },
+    disabledButtonStyle: {
+      backgroundColor: colors.onSurfaceDisabled,
+    },
     fab: {
       bottom: 0,
       margin: 16,
@@ -113,8 +116,12 @@ const AddWorkoutButton = () => {
               activeUnderlineColor="rgba(0,0,0,0)"
             />
             <TouchableRipple
-              style={styles.buttonStyle}
+              style={[
+                styles.buttonStyle,
+                workoutName.length < 1 && styles.disabledButtonStyle,
+              ]}
               onPress={handleCreateWorkout}
+              disabled={workoutName.length < 1}
             >
               <Text style={styles.buttonText}>Save</Text>
             </TouchableRipple>
