@@ -63,12 +63,6 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     listPadding: {
       paddingVertical: 69,
     },
-    noSetsInfo: {
-      color: colors.primary,
-      fontSize: 18,
-      marginTop: 10,
-      textAlign: "center",
-    },
     screen: {
       minHeight: "100%",
     },

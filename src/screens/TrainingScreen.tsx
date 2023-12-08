@@ -20,8 +20,11 @@ export default function TrainingScreen() {
   });
   return (
     <View style={styles.screen}>
-      {activeTrainingId ? (
-        <Training />
+      {activeTrainingId && activeWorkoutId ? (
+        <Training
+          activeTrainingId={activeTrainingId}
+          activeWorkoutId={activeWorkoutId}
+        />
       ) : activeWorkoutUnitId ? (
         <SafeAreaView>
           <WorkoutUnit workoutUnitId={activeWorkoutUnitId} />

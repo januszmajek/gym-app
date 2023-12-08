@@ -31,6 +31,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
     };
     addTraining(newTraining);
     setActiveTrainingId(newTraining.id);
+    setActiveWorkoutId(workout.id);
     console.log("active training:", newTraining);
   };
 
