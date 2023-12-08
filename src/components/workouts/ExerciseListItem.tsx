@@ -1,8 +1,14 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import {
+  Text,
+  Button,
+  Divider,
+  TouchableRipple,
+  useTheme,
+} from "react-native-paper";
 import { Exercise } from "../../../types";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+// import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useSession from "../../hooks/stores/useSession";
 import useWorkout from "../../hooks/stores/useWorkout";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
@@ -50,53 +56,64 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
   };
 
   const styles = StyleSheet.create({
-    addContainer: {
-      backgroundColor: colors.inversePrimary,
-      borderRadius: 5,
-      padding: 5,
-    },
+    // addContainer: {
+    //   // backgroundColor: colors.inversePrimary,
+    // borderRadius: 5,
+    //   padding: 5,
+    // },
     container: {
       alignItems: "center",
       flexDirection: "row",
       justifyContent: "space-between",
       overflow: "hidden",
-      paddingRight: 15,
     },
     exerciseName: {
-      color: colors.tertiary,
-      fontSize: 16,
+      fontSize: 20,
     },
     item: {
-      paddingHorizontal: 10,
+      paddingHorizontal: 20,
       paddingVertical: 20,
       width: "75%",
     },
     muscle: {
       color: colors.primary,
       fontSize: 14,
+      fontWeight: "bold",
       textTransform: "capitalize",
+    },
+    addButtonText: { color: colors.primary, fontSize: 16 },
+    divider: {
+      marginHorizontal: 20,
     },
   });
 
   return (
-    <TouchableRipple
-      key={exercise.id}
-      style={styles.container}
-      onPress={() => setActiveExerciseDescriptionId(exercise.id)}
-    >
-      <>
-        <View style={styles.item}>
-          <Text style={styles.exerciseName}>{exercise.name}</Text>
-          <Text style={styles.muscle}>{exercise.primary_muscles}</Text>
-        </View>
-        <TouchableRipple
-          style={styles.addContainer}
-          onPress={() => handleAddWorkoutUnit(exercise.id)}
-        >
-          <Icon name={"plus"} size={32} color={colors.primary} />
-        </TouchableRipple>
-      </>
-    </TouchableRipple>
+    <>
+      <TouchableRipple
+        key={exercise.id}
+        style={styles.container}
+        onPress={() => setActiveExerciseDescriptionId(exercise.id)}
+      >
+        <>
+          <View style={styles.item}>
+            <Text style={styles.exerciseName}>{exercise.name}</Text>
+            <Text style={styles.muscle}>{exercise.primary_muscles}</Text>
+          </View>
+          <Button onPress={() => handleAddWorkoutUnit(exercise.id)}>
+            <Text style={styles.addButtonText} variant="bodyMedium">
+              Add
+            </Text>
+          </Button>
+          {/*<TouchableRipple*/}
+          {/*  style={styles.addContainer}*/}
+          {/*  onPress={() => handleAddWorkoutUnit(exercise.id)}*/}
+          {/*>*/}
+          {/*  <Icon name={"plus"} size={32} color={colors.primary} />*/}
+          {/*</TouchableRipple>*/}
+        </>
+      </TouchableRipple>
+      <Divider bold style={styles.divider} />
+    </>
   );
 };
 

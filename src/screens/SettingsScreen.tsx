@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import AppBar from "../components/AppBar";
 import OptionRadioButton from "../components/settings/OptionRadioButton";
 import OptionSwitchButton from "../components/settings/OptionSwitchButton";

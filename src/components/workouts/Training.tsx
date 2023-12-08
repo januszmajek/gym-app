@@ -38,7 +38,7 @@ const Training: React.FC<TrainingProps> = ({
   const [pauseDuration, setPauseDuration] = useState(0);
 
   useEffect(() => {
-    console.log("ACTIVE TRAINING CHANGED: ", activeTraining);
+    // console.log("ACTIVE TRAINING CHANGED: ", activeTraining);
   }, [activeTraining]);
 
   useEffect(() => {

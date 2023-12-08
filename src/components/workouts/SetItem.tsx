@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, TouchableRipple, useTheme, Card } from "react-native-paper";
 import useSettings from "../../hooks/stores/useSettings";
@@ -173,13 +173,12 @@ const SetItem: React.FC<SetItemProps> = ({
     },
     button: {
       borderRadius: 15,
-      padding: 6,
+      padding: 5,
     },
     buttonContainer: {
       alignItems: "center",
       display: "flex",
       justifyContent: "center",
-      width: 60,
     },
     buttonValue: {},
     card: {
@@ -197,15 +196,12 @@ const SetItem: React.FC<SetItemProps> = ({
       flexDirection: "row",
     },
     valueRowContainer: {
-      // backgroundColor: colors.error,
       display: "flex",
       flexDirection: "row",
-      gap: 5,
-      // paddingBottom: 4,
+      gap: 20,
     },
     valuesContainer: {
       alignItems: "center",
-      // backgroundColor: colors.errorContainer,
       display: "flex",
       flexGrow: 1,
       justifyContent: "space-between",
@@ -223,7 +219,11 @@ const SetItem: React.FC<SetItemProps> = ({
                 style={styles.button}
                 onPress={incrementWeight}
               >
-                <Icon color={colors.primary} name="plus" size={28} />
+                <Icon
+                  color={colors.primary}
+                  name="plus"
+                  size={Platform.OS === "ios" ? 25 : 28}
+                />
               </TouchableRipple>
               <View style={styles.buttonContainer}>
                 <Text>Weight</Text>
@@ -236,7 +236,11 @@ const SetItem: React.FC<SetItemProps> = ({
                 style={styles.button}
                 onPress={decrementWeight}
               >
-                <Icon color={colors.primary} name="minus" size={28} />
+                <Icon
+                  color={colors.primary}
+                  name="minus"
+                  size={Platform.OS === "ios" ? 25 : 28}
+                />
               </TouchableRipple>
             </View>
             <View style={styles.valueContainer}>
@@ -245,7 +249,11 @@ const SetItem: React.FC<SetItemProps> = ({
                 style={styles.button}
                 onPress={incrementRepetitions}
               >
-                <Icon color={colors.primary} name="plus" size={28} />
+                <Icon
+                  color={colors.primary}
+                  name="plus"
+                  size={Platform.OS === "ios" ? 25 : 28}
+                />
               </TouchableRipple>
               <View style={styles.buttonContainer}>
                 <Text>Reps</Text>
@@ -256,7 +264,11 @@ const SetItem: React.FC<SetItemProps> = ({
                 style={styles.button}
                 onPress={decrementRepetitions}
               >
-                <Icon color={colors.primary} name="minus" size={28} />
+                <Icon
+                  color={colors.primary}
+                  name="minus"
+                  size={Platform.OS === "ios" ? 25 : 28}
+                />
               </TouchableRipple>
             </View>
           </View>
@@ -267,7 +279,11 @@ const SetItem: React.FC<SetItemProps> = ({
                 style={styles.button}
                 onPress={incrementPause}
               >
-                <Icon color={colors.primary} name="plus" size={28} />
+                <Icon
+                  color={colors.primary}
+                  name="plus"
+                  size={Platform.OS === "ios" ? 25 : 28}
+                />
               </TouchableRipple>
               <View style={styles.buttonContainer}>
                 <Text>Pause</Text>
@@ -280,7 +296,11 @@ const SetItem: React.FC<SetItemProps> = ({
                 style={styles.button}
                 onPress={decrementPuase}
               >
-                <Icon color={colors.primary} name="minus" size={28} />
+                <Icon
+                  color={colors.primary}
+                  name="minus"
+                  size={Platform.OS === "ios" ? 25 : 28}
+                />
               </TouchableRipple>
             </View>
           </View>
@@ -291,14 +311,22 @@ const SetItem: React.FC<SetItemProps> = ({
             onPress={handleCopySet}
             style={styles.button}
           >
-            <Icon color={colors.primary} name="content-copy" size={32} />
+            <Icon
+              color={colors.primary}
+              name="content-copy"
+              size={Platform.OS === "ios" ? 27 : 32}
+            />
           </TouchableRipple>
           <TouchableRipple
             borderless
             onPress={handleDeleteSet}
             style={styles.button}
           >
-            <Icon color={colors.primary} name="delete" size={32} />
+            <Icon
+              color={colors.primary}
+              name="trash-can-outline"
+              size={Platform.OS === "ios" ? 27 : 32}
+            />
           </TouchableRipple>
         </View>
       </Card.Content>

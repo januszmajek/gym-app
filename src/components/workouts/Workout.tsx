@@ -1,6 +1,6 @@
 import * as React from "react";
 import useWorkout from "../../hooks/stores/useWorkout";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { useTheme } from "react-native-paper";
 import WorkoutUnitItem from "./WorkoutUnitItem";
 import { supabase } from "../../../supabase/supabase";
@@ -87,25 +87,27 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
   const listFooter = () => <View style={styles.listPadding} />;
 
   return name ? (
-    <View style={styles.screen}>
-      <WorkoutHeader
-        workoutId={workoutId}
-        workoutName={name}
-        handleRemoveWorkout={handleDeleteWorkout}
-      />
-      {workoutUnits.length > 0 ? (
-        <FlashList
-          data={workoutUnits}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          estimatedItemSize={18}
-          ListFooterComponent={listFooter}
+    <SafeAreaView>
+      <View style={styles.screen}>
+        <WorkoutHeader
+          workoutId={workoutId}
+          workoutName={name}
+          handleRemoveWorkout={handleDeleteWorkout}
         />
-      ) : (
-        <Text style={styles.noExercisesInfo}>No exercises added</Text>
-      )}
-      <AddWorkoutUnitButton />
-    </View>
+        {workoutUnits.length > 0 ? (
+          <FlashList
+            data={workoutUnits}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            estimatedItemSize={18}
+            ListFooterComponent={listFooter}
+          />
+        ) : (
+          <Text style={styles.noExercisesInfo}>No exercises added</Text>
+        )}
+        <AddWorkoutUnitButton />
+      </View>
+    </SafeAreaView>
   ) : (
     <Text style={styles.workoutError}>Error: Workout not found</Text>
   );

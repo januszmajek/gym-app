@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Card, Text, TouchableRipple, useTheme } from "react-native-paper";
 import { Workout } from "../../../types";
 import useWorkout from "../../hooks/stores/useWorkout";
@@ -74,14 +74,14 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
           style={styles.iconContainer}
           onPress={handlePressEditWorkout}
         >
-          <Icon name="lead-pencil" size={28} color={colors.primary} />
+          <Icon name="note-edit-outline" size={28} color={colors.primary} />
         </TouchableRipple>
         <TouchableRipple
           borderless
           style={styles.iconContainer}
           onPress={handlePressStartTraining}
         >
-          <Icon name="play" size={28} color={colors.primary} />
+          <Icon name="play-circle-outline" size={28} color={colors.primary} />
         </TouchableRipple>
       </Card.Content>
     </Card>

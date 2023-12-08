@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { supabase } from "../../../supabase/supabase";
 import { Exercise } from "../../../types";
 import {
+  Text,
   ActivityIndicator,
   Dialog,
   TextInput,
@@ -67,20 +68,12 @@ const ExerciseListDialog: React.FC<ExerciseListDialogProps> = ({
   }, [debouncedValue]);
 
   const styles = StyleSheet.create({
-    arrowContainer: {
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 15,
-      padding: 7,
-    },
     dialogContainer: {
-      display: "flex",
-      flexGrow: 1,
-      overflow: "hidden",
-      paddingHorizontal: 10,
+      height: "80%",
+      paddingHorizontal: 0,
     },
     dialogTitle: {
-      color: colors.primary,
-      fontSize: 21,
+      fontSize: 20,
     },
     dialogTitleContainer: {
       alignItems: "center",
@@ -89,27 +82,23 @@ const ExerciseListDialog: React.FC<ExerciseListDialogProps> = ({
       gap: 10,
       justifyContent: "flex-start",
       marginBottom: 15,
+      paddingHorizontal: 15,
     },
     exerciseListContainer: {
       display: "flex",
       flexGrow: 1,
-      overflow: "hidden",
+      width: "100%",
     },
     indicatorContainer: {
       paddingVertical: 220,
     },
     searchInput: {
-      backgroundColor: colors.primary,
-      borderColor: colors.secondary,
-      borderRadius: 5,
-      borderWidth: 1,
-      color: colors.primaryContainer,
       height: 40,
       marginBottom: 10,
-      paddingLeft: 10,
+      marginHorizontal: 15,
     },
-    searchInputContent: {
-      color: colors.primaryContainer,
+    outline: {
+      borderRadius: 4,
     },
   });
 
@@ -132,10 +121,10 @@ const ExerciseListDialog: React.FC<ExerciseListDialogProps> = ({
           style={styles.dialogContainer}
         >
           <View style={styles.dialogTitleContainer}>
-            <TouchableRipple style={styles.arrowContainer}>
+            <TouchableRipple>
               <Icon
                 name="arrow-left"
-                size={32}
+                size={28}
                 color={colors.secondary}
                 onPress={() => setActiveExerciseDescriptionId(undefined)}
               />
@@ -151,10 +140,10 @@ const ExerciseListDialog: React.FC<ExerciseListDialogProps> = ({
           style={styles.dialogContainer}
         >
           <View style={styles.dialogTitleContainer}>
-            <TouchableRipple style={styles.arrowContainer}>
+            <TouchableRipple>
               <Icon
                 name="arrow-left"
-                size={32}
+                size={28}
                 color={colors.secondary}
                 onPress={hideAddExercise}
               />
@@ -164,10 +153,10 @@ const ExerciseListDialog: React.FC<ExerciseListDialogProps> = ({
           <View style={styles.exerciseListContainer}>
             <TextInput
               style={styles.searchInput}
-              contentStyle={styles.searchInputContent}
-              placeholderTextColor={colors.primaryContainer}
-              placeholder="Search by exercise name..."
+              outlineStyle={styles.outline}
               onChangeText={(text) => setSearchText(text)}
+              mode="outlined"
+              placeholder="Search by exercise name..."
             />
             {loading ? (
               <View style={styles.indicatorContainer}>

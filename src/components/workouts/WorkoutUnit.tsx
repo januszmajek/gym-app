@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, SafeAreaView } from "react-native";
 import { FAB, useTheme } from "react-native-paper";
 import { Set } from "../../../types";
 import useSession from "../../hooks/stores/useSession";
@@ -73,7 +73,9 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
       };
       setSets([...sets, newSet]);
     }
+    console.log("Deleted Workout Unit:", workoutUnitId);
   };
+
   const styles = StyleSheet.create({
     fab: {
       bottom: 0,
@@ -107,19 +109,21 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
   const listFooter = () => <View style={styles.listPadding} />;
 
   return (
-    <View style={styles.screen}>
-      <WorkoutUnitHeader workoutUnitId={workoutUnitId} saveSets={saveSets} />
-      {sets.length > 0 && (
-        <FlashList
-          data={sets}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          estimatedItemSize={116}
-          ListFooterComponent={listFooter}
-        />
-      )}
-      <FAB icon="plus" style={styles.fab} onPress={handleAddSet} />
-    </View>
+    <SafeAreaView>
+      <View style={styles.screen}>
+        <WorkoutUnitHeader workoutUnitId={workoutUnitId} saveSets={saveSets} />
+        {sets.length > 0 && (
+          <FlashList
+            data={sets}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            estimatedItemSize={116}
+            ListFooterComponent={listFooter}
+          />
+        )}
+        <FAB icon="plus" style={styles.fab} onPress={handleAddSet} />
+      </View>
+    </SafeAreaView>
   );
 };
 
