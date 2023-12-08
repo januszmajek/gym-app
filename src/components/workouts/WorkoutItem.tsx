@@ -5,7 +5,7 @@ import { Workout } from "../../../types";
 import useWorkout from "../../hooks/stores/useWorkout";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useTraining from "../../hooks/stores/useTraining";
-import Training from "../../../types";
+import { Training } from "../../../types";
 import uuid from "react-native-uuid";
 
 interface WorkoutItemProps {
@@ -25,12 +25,13 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   const handlePressStartTraining = () => {
     const newTraining: Training = {
       id: uuid.v4() as string,
-      date_start: Date.now(),
+      date_start: new Date(Date.now()),
       name: name,
-      exercise_done: [],
+      exercises_done: [],
     };
     addTraining(newTraining);
-    setActiveTrainingId(newTraining);
+    setActiveTrainingId(newTraining.id);
+    console.log("active training:", newTraining);
   };
 
   const styles = StyleSheet.create({
