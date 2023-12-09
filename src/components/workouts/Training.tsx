@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import TrainingHeader from "./TrainingHeader";
 import useTrainingUnits from "../../hooks/stores/useTrainingUnits";
 import useSet from "../../hooks/stores/useSet";
@@ -70,8 +70,6 @@ const Training: React.FC<TrainingProps> = ({
       });
       clearTrainingUnits();
       clearTrainingSets();
-      setActiveTraining(undefined);
-      setActiveTrainingId(undefined);
       setActiveWorkoutId(undefined);
     }
   };
