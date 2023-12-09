@@ -1,26 +1,26 @@
 import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { List, useTheme } from "react-native-paper";
-import { Set, TrainingExercise } from "../../../types";
+import { TrainingExercise } from "../../../types";
 import TrainingSet from "./TrainingSet";
+import { Text } from "react-native-paper";
+import useTrainingSet from "../../hooks/stores/useTrainingSet";
 
 export interface TrainingUnitItemProps {
   id: string;
   name?: string;
-  sets?: Set[];
-  setsDone?: number;
-  handleCompleteExerciseSet: (set: TrainingExercise) => void;
+  handleCompleteExerciseSet: (setId: string, set: TrainingExercise) => void;
 }
 
 const TrainingUnitItem = ({
   id,
   name,
-  sets,
-  setsDone,
   handleCompleteExerciseSet,
 }: TrainingUnitItemProps) => {
   const { colors } = useTheme();
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(false);
+  const { getTrainingSetsByUnitId } = useTrainingSet();
+  const sets = getTrainingSetsByUnitId(id);
 
   const handlePress = () => setExpanded(!expanded);
   const styles = StyleSheet.create({
@@ -39,19 +39,20 @@ const TrainingUnitItem = ({
       title={name}
       expanded={expanded}
       onPress={handlePress}
-      description={`${setsDone}/${sets?.length} Done`}
+      description={`0/${sets?.length} Done`}
     >
       {sets &&
-        sets.map(
-          (set, i) =>
-            !set.completed && (
-              <TrainingSet
-                key={i}
-                handleCompleteExerciseSet={handleCompleteExerciseSet}
-                name={name || ""}
-                set={set}
-              />
-            ),
+        sets.map((set, i) =>
+          set.completed ? (
+            <Text key={i}>Set completed!</Text>
+          ) : (
+            <TrainingSet
+              set={set}
+              name={name || ""}
+              key={i}
+              handleCompleteExerciseSet={handleCompleteExerciseSet}
+            />
+          ),
         )}
     </List.Accordion>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TrainingHeader from "./TrainingHeader";
-import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import useTrainingUnits from "../../hooks/stores/useTrainingUnits";
 import useSet from "../../hooks/stores/useSet";
 import { StyleSheet, View, Text } from "react-native";
 import { FlashList } from "@shopify/flash-list";
@@ -10,6 +10,8 @@ import { useTheme } from "react-native-paper";
 import useTraining from "../../hooks/stores/useTraining";
 import TrainingUnitItem from "./TrainingUnitItem";
 import useWorkout from "../../hooks/stores/useWorkout";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import useTrainingSet from "../../hooks/stores/useTrainingSet";
 
 interface TrainingProps {
   activeTrainingId: string;
@@ -23,39 +25,65 @@ const Training: React.FC<TrainingProps> = ({
   const { getWorkoutUnitsByWorkoutId } = useWorkoutUnits();
   const { getSetsByWorkoutUnitId } = useSet();
   const { getExerciseById } = useExercise();
-  const { getTrainingById, setActiveTrainingId } = useTraining();
+  const {
+    activeTraining,
+    setActiveTraining,
+    setActiveTrainingId,
+    updateTraining,
+  } = useTraining();
   const { setActiveWorkoutId } = useWorkout();
+  const { trainingUnits, addTrainingUnits, clearTrainingUnits } =
+    useTrainingUnits();
   const { colors } = useTheme();
-  const [trainingUnits, setTrainingUnits] = useState<TrainingUnit[]>(
-    getWorkoutUnitsByWorkoutId(activeWorkoutId),
-  );
-  const [training, setTraining] = useState(getTrainingById(activeTrainingId));
+  const { clearTrainingSets, completeTrainingSet, addTrainingSets } =
+    useTrainingSet();
 
   useEffect(() => {
-    const updatedTrainingUnits = trainingUnits.map((trainingUnit) => ({
-      ...trainingUnit,
-      sets: getSetsByWorkoutUnitId(trainingUnit.id).map((set) => ({
-        ...set,
-        completed: false,
-      })),
-      completedSets: 0,
-      name: getExerciseById(trainingUnit.exercise_id)?.name,
-    }));
-    setTrainingUnits(updatedTrainingUnits);
+    const units = getWorkoutUnitsByWorkoutId(activeWorkoutId);
+    const filledTrainingUnits = units.map(
+      (trainingUnit: TrainingUnit) => (
+        addTrainingSets(
+          getSetsByWorkoutUnitId(trainingUnit.id).map((i) => ({
+            ...i,
+            completed: false,
+          })),
+        ),
+        {
+          ...trainingUnit,
+          name: getExerciseById(trainingUnit.exercise_id)?.name,
+        }
+      ),
+    );
+    addTrainingUnits(filledTrainingUnits);
   }, []);
 
-  const handleFinishTraining = () => {
-    console.log("Finish training:", training);
-    setActiveTrainingId(undefined);
-    setActiveWorkoutId(undefined);
+  const handleFinishTraining = async () => {
+    if (activeTraining) {
+      console.log("Finish training:", activeTraining);
+      updateTraining(activeTrainingId, {
+        ...activeTraining,
+        date_end: new Date(Date.now()),
+      });
+      clearTrainingUnits();
+      clearTrainingSets();
+      setActiveTraining(undefined);
+      setActiveTrainingId(undefined);
+      setActiveWorkoutId(undefined);
+    }
   };
 
-  const handleCompleteExerciseSet = (setId: string, set: TrainingExercise) => {
-    if (training) {
-      setTraining({
-        ...training,
-        exercises_done: [...training.exercises_done, set],
+  const handleCompleteExerciseSet = async (
+    setId: string,
+    set: TrainingExercise,
+  ) => {
+    if (activeTraining) {
+      console.log(set);
+      setActiveTraining({
+        ...activeTraining,
+        exercises_done: [...activeTraining.exercises_done, set],
       });
+      console.log(activeTraining);
+      completeTrainingSet(setId);
     }
   };
 
@@ -75,14 +103,21 @@ const Training: React.FC<TrainingProps> = ({
     <TrainingUnitItem
       id={item.id}
       name={item.name}
-      setsDone={item.completedSets}
-      sets={item.sets}
       handleCompleteExerciseSet={handleCompleteExerciseSet}
     />
   );
 
   return (
     <View style={styles.screen}>
+      <Text>
+        {activeTraining?.exercises_done.map((exercise) => (
+          <>
+            <Text>{exercise.name} </Text>
+            <Text>{exercise.weight}kg x</Text>
+            <Text>{exercise.repetitions}</Text>
+          </>
+        ))}
+      </Text>
       <TrainingHeader handleFinishTraining={handleFinishTraining} />
       {trainingUnits && trainingUnits.length > 0 ? (
         <FlashList
@@ -97,5 +132,4 @@ const Training: React.FC<TrainingProps> = ({
     </View>
   );
 };
-
 export default Training;

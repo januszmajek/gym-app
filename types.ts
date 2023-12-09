@@ -37,8 +37,10 @@ export interface WorkoutUnit {
 
 export interface TrainingUnit extends WorkoutUnit {
   name?: string;
-  completedSets?: number;
-  sets?: Set[];
+}
+
+export interface TrainingSet extends Set {
+  completed: boolean;
 }
 
 export interface Workout {

@@ -5,6 +5,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import TimerComponent from "./TimerComponent";
 import useWorkout from "../../hooks/stores/useWorkout";
 import useTraining from "../../hooks/stores/useTraining";
+import useTrainingSet from "../../hooks/stores/useTrainingSet";
+import useTrainingUnit from "../../hooks/stores/useTrainingUnits";
 
 interface TrainingHeaderProps {
   handleFinishTraining: () => void;
@@ -14,16 +16,20 @@ const TrainingHeader: React.FC<TrainingHeaderProps> = ({
   handleFinishTraining,
 }) => {
   const { colors } = useTheme();
+  const { clearTrainingSets } = useTrainingSet();
+  const { clearTrainingUnits } = useTrainingUnit();
   const { setActiveWorkoutId } = useWorkout();
   const { setActiveTrainingId, removeTraining, activeTrainingId } =
     useTraining();
 
   const handleStopTraining = () => {
-    setActiveTrainingId(undefined);
-    setActiveWorkoutId(undefined);
     if (activeTrainingId) {
       removeTraining(activeTrainingId);
     }
+    clearTrainingUnits();
+    clearTrainingSets();
+    setActiveTrainingId(undefined);
+    setActiveWorkoutId(undefined);
   };
 
   const styles = StyleSheet.create({

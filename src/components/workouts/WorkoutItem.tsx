@@ -16,7 +16,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   const { id, name } = workout;
   const { colors } = useTheme();
   const { setActiveWorkoutId } = useWorkout();
-  const { addTraining, setActiveTrainingId } = useTraining();
+  const { addTraining, setActiveTrainingId, setActiveTraining } = useTraining();
 
   const handlePressEditWorkout = () => {
     setActiveWorkoutId(id);
@@ -30,6 +30,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
       exercises_done: [],
     };
     addTraining(newTraining);
+    setActiveTraining(newTraining);
     setActiveTrainingId(newTraining.id);
     setActiveWorkoutId(workout.id);
     console.log("active training:", newTraining);

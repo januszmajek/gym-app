@@ -1,18 +1,19 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { Button, TouchableRipple, useTheme } from "react-native-paper";
 import useSettings from "../../hooks/stores/useSettings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Set, TrainingExercise } from "../../../types";
+import useTrainingSet from "../../hooks/stores/useTrainingSet";
 
 interface TrainingSetProps {
   set: Set;
-  handleCompleteExerciseSet: (set: TrainingExercise) => void;
   name: string;
+  handleCompleteExerciseSet: (setId: string, set: TrainingExercise) => void;
 }
 
 const TrainingSet: React.FC<TrainingSetProps> = ({
-  set: { weight: weightInit, repetitions: repetitionsInit, pause },
+  set: { id: setId, weight, repetitions },
   handleCompleteExerciseSet,
   name,
 }) => {
@@ -23,8 +24,7 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
     105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175,
     180, 185, 190, 195, 200,
   ];
-  const [weight, setWeight] = useState(weightInit);
-  const [repetitions, setRepetitions] = useState(repetitionsInit);
+  const { updateWeight, updateRepetitions } = useTrainingSet();
 
   const { colors } = useTheme();
   const { weightUnit } = useSettings();
@@ -32,8 +32,8 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
   const incrementWeight = () => {
     const currentIndex = weightValues.indexOf(weight);
 
-    if (currentIndex < weightValues.length - 1) {
-      setWeight(weightValues[currentIndex + 1]);
+    if (currentIndex < weightValues.length) {
+      updateWeight(setId, weightValues[currentIndex + 1]);
     }
   };
 
@@ -41,28 +41,19 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
     const currentIndex = weightValues.indexOf(weight);
 
     if (currentIndex > 0) {
-      setWeight(weightValues[currentIndex - 1]);
+      updateWeight(setId, weightValues[currentIndex - 1]);
     }
   };
 
   const incrementRepetitions = () => {
-    setRepetitions(repetitions + 1);
+    updateRepetitions(setId, repetitions + 1);
   };
 
   const decrementRepetitions = () => {
     if (repetitions > 0) {
-      setRepetitions(repetitions - 1);
+      updateRepetitions(setId, repetitions - 1);
     }
   };
-
-  const handleCompletePress = (
-    weight: number,
-    repetitions: number,
-    name: string,
-  ) => {
-    handleCompleteExerciseSet({ weight, repetitions, name });
-  };
-
   const styles = StyleSheet.create({
     button: {
       borderRadius: 15,
@@ -150,7 +141,15 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
           </View>
         </View>
       </View>
-      <Button onPress={() => handleCompletePress(weight, repetitions, name)}>
+      <Button
+        onPress={() =>
+          handleCompleteExerciseSet(setId, {
+            weight,
+            repetitions,
+            name,
+          })
+        }
+      >
         <Text>Complete</Text>
       </Button>
     </View>

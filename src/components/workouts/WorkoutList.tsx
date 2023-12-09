@@ -11,14 +11,14 @@ import AddWorkoutButton from "./AddWorkoutButton";
 
 const WorkoutList = () => {
   const { workouts } = useWorkout();
-  const { workoutUnits } = useWorkoutUnits();
-  const { sets } = useSet();
+  // const { workoutUnits } = useWorkoutUnits();
+  // const { sets } = useSet();
 
-  useEffect(() => {
-    console.log("Workouts:", workouts);
-    console.log("WorkoutUnits:", workoutUnits);
-    console.log("Sets:", sets);
-  });
+  // useEffect(() => {
+  //   console.log("Workouts:", workouts);
+  //   console.log("WorkoutUnits:", workoutUnits);
+  //   console.log("Sets:", sets);
+  // });
 
   const styles = StyleSheet.create({
     listPadding: {
