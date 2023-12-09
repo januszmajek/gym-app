@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { List, useTheme } from "react-native-paper";
-import { TrainingExercise } from "../../../types";
+import { Training, TrainingExercise } from "../../../types";
 import TrainingSet from "./TrainingSet";
 import { Text } from "react-native-paper";
 import useTrainingSet from "../../hooks/stores/useTrainingSet";
@@ -9,7 +9,11 @@ import useTrainingSet from "../../hooks/stores/useTrainingSet";
 export interface TrainingUnitItemProps {
   id: string;
   name?: string;
-  handleCompleteExerciseSet: (setId: string, set: TrainingExercise) => void;
+  handleCompleteExerciseSet: (
+    setId: string,
+    set: TrainingExercise,
+    activeTraining: Training | undefined,
+  ) => void;
 }
 
 const TrainingUnitItem = ({
@@ -39,7 +43,9 @@ const TrainingUnitItem = ({
       title={name}
       expanded={expanded}
       onPress={handlePress}
-      description={`0/${sets?.length} Done`}
+      description={`${
+        sets.filter((set) => set.completed === true).length
+      }/${sets?.length} Done`}
     >
       {sets &&
         sets.map((set, i) =>

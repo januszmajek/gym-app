@@ -12,6 +12,7 @@ import TrainingUnitItem from "./TrainingUnitItem";
 import useWorkout from "../../hooks/stores/useWorkout";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import useTrainingSet from "../../hooks/stores/useTrainingSet";
+import { Training as ITraining } from "../../../types";
 
 interface TrainingProps {
   activeTrainingId: string;
@@ -39,6 +40,10 @@ const Training: React.FC<TrainingProps> = ({
     useTrainingSet();
 
   useEffect(() => {
+    console.log("ACTIVE TRAINING CHANGED: ", activeTraining);
+  }, [activeTraining]);
+
+  useEffect(() => {
     const units = getWorkoutUnitsByWorkoutId(activeWorkoutId);
     const filledTrainingUnits = units.map(
       (trainingUnit: TrainingUnit) => (
@@ -59,7 +64,6 @@ const Training: React.FC<TrainingProps> = ({
 
   const handleFinishTraining = async () => {
     if (activeTraining) {
-      console.log("Finish training:", activeTraining);
       updateTraining(activeTrainingId, {
         ...activeTraining,
         date_end: new Date(Date.now()),
@@ -75,14 +79,13 @@ const Training: React.FC<TrainingProps> = ({
   const handleCompleteExerciseSet = async (
     setId: string,
     set: TrainingExercise,
+    activeTraining: ITraining | undefined,
   ) => {
     if (activeTraining) {
-      console.log(set);
       setActiveTraining({
         ...activeTraining,
         exercises_done: [...activeTraining.exercises_done, set],
       });
-      console.log(activeTraining);
       completeTrainingSet(setId);
     }
   };
@@ -109,15 +112,6 @@ const Training: React.FC<TrainingProps> = ({
 
   return (
     <View style={styles.screen}>
-      <Text>
-        {activeTraining?.exercises_done.map((exercise) => (
-          <>
-            <Text>{exercise.name} </Text>
-            <Text>{exercise.weight}kg x</Text>
-            <Text>{exercise.repetitions}</Text>
-          </>
-        ))}
-      </Text>
       <TrainingHeader handleFinishTraining={handleFinishTraining} />
       {trainingUnits && trainingUnits.length > 0 ? (
         <FlashList

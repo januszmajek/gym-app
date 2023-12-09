@@ -18,10 +18,17 @@ const useTraining = create<TrainingStore>((set, get) => ({
     trainings: [],
     activeTraining: undefined,
     activeTrainingId: undefined,
-    setActiveTraining: (training) =>
+    setActiveTraining: (training) => {
+        console.log(
+            "ZUSTAND: setActiveTraining:",
+            get().activeTraining,
+            "---->",
+            training,
+        );
         set(() => ({
             activeTraining: training,
-        })),
+        }));
+    },
     addTraining: (training) =>
         set((state) => ({
             trainings: [...state.trainings, training],

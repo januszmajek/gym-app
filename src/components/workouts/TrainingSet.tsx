@@ -3,13 +3,18 @@ import React from "react";
 import { Button, TouchableRipple, useTheme } from "react-native-paper";
 import useSettings from "../../hooks/stores/useSettings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Set, TrainingExercise } from "../../../types";
+import { Set, Training, TrainingExercise } from "../../../types";
 import useTrainingSet from "../../hooks/stores/useTrainingSet";
+import useTraining from "../../hooks/stores/useTraining";
 
 interface TrainingSetProps {
   set: Set;
   name: string;
-  handleCompleteExerciseSet: (setId: string, set: TrainingExercise) => void;
+  handleCompleteExerciseSet: (
+    setId: string,
+    set: TrainingExercise,
+    activeTraining: Training,
+  ) => void;
 }
 
 const TrainingSet: React.FC<TrainingSetProps> = ({
@@ -25,7 +30,7 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
     180, 185, 190, 195, 200,
   ];
   const { updateWeight, updateRepetitions } = useTrainingSet();
-
+  const { activeTraining } = useTraining();
   const { colors } = useTheme();
   const { weightUnit } = useSettings();
 
@@ -143,11 +148,15 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
       </View>
       <Button
         onPress={() =>
-          handleCompleteExerciseSet(setId, {
-            weight,
-            repetitions,
-            name,
-          })
+          handleCompleteExerciseSet(
+            setId,
+            {
+              weight,
+              repetitions,
+              name,
+            },
+            activeTraining,
+          )
         }
       >
         <Text>Complete</Text>
