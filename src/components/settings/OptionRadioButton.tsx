@@ -1,6 +1,12 @@
 import * as React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { Dialog, Portal, TouchableRipple } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import {
+  Card,
+  Text,
+  Dialog,
+  Portal,
+  TouchableRipple,
+} from "react-native-paper";
 import Radio from "./Radio";
 import useThemeStore from "../../hooks/stores/useThemeStore";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -56,33 +62,32 @@ const OptionRadioButton = ({
   const hideDialog = () => setVisible(false);
 
   const styles = StyleSheet.create({
-    bigLabel: { color: colors.primary, fontSize: 20 },
     buttonStyle: {
       alignItems: "center",
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 0,
       display: "flex",
       flexDirection: "row",
       gap: 15,
       paddingHorizontal: 10,
-      paddingVertical: 8,
+      paddingVertical: 12,
     },
-
+    cardStyle: { marginHorizontal: 10, marginVertical: 5 },
     dialogContainer: { paddingHorizontal: 10 },
-    smallLabel: { color: colors.primary, fontSize: 16 },
+    ripple: {
+      borderRadius: 10,
+    },
     title: { fontSize: 20, textAlign: "center" },
   });
 
   return (
-    <View>
-      <TouchableRipple onPress={showDialog} style={styles.buttonStyle}>
-        <>
-          <Icon name={iconName} size={32} color={colors.primary} />
+    <Card style={styles.cardStyle}>
+      <TouchableRipple borderless style={styles.ripple} onPress={showDialog}>
+        <Card.Content style={styles.buttonStyle}>
+          <Icon name={iconName} size={32} />
           <View>
-            <Text style={styles.bigLabel}>{label}</Text>
-            <Text style={styles.smallLabel}>{value}</Text>
+            <Text variant="bodyLarge">{label}</Text>
+            <Text variant="bodyMedium">{value}</Text>
           </View>
-        </>
+        </Card.Content>
       </TouchableRipple>
       <Portal>
         <Dialog
@@ -99,7 +104,7 @@ const OptionRadioButton = ({
           />
         </Dialog>
       </Portal>
-    </View>
+    </Card>
   );
 };
 
