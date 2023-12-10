@@ -1,24 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
 import AppBar from "../AppBar";
 import useWorkout from "../../hooks/stores/useWorkout";
 import WorkoutItem from "./WorkoutItem";
-import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
-import useSet from "../../hooks/stores/useSet";
 import { Workout } from "../../../types";
 import { FlashList } from "@shopify/flash-list";
 import AddWorkoutButton from "./AddWorkoutButton";
 
 const WorkoutList = () => {
   const { workouts } = useWorkout();
-  // const { workoutUnits } = useWorkoutUnits();
-  // const { sets } = useSet();
-
-  // useEffect(() => {
-  //   console.log("Workouts:", workouts);
-  //   console.log("WorkoutUnits:", workoutUnits);
-  //   console.log("Sets:", sets);
-  // });
 
   const styles = StyleSheet.create({
     listPadding: {

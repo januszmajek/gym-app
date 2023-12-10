@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
-import React, { useEffect } from "react";
-import { List, useTheme } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import React from "react";
+import { Card, Divider, List, useTheme } from "react-native-paper";
 import { Training, TrainingExercise } from "../../../types";
 import TrainingSet from "./TrainingSet";
 import { Text } from "react-native-paper";
@@ -28,39 +28,57 @@ const TrainingUnitItem = ({
 
   const handlePress = () => setExpanded(!expanded);
   const styles = StyleSheet.create({
-    unitTitle: {
-      padding: 0,
+    cardContainer: {
+      marginHorizontal: 12,
+      marginVertical: 8,
+    },
+    setCompletedContainer: {},
+    setCompletedText: {
+      paddingVertical: 8,
+      textAlign: "center",
     },
     unitTitleContainer: {
-      backgroundColor: colors.inversePrimary,
+      backgroundColor: colors.elevation.level1,
+      borderRadius: 5,
     },
   });
 
   return (
-    <List.Accordion
-      style={styles.unitTitleContainer}
-      titleStyle={styles.unitTitle}
-      title={name}
-      expanded={expanded}
-      onPress={handlePress}
-      description={`${
-        sets.filter((set) => set.completed === true).length
-      }/${sets?.length} Done`}
-    >
-      {sets &&
-        sets.map((set, i) =>
-          set.completed ? (
-            <Text key={i}>Set completed!</Text>
-          ) : (
-            <TrainingSet
-              set={set}
-              name={name || ""}
-              key={i}
-              handleCompleteExerciseSet={handleCompleteExerciseSet}
-            />
-          ),
-        )}
-    </List.Accordion>
+    <Card style={styles.cardContainer}>
+      <Card.Content>
+        <List.Accordion
+          style={styles.unitTitleContainer}
+          title={name}
+          descriptionStyle={{ color: colors.primary }}
+          expanded={expanded}
+          onPress={handlePress}
+          description={`${
+            sets.filter((set) => set.completed === true).length
+          }/${sets?.length} Done`}
+        >
+          {sets &&
+            sets.map((set, i) =>
+              set.completed ? (
+                <View key={i} style={styles.setCompletedContainer}>
+                  <Text variant="bodyLarge" style={styles.setCompletedText}>
+                    Set completed!
+                  </Text>
+                  <Divider />
+                </View>
+              ) : (
+                <TrainingSet
+                  set={set}
+                  name={name || ""}
+                  key={i}
+                  index={i}
+                  setsLength={sets.length}
+                  handleCompleteExerciseSet={handleCompleteExerciseSet}
+                />
+              ),
+            )}
+        </List.Accordion>
+      </Card.Content>
+    </Card>
   );
 };
 

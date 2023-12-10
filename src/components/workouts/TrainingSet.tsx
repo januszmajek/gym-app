@@ -1,6 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React from "react";
-import { Button, TouchableRipple, useTheme } from "react-native-paper";
+import {
+  Button,
+  Divider,
+  TouchableRipple,
+  useTheme,
+  Text,
+} from "react-native-paper";
 import useSettings from "../../hooks/stores/useSettings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Set, Training, TrainingExercise } from "../../../types";
@@ -13,14 +19,18 @@ interface TrainingSetProps {
   handleCompleteExerciseSet: (
     setId: string,
     set: TrainingExercise,
-    activeTraining: Training,
+    activeTraining: Training | undefined,
   ) => void;
+  index: number;
+  setsLength: number;
 }
 
 const TrainingSet: React.FC<TrainingSetProps> = ({
   set: { id: setId, weight, repetitions },
   handleCompleteExerciseSet,
   name,
+  index,
+  setsLength,
 }) => {
   const weightValues = [
     0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5,
@@ -70,21 +80,16 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
       justifyContent: "center",
       width: 60,
     },
-    buttonLabel: {
+    completeText: {
       color: colors.primary,
     },
-    buttonValue: {},
-    buttonsContainer: {
-      display: "flex",
-      width: "80%",
-    },
-    firstRowContainer: {
-      display: "flex",
-      flexDirection: "row",
-      paddingBottom: 4,
+    dividerContainer: {
+      marginLeft: "auto",
+      marginRight: "auto",
+      width: "92%",
     },
     setContainer: {
-      backgroundColor: colors.primaryContainer,
+      alignItems: "center",
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
@@ -99,69 +104,74 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
   });
 
   return (
-    <View style={styles.setContainer}>
-      <View style={styles.buttonsContainer}>
-        <View style={styles.firstRowContainer}>
-          <View style={styles.valueContainer}>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={incrementWeight}
-            >
-              <Icon color={colors.primary} name="plus" size={28} />
-            </TouchableRipple>
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonLabel}>Weight</Text>
-              <Text style={styles.buttonValue}>
-                {weight} {weightUnit === "Kilogram" ? "kg" : "lbs"}
-              </Text>
-            </View>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={decrementWeight}
-            >
-              <Icon color={colors.primary} name="minus" size={28} />
-            </TouchableRipple>
+    <>
+      <View style={styles.setContainer}>
+        <View style={styles.valueContainer}>
+          <TouchableRipple
+            borderless
+            style={styles.button}
+            onPress={incrementWeight}
+          >
+            <Icon color={colors.primary} name="plus" size={28} />
+          </TouchableRipple>
+          <View style={styles.buttonContainer}>
+            <Text>Weight</Text>
+            <Text>
+              {weight} {weightUnit === "Kilogram" ? "kg" : "lbs"}
+            </Text>
           </View>
-          <View style={styles.valueContainer}>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={incrementRepetitions}
-            >
-              <Icon color={colors.primary} name="plus" size={28} />
-            </TouchableRipple>
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonLabel}>Reps</Text>
-              <Text style={styles.buttonValue}>{repetitions}</Text>
-            </View>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={decrementRepetitions}
-            >
-              <Icon color={colors.primary} name="minus" size={28} />
-            </TouchableRipple>
-          </View>
+          <TouchableRipple
+            borderless
+            style={styles.button}
+            onPress={decrementWeight}
+          >
+            <Icon color={colors.primary} name="minus" size={28} />
+          </TouchableRipple>
         </View>
+        <View style={styles.valueContainer}>
+          <TouchableRipple
+            borderless
+            style={styles.button}
+            onPress={incrementRepetitions}
+          >
+            <Icon color={colors.primary} name="plus" size={28} />
+          </TouchableRipple>
+          <View style={styles.buttonContainer}>
+            <Text>Reps</Text>
+            <Text>{repetitions}</Text>
+          </View>
+          <TouchableRipple
+            borderless
+            style={styles.button}
+            onPress={decrementRepetitions}
+          >
+            <Icon color={colors.primary} name="minus" size={28} />
+          </TouchableRipple>
+        </View>
+        <Button
+          onPress={() =>
+            handleCompleteExerciseSet(
+              setId,
+              {
+                weight,
+                repetitions,
+                name,
+              },
+              activeTraining,
+            )
+          }
+        >
+          <Text variant="labelLarge" style={styles.completeText}>
+            Complete
+          </Text>
+        </Button>
       </View>
-      <Button
-        onPress={() =>
-          handleCompleteExerciseSet(
-            setId,
-            {
-              weight,
-              repetitions,
-              name,
-            },
-            activeTraining,
-          )
-        }
-      >
-        <Text>Complete</Text>
-      </Button>
-    </View>
+      {index + 1 != setsLength && (
+        <View style={styles.dividerContainer}>
+          <Divider />
+        </View>
+      )}
+    </>
   );
 };
 export default TrainingSet;
