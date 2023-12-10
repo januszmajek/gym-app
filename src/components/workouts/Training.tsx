@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import TrainingHeader from "./TrainingHeader";
 import useTrainingUnits from "../../hooks/stores/useTrainingUnits";
 import useSet from "../../hooks/stores/useSet";
@@ -13,6 +13,7 @@ import useWorkout from "../../hooks/stores/useWorkout";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import useTrainingSet from "../../hooks/stores/useTrainingSet";
 import { Training as ITraining } from "../../../types";
+import CountdownModal from "./CountdownModal";
 
 interface TrainingProps {
   activeTrainingId: string;
@@ -26,18 +27,15 @@ const Training: React.FC<TrainingProps> = ({
   const { getWorkoutUnitsByWorkoutId } = useWorkoutUnits();
   const { getSetsByWorkoutUnitId } = useSet();
   const { getExerciseById } = useExercise();
-  const {
-    activeTraining,
-    setActiveTraining,
-    setActiveTrainingId,
-    updateTraining,
-  } = useTraining();
+  const { activeTraining, setActiveTraining, updateTraining } = useTraining();
   const { setActiveWorkoutId } = useWorkout();
   const { trainingUnits, addTrainingUnits, clearTrainingUnits } =
     useTrainingUnits();
   const { colors } = useTheme();
   const { clearTrainingSets, completeTrainingSet, addTrainingSets } =
     useTrainingSet();
+  const [countdownVisibility, setCountdownVisibility] = useState(false);
+  const [pauseDuration, setPauseDuration] = useState(0);
 
   useEffect(() => {
     console.log("ACTIVE TRAINING CHANGED: ", activeTraining);
@@ -75,10 +73,13 @@ const Training: React.FC<TrainingProps> = ({
   };
 
   const handleCompleteExerciseSet = async (
-    setId: string,
-    set: TrainingExercise,
     activeTraining: ITraining | undefined,
+    setId: string,
+    pause: number,
+    set: TrainingExercise,
   ) => {
+    setPauseDuration(pause);
+    setCountdownVisibility(true);
     if (activeTraining) {
       setActiveTraining({
         ...activeTraining,
@@ -120,6 +121,15 @@ const Training: React.FC<TrainingProps> = ({
         />
       ) : (
         <Text style={styles.noExercisesInfo}>No exercises added</Text>
+      )}
+      {countdownVisibility && (
+        <CountdownModal
+          visible={countdownVisibility}
+          duration={pauseDuration}
+          onClose={() => {
+            setCountdownVisibility(false);
+          }}
+        />
       )}
     </View>
   );

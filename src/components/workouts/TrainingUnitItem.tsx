@@ -10,9 +10,10 @@ export interface TrainingUnitItemProps {
   id: string;
   name?: string;
   handleCompleteExerciseSet: (
-    setId: string,
-    set: TrainingExercise,
     activeTraining: Training | undefined,
+    setId: string,
+    pause: number,
+    set: TrainingExercise,
   ) => void;
 }
 
@@ -63,7 +64,7 @@ const TrainingUnitItem = ({
                   <Text variant="bodyLarge" style={styles.setCompletedText}>
                     Set completed!
                   </Text>
-                  <Divider />
+                  {i + 1 !== sets.length && <Divider />}
                 </View>
               ) : (
                 <TrainingSet

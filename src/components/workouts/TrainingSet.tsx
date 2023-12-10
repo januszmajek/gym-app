@@ -13,20 +13,21 @@ import { Set, Training, TrainingExercise } from "../../../types";
 import useTrainingSet from "../../hooks/stores/useTrainingSet";
 import useTraining from "../../hooks/stores/useTraining";
 
-interface TrainingSetProps {
+export interface TrainingSetProps {
   set: Set;
   name: string;
   handleCompleteExerciseSet: (
-    setId: string,
-    set: TrainingExercise,
     activeTraining: Training | undefined,
+    setId: string,
+    pause: number,
+    set: TrainingExercise,
   ) => void;
   index: number;
   setsLength: number;
 }
 
 const TrainingSet: React.FC<TrainingSetProps> = ({
-  set: { id: setId, weight, repetitions },
+  set: { id: setId, weight, repetitions, pause },
   handleCompleteExerciseSet,
   name,
   index,
@@ -69,6 +70,7 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
       updateRepetitions(setId, repetitions - 1);
     }
   };
+
   const styles = StyleSheet.create({
     button: {
       borderRadius: 15,
@@ -150,15 +152,11 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
         </View>
         <Button
           onPress={() =>
-            handleCompleteExerciseSet(
-              setId,
-              {
-                weight,
-                repetitions,
-                name,
-              },
-              activeTraining,
-            )
+            handleCompleteExerciseSet(activeTraining, setId, pause, {
+              weight,
+              repetitions,
+              name,
+            })
           }
         >
           <Text variant="labelLarge" style={styles.completeText}>
@@ -166,7 +164,7 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
           </Text>
         </Button>
       </View>
-      {index + 1 != setsLength && (
+      {index + 1 !== setsLength && (
         <View style={styles.dividerContainer}>
           <Divider />
         </View>
