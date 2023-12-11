@@ -78,8 +78,10 @@ const Training: React.FC<TrainingProps> = ({
     pause: number,
     set: TrainingExercise,
   ) => {
-    setPauseDuration(pause);
-    setCountdownVisibility(true);
+    if (pause > 0) {
+      setPauseDuration(pause);
+      setCountdownVisibility(true);
+    }
     if (activeTraining) {
       setActiveTraining({
         ...activeTraining,

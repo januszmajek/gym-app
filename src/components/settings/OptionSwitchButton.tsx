@@ -19,6 +19,7 @@ const OptionSwitchButton = ({
   const { vibrate, switchVibrate, keepScreenOn, switchKeepScreenOn } =
     useSettings();
 
+  const { colors } = useTheme();
   const store: () => [boolean, () => void] = () => {
     if (type === "vibrate") {
       return [vibrate, switchVibrate];
@@ -51,7 +52,7 @@ const OptionSwitchButton = ({
       <TouchableRipple style={styles.ripple} onPress={onToggleSwitch}>
         <Card.Content style={styles.buttonStyle}>
           <>
-            <Icon name={iconName} size={32} />
+            <Icon name={iconName} size={32} color={colors.primary} />
             <Text variant="bodyLarge">{label}</Text>
             <Switch
               value={value}

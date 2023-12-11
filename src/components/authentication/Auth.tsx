@@ -22,7 +22,7 @@ export default function Auth() {
 
     if (error) Alert.alert(error.message);
     if (session) {
-      Alert.alert("setting session");
+      // Alert.alert("setting session");
       setSession(session);
     }
     setLoading(false);

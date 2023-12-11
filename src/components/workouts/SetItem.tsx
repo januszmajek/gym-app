@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { Text, TouchableRipple, useTheme, Card } from "react-native-paper";
 import useSettings from "../../hooks/stores/useSettings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Set } from "../../../types";
@@ -166,13 +166,10 @@ const SetItem: React.FC<SetItemProps> = ({
   const styles = StyleSheet.create({
     actionsContainer: {
       alignItems: "center",
-      borderLeftColor: colors.elevation.level1,
-      borderLeftWidth: 1,
-      borderStyle: "dashed",
       display: "flex",
       flexDirection: "column",
+      gap: 10,
       justifyContent: "center",
-      width: "15%",
     },
     button: {
       borderRadius: 15,
@@ -184,131 +181,128 @@ const SetItem: React.FC<SetItemProps> = ({
       justifyContent: "center",
       width: 60,
     },
-    buttonLabel: {
-      color: colors.primary,
-    },
     buttonValue: {},
-    buttonsContainer: {
-      display: "flex",
-      width: "80%",
-    },
-    firstRowContainer: {
-      display: "flex",
-      flexDirection: "row",
-      paddingBottom: 4,
-    },
-    secondRowContainer: {
-      alignItems: "center",
-      borderStyle: "dashed",
-      borderTopColor: colors.elevation.level1,
-      borderTopWidth: 1,
-      display: "flex",
-      paddingTop: 3,
+    card: {
+      marginBottom: 10,
+      marginHorizontal: 10,
+      marginTop: 5,
     },
     setContainer: {
-      backgroundColor: colors.primaryContainer,
       display: "flex",
       flexDirection: "row",
-      justifyContent: "space-between",
-      marginBottom: 2,
-      padding: 5,
     },
     valueContainer: {
       alignItems: "center",
       display: "flex",
       flexDirection: "row",
     },
+    valueRowContainer: {
+      // backgroundColor: colors.error,
+      display: "flex",
+      flexDirection: "row",
+      gap: 5,
+      // paddingBottom: 4,
+    },
+    valuesContainer: {
+      alignItems: "center",
+      // backgroundColor: colors.errorContainer,
+      display: "flex",
+      flexGrow: 1,
+      justifyContent: "space-between",
+    },
   });
 
   return (
-    <View style={styles.setContainer}>
-      <View style={styles.buttonsContainer}>
-        <View style={styles.firstRowContainer}>
-          <View style={styles.valueContainer}>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={incrementWeight}
-            >
-              <Icon color={colors.primary} name="plus" size={28} />
-            </TouchableRipple>
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonLabel}>Weight</Text>
-              <Text style={styles.buttonValue}>
-                {weight} {weightUnit === "Kilogram" ? "kg" : "lbs"}
-              </Text>
+    <Card style={styles.card}>
+      <Card.Content style={styles.setContainer}>
+        <View style={styles.valuesContainer}>
+          <View style={styles.valueRowContainer}>
+            <View style={styles.valueContainer}>
+              <TouchableRipple
+                borderless
+                style={styles.button}
+                onPress={incrementWeight}
+              >
+                <Icon color={colors.primary} name="plus" size={28} />
+              </TouchableRipple>
+              <View style={styles.buttonContainer}>
+                <Text>Weight</Text>
+                <Text style={styles.buttonValue}>
+                  {weight} {weightUnit === "Kilogram" ? "kg" : "lbs"}
+                </Text>
+              </View>
+              <TouchableRipple
+                borderless
+                style={styles.button}
+                onPress={decrementWeight}
+              >
+                <Icon color={colors.primary} name="minus" size={28} />
+              </TouchableRipple>
             </View>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={decrementWeight}
-            >
-              <Icon color={colors.primary} name="minus" size={28} />
-            </TouchableRipple>
+            <View style={styles.valueContainer}>
+              <TouchableRipple
+                borderless
+                style={styles.button}
+                onPress={incrementRepetitions}
+              >
+                <Icon color={colors.primary} name="plus" size={28} />
+              </TouchableRipple>
+              <View style={styles.buttonContainer}>
+                <Text>Reps</Text>
+                <Text style={styles.buttonValue}>{repetitions}</Text>
+              </View>
+              <TouchableRipple
+                borderless
+                style={styles.button}
+                onPress={decrementRepetitions}
+              >
+                <Icon color={colors.primary} name="minus" size={28} />
+              </TouchableRipple>
+            </View>
           </View>
-          <View style={styles.valueContainer}>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={incrementRepetitions}
-            >
-              <Icon color={colors.primary} name="plus" size={28} />
-            </TouchableRipple>
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonLabel}>Reps</Text>
-              <Text style={styles.buttonValue}>{repetitions}</Text>
+          <View style={styles.valueRowContainer}>
+            <View style={styles.valueContainer}>
+              <TouchableRipple
+                borderless
+                style={styles.button}
+                onPress={incrementPause}
+              >
+                <Icon color={colors.primary} name="plus" size={28} />
+              </TouchableRipple>
+              <View style={styles.buttonContainer}>
+                <Text>Pause</Text>
+                <Text style={styles.buttonValue}>
+                  {minutes}:{seconds}
+                </Text>
+              </View>
+              <TouchableRipple
+                borderless
+                style={styles.button}
+                onPress={decrementPuase}
+              >
+                <Icon color={colors.primary} name="minus" size={28} />
+              </TouchableRipple>
             </View>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={decrementRepetitions}
-            >
-              <Icon color={colors.primary} name="minus" size={28} />
-            </TouchableRipple>
           </View>
         </View>
-        <View style={styles.secondRowContainer}>
-          <View style={styles.valueContainer}>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={incrementPause}
-            >
-              <Icon color={colors.primary} name="plus" size={28} />
-            </TouchableRipple>
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonLabel}>Pause</Text>
-              <Text style={styles.buttonValue}>
-                {minutes}:{seconds}
-              </Text>
-            </View>
-            <TouchableRipple
-              borderless
-              style={styles.button}
-              onPress={decrementPuase}
-            >
-              <Icon color={colors.primary} name="minus" size={28} />
-            </TouchableRipple>
-          </View>
+        <View style={styles.actionsContainer}>
+          <TouchableRipple
+            borderless
+            onPress={handleCopySet}
+            style={styles.button}
+          >
+            <Icon color={colors.primary} name="content-copy" size={32} />
+          </TouchableRipple>
+          <TouchableRipple
+            borderless
+            onPress={handleDeleteSet}
+            style={styles.button}
+          >
+            <Icon color={colors.primary} name="delete" size={32} />
+          </TouchableRipple>
         </View>
-      </View>
-      <View style={styles.actionsContainer}>
-        <TouchableRipple
-          borderless
-          onPress={handleCopySet}
-          style={styles.button}
-        >
-          <Icon color={colors.primary} name="content-copy" size={28} />
-        </TouchableRipple>
-        <TouchableRipple
-          borderless
-          onPress={handleDeleteSet}
-          style={styles.button}
-        >
-          <Icon color={colors.error} name="delete" size={28} />
-        </TouchableRipple>
-      </View>
-    </View>
+      </Card.Content>
+    </Card>
   );
 };
 export default SetItem;

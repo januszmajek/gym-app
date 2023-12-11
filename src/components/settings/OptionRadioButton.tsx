@@ -41,6 +41,7 @@ const OptionRadioButton = ({
     changeLengthUnit,
   } = useSettings();
 
+  const { colors } = useTheme();
   const { value: theme, changeValue: changeTheme } = useThemeStore();
 
   const store: () => [string, (unit: string) => void] = () => {
@@ -81,7 +82,7 @@ const OptionRadioButton = ({
     <Card style={styles.cardStyle}>
       <TouchableRipple borderless style={styles.ripple} onPress={showDialog}>
         <Card.Content style={styles.buttonStyle}>
-          <Icon name={iconName} size={32} />
+          <Icon name={iconName} size={32} color={colors.primary} />
           <View>
             <Text variant="bodyLarge">{label}</Text>
             <Text variant="bodyMedium">{value}</Text>

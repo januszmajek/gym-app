@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Card, TouchableRipple } from "react-native-paper";
+import { Card, TouchableRipple, useTheme } from "react-native-paper";
 import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../../supabase/supabase";
@@ -8,7 +8,7 @@ import useSession from "../../hooks/stores/useSession";
 
 const LogoutButton = () => {
   const { setSession } = useSession();
-
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     buttonStyle: {
       alignItems: "center",
@@ -33,7 +33,7 @@ const LogoutButton = () => {
     <Card style={styles.cardStyle}>
       <TouchableRipple onPress={handleLogout} style={styles.ripple}>
         <Card.Content style={styles.buttonStyle}>
-          <Icon name="logout" size={32} />
+          <Icon name="logout" size={32} color={colors.primary} />
           <Text variant="bodyLarge">Log out</Text>
         </Card.Content>
       </TouchableRipple>

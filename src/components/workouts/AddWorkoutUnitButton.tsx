@@ -17,7 +17,7 @@ const AddWorkoutUnitButton = () => {
 
   const styles = StyleSheet.create({
     fab: {
-      backgroundColor: colors.inversePrimary,
+      backgroundColor: colors.tertiaryContainer,
       bottom: 0,
       margin: 16,
       position: "absolute",

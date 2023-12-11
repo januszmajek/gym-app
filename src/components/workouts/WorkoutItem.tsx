@@ -14,10 +14,9 @@ interface WorkoutItemProps {
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   const { id, name } = workout;
-  const { colors } = useTheme();
   const { setActiveWorkoutId } = useWorkout();
   const { addTraining, setActiveTrainingId, setActiveTraining } = useTraining();
-
+  const { colors } = useTheme();
   const handlePressEditWorkout = () => {
     setActiveWorkoutId(id);
   };
@@ -75,14 +74,14 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
           style={styles.iconContainer}
           onPress={handlePressEditWorkout}
         >
-          <Icon name="lead-pencil" size={28} />
+          <Icon name="lead-pencil" size={28} color={colors.primary} />
         </TouchableRipple>
         <TouchableRipple
           borderless
           style={styles.iconContainer}
           onPress={handlePressStartTraining}
         >
-          <Icon name="play" size={28} />
+          <Icon name="play" size={28} color={colors.primary} />
         </TouchableRipple>
       </Card.Content>
     </Card>

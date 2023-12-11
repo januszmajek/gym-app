@@ -88,8 +88,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
       minHeight: "100%",
     },
     setLabel: {
-      backgroundColor: colors.primary,
-      color: colors.primaryContainer,
+      color: colors.primary,
       paddingLeft: 20,
       paddingVertical: 2,
     },

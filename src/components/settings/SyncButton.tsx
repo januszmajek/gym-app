@@ -84,7 +84,7 @@ const SyncButton = () => {
     <Card style={styles.cardStyle}>
       <TouchableRipple onPress={handleSync} style={styles.ripple}>
         <Card.Content style={styles.buttonStyle}>
-          <Icon name="download" size={32} />
+          <Icon name="download" size={32} color={colors.primary} />
           <Text variant="bodyLarge">Sync with DB state</Text>
         </Card.Content>
       </TouchableRipple>
