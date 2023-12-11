@@ -32,7 +32,6 @@ const OptionRadioButton = ({
   iconName,
 }: OptionRadioButtonProps) => {
   const [visible, setVisible] = React.useState(false);
-  const { colors } = useTheme();
   const {
     distanceUnit,
     changeDistanceUnit,

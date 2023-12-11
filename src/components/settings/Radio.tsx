@@ -37,7 +37,7 @@ const Radio = ({ options, initValue, changeValue, hideDialog }: RadioProps) => {
       </RadioButton.Group>
       <Dialog.Actions>
         <Button onPress={onSave}>
-          <Text>Zapisz</Text>
+          <Text>Save</Text>
         </Button>
       </Dialog.Actions>
     </>

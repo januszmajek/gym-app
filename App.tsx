@@ -31,7 +31,7 @@ export default function App() {
   const { value: themeType } = useThemeStore();
 
   return (
-    <PaperProvider theme={themeType === "Jasny" ? lightTheme : darkTheme}>
+    <PaperProvider theme={themeType === "Light" ? lightTheme : darkTheme}>
       <PhoneBar />
       {session && session.user ? (
         <NavigationContainer>

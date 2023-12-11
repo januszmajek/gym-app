@@ -14,10 +14,10 @@ interface SettingsStore {
 }
 
 const useSettings = create<SettingsStore>((set) => ({
-    distanceUnit: "Kilometr",
+    distanceUnit: "Kilometer",
     weightUnit: "Kilogram",
     vibrate: true,
-    lengthUnit: "Centymetr",
+    lengthUnit: "Centimeter",
     keepScreenOn: true,
     switchKeepScreenOn: () =>
         set((state) => ({

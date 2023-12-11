@@ -37,7 +37,7 @@ const OptionSwitchButton = ({
       flexDirection: "row",
       gap: 15,
       paddingHorizontal: 10,
-      paddingVertical: 18,
+      paddingVertical: 10,
     },
     cardStyle: { marginHorizontal: 10, marginVertical: 5 },
     ripple: {

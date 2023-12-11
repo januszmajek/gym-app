@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Card, TouchableRipple, useTheme } from "react-native-paper";
+import { Card, TouchableRipple } from "react-native-paper";
 import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../../supabase/supabase";
@@ -7,7 +7,6 @@ import React from "react";
 import useSession from "../../hooks/stores/useSession";
 
 const LogoutButton = () => {
-  const { colors } = useTheme();
   const { setSession } = useSession();
 
   const styles = StyleSheet.create({
@@ -17,7 +16,7 @@ const LogoutButton = () => {
       flexDirection: "row",
       gap: 15,
       paddingHorizontal: 10,
-      paddingVertical: 14,
+      paddingVertical: 16,
     },
     cardStyle: { marginHorizontal: 10, marginVertical: 5 },
     ripple: {

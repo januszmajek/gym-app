@@ -24,7 +24,7 @@ const SyncButton = () => {
       flexDirection: "row",
       gap: 15,
       paddingHorizontal: 10,
-      paddingVertical: 12,
+      paddingVertical: 15,
     },
     cardStyle: { marginHorizontal: 10, marginVertical: 8 },
     ripple: {
