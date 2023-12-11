@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import AppBar from "../components/AppBar";
 import OptionRadioButton from "../components/settings/OptionRadioButton";
 import OptionSwitchButton from "../components/settings/OptionSwitchButton";
@@ -70,7 +70,7 @@ export default function SettingsScreen() {
   });
 
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen}>
       <AppBar title="Settings" />
       {radioButtons.map(({ type, label, options, icon }, key) => (
         <OptionRadioButton
@@ -91,6 +91,6 @@ export default function SettingsScreen() {
       ))}
       <SyncButton />
       <LogoutButton />
-    </View>
+    </ScrollView>
   );
 }
