@@ -33,6 +33,9 @@ const TrainingUnitItem = ({
       marginHorizontal: 12,
       marginVertical: 8,
     },
+    cardContent: {
+      padding: 0,
+    },
     setCompletedContainer: {},
     setCompletedText: {
       paddingVertical: 8,
@@ -46,10 +49,11 @@ const TrainingUnitItem = ({
 
   return (
     <Card style={styles.cardContainer}>
-      <Card.Content>
+      <Card.Content style={styles.cardContent}>
         <List.Accordion
           style={styles.unitTitleContainer}
           title={name}
+          titleStyle={{ fontSize: 20 }}
           descriptionStyle={{ color: colors.primary }}
           expanded={expanded}
           onPress={handlePress}

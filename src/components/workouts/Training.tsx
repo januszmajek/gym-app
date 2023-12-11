@@ -62,6 +62,10 @@ const Training: React.FC<TrainingProps> = ({
 
   const handleFinishTraining = async () => {
     if (activeTraining) {
+      setActiveTraining({
+        ...activeTraining,
+        date_end: new Date(Date.now()),
+      });
       updateTraining(activeTrainingId, {
         ...activeTraining,
         date_end: new Date(Date.now()),

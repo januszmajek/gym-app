@@ -22,13 +22,13 @@ const TimerComponent = () => {
 
   const styles = StyleSheet.create({
     timerContainer: {
-      marginHorizontal: 15,
-      paddingHorizontal: 15,
+      flex: 1,
       paddingVertical: 8,
     },
     timerText: {
       color: colors.primary,
       fontSize: 20,
+      textAlign: "center",
     },
   });
 

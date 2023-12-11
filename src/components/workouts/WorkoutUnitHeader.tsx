@@ -67,7 +67,7 @@ const WorkoutUnitHeader: React.FC<WorkoutUnitHeaderProps> = ({
         onPress={handleArrowPress}
         style={styles.arrowContainer}
       >
-        <Icon name="arrow-left" size={28} color={colors.secondary} />
+        <Icon name="arrow-left" size={28} color={colors.primary} />
       </TouchableRipple>
       <View style={styles.workoutUnitNameContainer}>
         <Text

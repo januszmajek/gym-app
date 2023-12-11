@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { Text, TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import TimerComponent from "./TimerComponent";
 import useWorkout from "../../hooks/stores/useWorkout";
@@ -33,21 +33,25 @@ const TrainingHeader: React.FC<TrainingHeaderProps> = ({
   };
 
   const styles = StyleSheet.create({
+    buttonText: {
+      color: colors.primary,
+    },
     saveContainer: {
-      backgroundColor: colors.primaryContainer,
       borderRadius: 15,
       marginLeft: "auto",
-      padding: 7,
+      paddingHorizontal: 15,
+      paddingVertical: 8,
     },
     stopContainer: {
-      backgroundColor: colors.primaryContainer,
       borderRadius: 15,
-      padding: 7,
+      paddingHorizontal: 15,
+      paddingVertical: 8,
     },
     trainingHeaderContainer: {
       alignItems: "center",
       display: "flex",
       flexDirection: "row",
+      justifyContent: "space-between",
       paddingHorizontal: 10,
       paddingVertical: 5,
     },
@@ -60,7 +64,7 @@ const TrainingHeader: React.FC<TrainingHeaderProps> = ({
         onPress={handleStopTraining}
         style={styles.stopContainer}
       >
-        <Icon name="stop" size={28} color={colors.error} />
+        <Text style={styles.buttonText}>Cancel</Text>
       </TouchableRipple>
       <TimerComponent />
       <TouchableRipple
@@ -68,7 +72,7 @@ const TrainingHeader: React.FC<TrainingHeaderProps> = ({
         onPress={handleFinishTraining}
         style={styles.saveContainer}
       >
-        <Icon name="check" size={28} color={colors.secondary} />
+        <Text style={styles.buttonText}>Finish</Text>
       </TouchableRipple>
     </View>
   );
