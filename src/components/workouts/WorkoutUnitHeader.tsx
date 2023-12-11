@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { TouchableRipple, Text, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import useExercise from "../../hooks/stores/useExercise";
@@ -26,19 +26,20 @@ const WorkoutUnitHeader: React.FC<WorkoutUnitHeaderProps> = ({
 
   const styles = StyleSheet.create({
     arrowContainer: {
-      backgroundColor: colors.primaryContainer,
       borderRadius: 15,
       padding: 7,
     },
     saveContainer: {
-      backgroundColor: colors.primaryContainer,
       borderRadius: 15,
       marginLeft: "auto",
-      padding: 7,
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+    },
+    saveText: {
+      color: colors.primary,
     },
     workoutTitle: {
       borderRadius: 15,
-      color: colors.primary,
       flexGrow: 1,
       fontSize: 24,
     },
@@ -66,7 +67,7 @@ const WorkoutUnitHeader: React.FC<WorkoutUnitHeaderProps> = ({
         onPress={handleArrowPress}
         style={styles.arrowContainer}
       >
-        <Icon name="arrow-left" size={28} color={colors.secondary} />
+        <Icon name="arrow-left" size={28} color={colors.primary} />
       </TouchableRipple>
       <View style={styles.workoutUnitNameContainer}>
         <Text
@@ -82,7 +83,9 @@ const WorkoutUnitHeader: React.FC<WorkoutUnitHeaderProps> = ({
         onPress={saveSets}
         style={styles.saveContainer}
       >
-        <Icon name="content-save-outline" size={28} color={colors.secondary} />
+        <Text variant="bodyLarge" style={styles.saveText}>
+          Save
+        </Text>
       </TouchableRipple>
     </View>
   );

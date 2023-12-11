@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { Card, Text, TouchableRipple, useTheme } from "react-native-paper";
 import { Workout } from "../../../types";
 import useWorkout from "../../hooks/stores/useWorkout";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -14,10 +14,9 @@ interface WorkoutItemProps {
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   const { id, name } = workout;
-  const { colors } = useTheme();
   const { setActiveWorkoutId } = useWorkout();
-  const { addTraining, setActiveTrainingId } = useTraining();
-
+  const { addTraining, setActiveTrainingId, setActiveTraining } = useTraining();
+  const { colors } = useTheme();
   const handlePressEditWorkout = () => {
     setActiveWorkoutId(id);
   };
@@ -30,32 +29,29 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
       exercises_done: [],
     };
     addTraining(newTraining);
+    setActiveTraining(newTraining);
     setActiveTrainingId(newTraining.id);
+    setActiveWorkoutId(workout.id);
     console.log("active training:", newTraining);
   };
 
   const styles = StyleSheet.create({
+    cardStyle: { marginHorizontal: 10, marginVertical: 5 },
     iconContainer: {
-      backgroundColor: colors.inversePrimary,
       borderRadius: 15,
       overflow: "hidden",
       padding: 5,
     },
     workoutContainer: {
-      backgroundColor: colors.primaryContainer,
-      marginBottom: 5,
-      paddingHorizontal: 20,
-      paddingVertical: 8,
-    },
-    workoutContent: {
       alignItems: "center",
       display: "flex",
       flexDirection: "row",
       gap: 5,
       justifyContent: "space-between",
+      paddingHorizontal: 20,
+      paddingVertical: 10,
     },
     workoutText: {
-      color: colors.primary,
       flex: 1,
       fontSize: 18,
       marginRight: 10,
@@ -63,18 +59,16 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   });
 
   return (
-    <TouchableRipple style={styles.workoutContainer}>
-      <View style={styles.workoutContent}>
-        <Text style={styles.workoutText} numberOfLines={1} ellipsizeMode="tail">
+    <Card style={styles.cardStyle}>
+      <Card.Content style={styles.workoutContainer}>
+        <Text
+          style={styles.workoutText}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          variant="bodyLarge"
+        >
           {name}
         </Text>
-        <TouchableRipple
-          borderless
-          style={styles.iconContainer}
-          onPress={handlePressStartTraining}
-        >
-          <Icon name="play" size={28} color={colors.primary} />
-        </TouchableRipple>
         <TouchableRipple
           borderless
           style={styles.iconContainer}
@@ -82,8 +76,15 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
         >
           <Icon name="lead-pencil" size={28} color={colors.primary} />
         </TouchableRipple>
-      </View>
-    </TouchableRipple>
+        <TouchableRipple
+          borderless
+          style={styles.iconContainer}
+          onPress={handlePressStartTraining}
+        >
+          <Icon name="play" size={28} color={colors.primary} />
+        </TouchableRipple>
+      </Card.Content>
+    </Card>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TextInput, TouchableRipple, useTheme } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { Text, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useWorkout from "../../hooks/stores/useWorkout";
 import { supabase } from "../../../supabase/supabase";
@@ -58,15 +58,18 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
 
   const styles = StyleSheet.create({
     arrowContainer: {
-      backgroundColor: colors.primaryContainer,
+      // backgroundColor: colors.primaryContainer,
       borderRadius: 15,
       padding: 7,
     },
     removeContainer: {
-      backgroundColor: colors.primaryContainer,
       borderRadius: 15,
       marginLeft: "auto",
-      padding: 7,
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+    },
+    removeText: {
+      color: colors.primary,
     },
     renameContainer: {
       alignItems: "flex-end",
@@ -106,7 +109,6 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
     },
     workoutTitle: {
       borderRadius: 15,
-      color: colors.primary,
       flexGrow: 1,
       fontSize: 24,
     },
@@ -158,7 +160,9 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
         style={styles.removeContainer}
         onPress={handleRemoveWorkout}
       >
-        <Icon name="delete" size={28} color={colors.error} />
+        <Text variant="bodyLarge" style={styles.removeText}>
+          Delete
+        </Text>
       </TouchableRipple>
     </View>
   );

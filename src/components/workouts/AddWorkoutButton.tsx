@@ -76,6 +76,7 @@ const AddWorkoutButton = () => {
       backgroundColor: colors.onSurfaceDisabled,
     },
     fab: {
+      backgroundColor: colors.tertiaryContainer,
       bottom: 0,
       margin: 16,
       position: "absolute",

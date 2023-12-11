@@ -1,12 +1,12 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
-import { FAB, Portal } from "react-native-paper";
+import { FAB, Portal, useTheme } from "react-native-paper";
 import { useState } from "react";
 import ExerciseListDialog from "./ExerciseListDialog";
 
 const AddWorkoutUnitButton = () => {
   const [showExerciseList, setShowExerciseList] = useState(false);
-
+  const { colors } = useTheme();
   const showAddExercise = () => {
     setShowExerciseList(true);
   };
@@ -17,6 +17,7 @@ const AddWorkoutUnitButton = () => {
 
   const styles = StyleSheet.create({
     fab: {
+      backgroundColor: colors.tertiaryContainer,
       bottom: 0,
       margin: 16,
       position: "absolute",

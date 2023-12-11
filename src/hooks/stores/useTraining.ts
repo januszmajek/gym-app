@@ -3,18 +3,32 @@ import { Training } from "../../../types";
 
 interface TrainingStore {
     trainings: Training[];
+    activeTraining: Training | undefined;
+    setActiveTraining: (training: Training | undefined) => void;
     activeTrainingId: string | undefined;
-    addTraining: (Training: Training) => void;
-    removeTraining: (TrainingId: string) => void;
-    updateTraining: (TrainingId: string, updatedTraining: Training) => void;
-    getTrainingById: (TrainingId: string) => Training | undefined;
+    addTraining: (training: Training) => void;
+    removeTraining: (trainingId: string) => void;
+    updateTraining: (trainingId: string, updatedTraining: Training) => void;
+    getTrainingById: (trainingId: string) => Training | undefined;
     setActiveTrainingId: (TrainingId: string | undefined) => void;
-    syncTrainings: (Trainings: Training[]) => void;
+    syncTrainings: (trainings: Training[]) => void;
 }
 
 const useTraining = create<TrainingStore>((set, get) => ({
     trainings: [],
+    activeTraining: undefined,
     activeTrainingId: undefined,
+    setActiveTraining: (training) => {
+        console.log(
+            "ZUSTAND: setActiveTraining:",
+            get().activeTraining,
+            "---->",
+            training,
+        );
+        set(() => ({
+            activeTraining: training,
+        }));
+    },
     addTraining: (training) =>
         set((state) => ({
             trainings: [...state.trainings, training],

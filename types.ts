@@ -25,6 +25,7 @@ export interface Set {
   repetitions: number;
   pause: number;
   order: number;
+  completed?: boolean;
 }
 
 export interface WorkoutUnit {
@@ -32,6 +33,14 @@ export interface WorkoutUnit {
   workout_id: string;
   exercise_id: string;
   order: number;
+}
+
+export interface TrainingUnit extends WorkoutUnit {
+  name?: string;
+}
+
+export interface TrainingSet extends Set {
+  completed: boolean;
 }
 
 export interface Workout {
@@ -51,5 +60,5 @@ export interface Training {
   date_start: Date;
   date_end?: Date;
   name: string;
-  exercises_done?: TrainingExercise[];
+  exercises_done: TrainingExercise[];
 }

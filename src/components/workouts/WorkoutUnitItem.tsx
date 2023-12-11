@@ -1,7 +1,7 @@
-import { Text, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import { Set } from "../../../types";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { TouchableRipple, useTheme, Card, Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../../supabase/supabase";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
@@ -46,19 +46,15 @@ const WorkoutUnitItem = ({
       gap: 5,
       justifyContent: "center",
     },
+    cardStyle: { marginHorizontal: 10, marginVertical: 5 },
     container: {
       alignItems: "center",
-      backgroundColor: colors.primaryContainer,
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
       marginVertical: 2,
       paddingHorizontal: 15,
-      paddingVertical: 5,
-    },
-    exerciseName: {
-      color: colors.tertiary,
-      fontSize: 18,
+      paddingVertical: 6,
     },
     iconContainer: {
       borderRadius: 15,
@@ -75,34 +71,34 @@ const WorkoutUnitItem = ({
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.labelContainer}>
-        <Text
-          style={styles.exerciseName}
-          numberOfLines={2}
-          ellipsizeMode="tail"
-        >
-          {name}
-        </Text>
-        <Text style={styles.setsCount}>{sets.length} sets</Text>
-      </View>
-      <View style={styles.buttonsContainer}>
-        <TouchableRipple
-          borderless
-          style={styles.iconContainer}
-          onPress={() => setActiveWorkoutUnitId(workoutUnitId)}
-        >
-          <Icon name="lead-pencil" size={28} color={colors.primary} />
-        </TouchableRipple>
-        <TouchableRipple
-          borderless
-          style={styles.iconContainer}
-          onPress={handleDeleteWorkoutUnit}
-        >
-          <Icon name="delete" size={28} color={colors.error} />
-        </TouchableRipple>
-      </View>
-    </View>
+    <Card style={styles.cardStyle}>
+      <Card.Content style={styles.container}>
+        <View style={styles.labelContainer}>
+          <Text variant="bodyLarge" numberOfLines={2} ellipsizeMode="tail">
+            {name}
+          </Text>
+          <Text variant="bodyMedium" style={styles.setsCount}>
+            {sets.length} sets
+          </Text>
+        </View>
+        <View style={styles.buttonsContainer}>
+          <TouchableRipple
+            borderless
+            style={styles.iconContainer}
+            onPress={() => setActiveWorkoutUnitId(workoutUnitId)}
+          >
+            <Icon name="lead-pencil" size={28} color={colors.primary} />
+          </TouchableRipple>
+          <TouchableRipple
+            borderless
+            style={styles.iconContainer}
+            onPress={handleDeleteWorkoutUnit}
+          >
+            <Icon name="delete" size={28} color={colors.primary} />
+          </TouchableRipple>
+        </View>
+      </Card.Content>
+    </Card>
   );
 };
 

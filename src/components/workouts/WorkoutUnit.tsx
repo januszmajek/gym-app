@@ -9,6 +9,7 @@ import SetItem from "./SetItem";
 import uuid from "react-native-uuid";
 import WorkoutUnitHeader from "./WorkoutUnitHeader";
 import { FlashList } from "@shopify/flash-list";
+import { supabase } from "../../../supabase/supabase";
 
 interface WorkoutUnitProps {
   workoutUnitId: string;
@@ -33,10 +34,30 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     setSets(newSets);
   }, [allSets]);
 
+  const addSetToDB = async (set: Set) => {
+    if (session) {
+      const { completed, ...restOfSet } = set;
+      const { data, error: supabaseError } = await supabase
+        .from("sets")
+        .insert({ ...restOfSet, user_id: session.user.id })
+        .select();
+      if (supabaseError) console.log(supabaseError);
+      console.log(data);
+    }
+  };
+
   const saveSets = async () => {
     clearSetsByWorkoutUnitId(workoutUnitId);
     addSets(sets);
     setActiveWorkoutUnitId(undefined);
+    const { error: supabaseError } = await supabase
+      .from("sets")
+      .delete()
+      .eq("workout_unit_id", workoutUnitId);
+    if (supabaseError) console.log(supabaseError);
+    sets.map((set) => {
+      addSetToDB(set);
+    });
   };
 
   const handleAddSet = async () => {
@@ -63,18 +84,11 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     listPadding: {
       paddingVertical: 69,
     },
-    noSetsInfo: {
-      color: colors.primary,
-      fontSize: 18,
-      marginTop: 10,
-      textAlign: "center",
-    },
     screen: {
       minHeight: "100%",
     },
     setLabel: {
-      backgroundColor: colors.primary,
-      color: colors.primaryContainer,
+      color: colors.primary,
       paddingLeft: 20,
       paddingVertical: 2,
     },

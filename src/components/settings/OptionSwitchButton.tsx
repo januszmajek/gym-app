@@ -1,6 +1,6 @@
 import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Card, Text, TouchableRipple, useTheme } from "react-native-paper";
 import { Switch } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useSettings from "../../hooks/stores/useSettings";
@@ -16,10 +16,10 @@ const OptionSwitchButton = ({
   label,
   iconName,
 }: OptionSwitchButtonProps) => {
-  const { colors } = useTheme();
   const { vibrate, switchVibrate, keepScreenOn, switchKeepScreenOn } =
     useSettings();
 
+  const { colors } = useTheme();
   const store: () => [boolean, () => void] = () => {
     if (type === "vibrate") {
       return [vibrate, switchVibrate];
@@ -34,27 +34,35 @@ const OptionSwitchButton = ({
   const styles = StyleSheet.create({
     buttonStyle: {
       alignItems: "center",
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 0,
       display: "flex",
       flexDirection: "row",
       gap: 15,
       paddingHorizontal: 10,
-      paddingVertical: 8,
+      paddingVertical: 10,
     },
-    label: { color: colors.primary, fontSize: 20 },
+    cardStyle: { marginHorizontal: 10, marginVertical: 5 },
+    ripple: {
+      borderRadius: 10,
+    },
+    switch: { marginLeft: "auto", marginRight: 15 },
   });
 
   return (
-    <View>
-      <TouchableRipple onPress={onToggleSwitch} style={styles.buttonStyle}>
-        <>
-          <Icon name={iconName} size={32} color={colors.primary} />
-          <Text style={styles.label}>{label}</Text>
-          <Switch value={value} onValueChange={onToggleSwitch} />
-        </>
+    <Card style={styles.cardStyle}>
+      <TouchableRipple style={styles.ripple} onPress={onToggleSwitch}>
+        <Card.Content style={styles.buttonStyle}>
+          <>
+            <Icon name={iconName} size={32} color={colors.primary} />
+            <Text variant="bodyLarge">{label}</Text>
+            <Switch
+              value={value}
+              onValueChange={onToggleSwitch}
+              style={styles.switch}
+            />
+          </>
+        </Card.Content>
       </TouchableRipple>
-    </View>
+    </Card>
   );
 };
 

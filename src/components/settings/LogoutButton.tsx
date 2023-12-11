@@ -1,27 +1,27 @@
-import { View, Text, StyleSheet } from "react-native";
-import { TouchableRipple, useTheme } from "react-native-paper";
-
+import { StyleSheet } from "react-native";
+import { Card, TouchableRipple, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { supabase } from "../../../supabase/supabase";
 import React from "react";
 import useSession from "../../hooks/stores/useSession";
 
 const LogoutButton = () => {
-  const { colors } = useTheme();
   const { setSession } = useSession();
-
+  const { colors } = useTheme();
   const styles = StyleSheet.create({
     buttonStyle: {
       alignItems: "center",
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 0,
       display: "flex",
       flexDirection: "row",
       gap: 15,
-      paddingHorizontal: 14,
-      paddingVertical: 13,
+      paddingHorizontal: 10,
+      paddingVertical: 16,
     },
-    label: { color: colors.primary, fontSize: 20 },
+    cardStyle: { marginHorizontal: 10, marginVertical: 5 },
+    ripple: {
+      borderRadius: 10,
+    },
   });
 
   const handleLogout = () => {
@@ -30,14 +30,14 @@ const LogoutButton = () => {
   };
 
   return (
-    <View>
-      <TouchableRipple onPress={handleLogout} style={styles.buttonStyle}>
-        <>
+    <Card style={styles.cardStyle}>
+      <TouchableRipple onPress={handleLogout} style={styles.ripple}>
+        <Card.Content style={styles.buttonStyle}>
           <Icon name="logout" size={32} color={colors.primary} />
-          <Text style={styles.label}>Wyloguj się</Text>
-        </>
+          <Text variant="bodyLarge">Log out</Text>
+        </Card.Content>
       </TouchableRipple>
-    </View>
+    </Card>
   );
 };
 

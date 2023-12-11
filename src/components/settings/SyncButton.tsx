@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { TouchableRipple, useTheme, Card, Text } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import React from "react";
 import useWorkout from "../../hooks/stores/useWorkout";
@@ -20,15 +20,16 @@ const SyncButton = () => {
   const styles = StyleSheet.create({
     buttonStyle: {
       alignItems: "center",
-      backgroundColor: colors.primaryContainer,
-      borderRadius: 0,
       display: "flex",
       flexDirection: "row",
       gap: 15,
-      paddingHorizontal: 14,
-      paddingVertical: 13,
+      paddingHorizontal: 10,
+      paddingVertical: 15,
     },
-    label: { color: colors.primary, fontSize: 20 },
+    cardStyle: { marginHorizontal: 10, marginVertical: 8 },
+    ripple: {
+      borderRadius: 10,
+    },
   });
 
   const handleSync = async () => {
@@ -80,14 +81,14 @@ const SyncButton = () => {
   };
 
   return (
-    <View>
-      <TouchableRipple onPress={handleSync} style={styles.buttonStyle}>
-        <>
+    <Card style={styles.cardStyle}>
+      <TouchableRipple onPress={handleSync} style={styles.ripple}>
+        <Card.Content style={styles.buttonStyle}>
           <Icon name="download" size={32} color={colors.primary} />
-          <Text style={styles.label}>Sync with DB state</Text>
-        </>
+          <Text variant="bodyLarge">Sync with DB state</Text>
+        </Card.Content>
       </TouchableRipple>
-    </View>
+    </Card>
   );
 };
 

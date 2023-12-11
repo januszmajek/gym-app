@@ -8,6 +8,7 @@ import useWorkoutUnits from "../hooks/stores/useWorkoutUnit";
 import WorkoutUnit from "../components/workouts/WorkoutUnit";
 import useTraining from "../hooks/stores/useTraining";
 import Training from "../components/workouts/Training";
+import TrainingSummary from "../components/workouts/TrainingSummary";
 
 export default function TrainingScreen() {
   const { activeWorkoutId } = useWorkout();
@@ -20,8 +21,13 @@ export default function TrainingScreen() {
   });
   return (
     <View style={styles.screen}>
-      {activeTrainingId ? (
-        <Training />
+      {activeTrainingId && activeWorkoutId ? (
+        <Training
+          activeTrainingId={activeTrainingId}
+          activeWorkoutId={activeWorkoutId}
+        />
+      ) : activeTrainingId ? (
+        <TrainingSummary />
       ) : activeWorkoutUnitId ? (
         <SafeAreaView>
           <WorkoutUnit workoutUnitId={activeWorkoutUnitId} />

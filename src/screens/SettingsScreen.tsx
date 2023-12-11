@@ -10,53 +10,53 @@ import SyncButton from "../components/settings/SyncButton";
 export default function SettingsScreen() {
   const distance = {
     type: "distance",
-    label: "Jednostka dystansu",
+    label: "Distance unit",
     options: [
-      { label: "Kilometr", value: "Kilometr" },
-      { label: "Mila", value: "Mila" },
+      { label: "Kilometer", value: "Kilometer" },
+      { label: "Mile", value: "Mile" },
     ],
     icon: "apple-safari",
   };
 
   const weight = {
     type: "weight",
-    label: "Jednostka wagi",
+    label: "Weight unit",
     options: [
       { label: "Kilogram", value: "Kilogram" },
-      { label: "Funt", value: "Funt" },
+      { label: "Pound", value: "Pound" },
     ],
     icon: "weight",
   };
 
   const size = {
     type: "length",
-    label: "Jednostka długości",
+    label: "Length unit",
     options: [
-      { label: "Centymetr", value: "Centymetr" },
-      { label: "Cal", value: "Cal" },
+      { label: "Centimeter", value: "Centimeter" },
+      { label: "Inch", value: "Inch" },
     ],
     icon: "ruler",
   };
 
   const theme = {
     type: "theme",
-    label: "Układ kolorystyczny",
+    label: "Application theme",
     options: [
-      { label: "Jasny niebieski", value: "Jasny" },
-      { label: "Ciemny polski", value: "Ciemny" },
+      { label: "Light", value: "Light" },
+      { label: "Dark", value: "Dark" },
     ],
     icon: "palette",
   };
 
   const vibrate = {
     type: "vibrate",
-    label: "Wibracje",
+    label: "Vibrations after pause",
     icon: "vibrate",
   };
 
   const keepScreenOn = {
     type: "keepScreenOn",
-    label: "Nie wygaszaj ekranu",
+    label: "Keep screen on",
     icon: "cellphone",
   };
 
@@ -64,13 +64,14 @@ export default function SettingsScreen() {
   const switchButtons = [vibrate, keepScreenOn];
 
   const { colors } = useTheme();
+
   const styles = StyleSheet.create({
     screen: { backgroundColor: colors.background, minHeight: "100%" },
   });
 
   return (
     <View style={styles.screen}>
-      <AppBar title="Ustawienia" />
+      <AppBar title="Settings" />
       {radioButtons.map(({ type, label, options, icon }, key) => (
         <OptionRadioButton
           key={key}
