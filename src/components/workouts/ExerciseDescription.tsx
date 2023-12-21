@@ -1,38 +1,104 @@
 import React from "react";
-import { View, Text } from "react-native";
-import { List } from "react-native-paper";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { List, useTheme } from "react-native-paper";
 import { Exercise } from "../../../types";
 
 interface ExerciseProps {
   exercise: Exercise | undefined;
 }
 
-//TODO: Design
-
 const ExerciseDescription: React.FC<ExerciseProps> = ({ exercise }) => {
+  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    listItem: {
+      paddingHorizontal: 5,
+    },
+    listItemTitle: {
+      fontSize: 20,
+    },
+    listItemDescription: {
+      color: colors.primary,
+      fontSize: 14,
+      fontWeight: "bold",
+    },
+
+    listItemInstructionDescription: {
+      lineHeight: 20,
+    },
+    divider: {
+      marginHorizontal: 20,
+    },
+  });
+
   return exercise ? (
-    <View>
-      <Text>{exercise.name}</Text>
+    <ScrollView>
       <List.Section>
         <List.Item
-          title={`Primary Muscles: ${exercise.primary_muscles.join(", ")}`}
+          title="Primary Muscles"
+          titleStyle={styles.listItemTitle}
+          description={`${exercise.primary_muscles.join(", ")}`}
+          descriptionStyle={styles.listItemDescription}
+          style={styles.listItem}
+        />
+        {/*<Divider bold style={styles.divider} />*/}
+        <List.Item
+          title="Secondary Muscles"
+          titleStyle={styles.listItemTitle}
+          description={`${
+            exercise.secondary_muscles.join(", ") || "Not provided"
+          }`}
+          descriptionStyle={styles.listItemDescription}
+          style={styles.listItem}
         />
         <List.Item
-          title={`Secondary Muscles: ${exercise.secondary_muscles.join(", ")}`}
+          title="Force"
+          titleStyle={styles.listItemTitle}
+          description={` ${exercise.force}`}
+          descriptionStyle={styles.listItemDescription}
+          style={styles.listItem}
         />
-        <List.Item title={`Force: ${exercise.force}`} />
-        <List.Item title={`Level: ${exercise.level}`} />
-        <List.Item title={`Mechanic: ${exercise.mechanic}`} />
-        <List.Item title={`Equipment: ${exercise.equipment}`} />
-        <List.Item title={`Category: ${exercise.category}`} />
+
+        <List.Item
+          title="Level"
+          titleStyle={styles.listItemTitle}
+          description={`${exercise.level}`}
+          descriptionStyle={styles.listItemDescription}
+          style={styles.listItem}
+        />
+        <List.Item
+          title="Mechanic"
+          titleStyle={styles.listItemTitle}
+          description={`${exercise.mechanic}`}
+          descriptionStyle={styles.listItemDescription}
+          style={styles.listItem}
+        />
+        <List.Item
+          title="Equipment"
+          titleStyle={styles.listItemTitle}
+          description={`${exercise.equipment}`}
+          descriptionStyle={styles.listItemDescription}
+          style={styles.listItem}
+        />
+        <List.Item
+          title="Category"
+          titleStyle={styles.listItemTitle}
+          description={`${exercise.category}`}
+          descriptionStyle={styles.listItemDescription}
+          style={styles.listItem}
+        />
+        <List.Item
+          title="Instrunction"
+          titleStyle={styles.listItemTitle}
+          description={`${exercise.instructions.map(
+            (instruction) => instruction,
+          )}`}
+          descriptionNumberOfLines={100}
+          descriptionStyle={styles.listItemInstructionDescription}
+          style={styles.listItem}
+        />
       </List.Section>
-      <View>
-        <Text>Instructions</Text>
-        {exercise.instructions.map((instruction, index) => (
-          <Text key={index}>{instruction}</Text>
-        ))}
-      </View>
-    </View>
+    </ScrollView>
   ) : (
     <View>
       <Text>Can't find exercise</Text>

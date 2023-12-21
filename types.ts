@@ -62,3 +62,8 @@ export interface Training {
   name: string;
   exercises_done: TrainingExercise[];
 }
+
+export interface Statistic {
+  id: string;
+  name: string;
+}

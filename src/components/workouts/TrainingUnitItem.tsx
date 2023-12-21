@@ -45,21 +45,30 @@ const TrainingUnitItem = ({
       backgroundColor: colors.elevation.level1,
       borderRadius: 5,
     },
+    listAccordionDescription: {
+      color: colors.primary,
+      fontWeight: "bold",
+    },
+    listAccordionTitle: {
+      fontSize: 20,
+      color: colors.onSurface,
+    },
   });
 
   return (
     <Card style={styles.cardContainer}>
       <Card.Content style={styles.cardContent}>
         <List.Accordion
-          style={styles.unitTitleContainer}
           title={name}
-          titleStyle={{ fontSize: 20 }}
-          descriptionStyle={{ color: colors.primary }}
-          expanded={expanded}
-          onPress={handlePress}
+          titleNumberOfLines={2}
+          titleStyle={styles.listAccordionTitle}
           description={`${
             sets.filter((set) => set.completed === true).length
           }/${sets?.length} Done`}
+          descriptionStyle={styles.listAccordionDescription}
+          expanded={expanded}
+          onPress={handlePress}
+          style={styles.unitTitleContainer}
         >
           {sets &&
             sets.map((set, i) =>

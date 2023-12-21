@@ -1,7 +1,6 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, SafeAreaView } from "react-native";
 import { Text, TouchableRipple, useTheme } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import TimerComponent from "./TimerComponent";
 import useWorkout from "../../hooks/stores/useWorkout";
 import useTraining from "../../hooks/stores/useTraining";
@@ -58,23 +57,25 @@ const TrainingHeader: React.FC<TrainingHeaderProps> = ({
   });
 
   return (
-    <View style={styles.trainingHeaderContainer}>
-      <TouchableRipple
-        borderless
-        onPress={handleStopTraining}
-        style={styles.stopContainer}
-      >
-        <Text style={styles.buttonText}>Cancel</Text>
-      </TouchableRipple>
-      <TimerComponent />
-      <TouchableRipple
-        borderless
-        onPress={handleFinishTraining}
-        style={styles.saveContainer}
-      >
-        <Text style={styles.buttonText}>Finish</Text>
-      </TouchableRipple>
-    </View>
+    <SafeAreaView>
+      <View style={styles.trainingHeaderContainer}>
+        <TouchableRipple
+          borderless
+          onPress={handleStopTraining}
+          style={styles.stopContainer}
+        >
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableRipple>
+        <TimerComponent />
+        <TouchableRipple
+          borderless
+          onPress={handleFinishTraining}
+          style={styles.saveContainer}
+        >
+          <Text style={styles.buttonText}>Finish</Text>
+        </TouchableRipple>
+      </View>
+    </SafeAreaView>
   );
 };
 

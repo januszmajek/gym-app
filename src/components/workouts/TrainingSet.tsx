@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import React from "react";
 import {
   Button,
@@ -74,13 +74,13 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
   const styles = StyleSheet.create({
     button: {
       borderRadius: 15,
-      padding: 6,
+      paddingHorizontal: 1,
     },
     buttonContainer: {
       alignItems: "center",
       display: "flex",
       justifyContent: "center",
-      width: 60,
+      paddingHorizontal: 4,
     },
     completeText: {
       color: colors.primary,
@@ -88,17 +88,18 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
     dividerContainer: {
       marginLeft: "auto",
       marginRight: "auto",
-      width: "92%",
+      width: "100%",
     },
     setContainer: {
+      width: "100%",
       alignItems: "center",
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
-      marginBottom: 2,
-      padding: 5,
+      paddingVertical: 7,
     },
     valueContainer: {
+      paddingLeft: 7,
       alignItems: "center",
       display: "flex",
       flexDirection: "row",
@@ -114,7 +115,11 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
             style={styles.button}
             onPress={incrementWeight}
           >
-            <Icon color={colors.primary} name="plus" size={28} />
+            <Icon
+              color={colors.primary}
+              name="plus"
+              size={Platform.OS === "ios" ? 20 : 28}
+            />
           </TouchableRipple>
           <View style={styles.buttonContainer}>
             <Text>Weight</Text>
@@ -127,7 +132,11 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
             style={styles.button}
             onPress={decrementWeight}
           >
-            <Icon color={colors.primary} name="minus" size={28} />
+            <Icon
+              color={colors.primary}
+              name="minus"
+              size={Platform.OS === "ios" ? 20 : 28}
+            />
           </TouchableRipple>
         </View>
         <View style={styles.valueContainer}>
@@ -136,7 +145,11 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
             style={styles.button}
             onPress={incrementRepetitions}
           >
-            <Icon color={colors.primary} name="plus" size={28} />
+            <Icon
+              color={colors.primary}
+              name="plus"
+              size={Platform.OS === "ios" ? 20 : 28}
+            />
           </TouchableRipple>
           <View style={styles.buttonContainer}>
             <Text>Reps</Text>
@@ -147,7 +160,11 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
             style={styles.button}
             onPress={decrementRepetitions}
           >
-            <Icon color={colors.primary} name="minus" size={28} />
+            <Icon
+              color={colors.primary}
+              name="minus"
+              size={Platform.OS === "ios" ? 20 : 28}
+            />
           </TouchableRipple>
         </View>
         <Button
@@ -159,9 +176,7 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
             })
           }
         >
-          <Text variant="labelLarge" style={styles.completeText}>
-            Complete
-          </Text>
+          <Text style={styles.completeText}>Complete</Text>
         </Button>
       </View>
       {index + 1 !== setsLength && (

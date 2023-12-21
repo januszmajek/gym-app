@@ -87,14 +87,14 @@ const WorkoutUnitItem = ({
             style={styles.iconContainer}
             onPress={() => setActiveWorkoutUnitId(workoutUnitId)}
           >
-            <Icon name="lead-pencil" size={28} color={colors.primary} />
+            <Icon name="note-edit-outline" size={28} color={colors.primary} />
           </TouchableRipple>
           <TouchableRipple
             borderless
             style={styles.iconContainer}
             onPress={handleDeleteWorkoutUnit}
           >
-            <Icon name="delete" size={28} color={colors.primary} />
+            <Icon name="trash-can-outline" size={28} color={colors.primary} />
           </TouchableRipple>
         </View>
       </Card.Content>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import useTraining from "../../hooks/stores/useTraining";
 import { TrainingExercise } from "../../../types";
@@ -35,9 +35,7 @@ const TrainingSummary = () => {
       const formattedMinutes = minutes.toString().padStart(2, "0");
       const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
 
-      const formattedDuration = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-
-      return formattedDuration;
+      return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     }
 
     return "";
@@ -128,66 +126,68 @@ const TrainingSummary = () => {
   });
 
   return (
-    <ScrollView stickyHeaderIndices={[0]}>
-      {activeTraining && <SummaryHeader name={activeTraining.name} />}
-      <View style={styles.summaryCards}>
-        <Card style={styles.cardContainer}>
-          <Card.Content style={styles.cardContent}>
-            <Icon name="weight-lifter" size={32} color={colors.primary} />
-            <Text variant="labelLarge">Sets</Text>
-            <Text>{setsSum}</Text>
-          </Card.Content>
-        </Card>
-        <Card style={styles.cardContainer}>
-          <Card.Content style={styles.cardContent}>
-            <Icon
-              name={
-                weightUnit === "Kilogram" ? "weight-kilogram" : "weight-pound"
-              }
-              size={32}
-              color={colors.primary}
-            />
-            <Text variant="labelLarge">Weight</Text>
-            <Text>{weightSum}</Text>
-          </Card.Content>
-        </Card>
-        <Card style={styles.cardContainer}>
-          <Card.Content style={styles.cardContent}>
-            <Icon
-              name="timer-settings-outline"
-              size={32}
-              color={colors.primary}
-            />
-            <Text variant="labelLarge">Duration</Text>
-            <Text>{duration}</Text>
-          </Card.Content>
-        </Card>
-      </View>
-      <View>
-        {groupedExercises &&
-          Object.entries(groupedExercises).map(([groupName, exercises]) => (
-            <Card key={groupName} style={styles.groupExerciseCard}>
-              <Card.Content>
-                <Text variant="headlineSmall">{groupName}</Text>
-                <View style={styles.setsContainer}>
-                  {exercises.map((exercise, index) => (
-                    <View style={styles.setRow} key={index}>
-                      <View style={styles.indexContainer}>
-                        <Text variant="bodyLarge">Set {index + 1}</Text>
+    <SafeAreaView>
+      <ScrollView stickyHeaderIndices={[0]}>
+        {activeTraining && <SummaryHeader name={activeTraining.name} />}
+        <View style={styles.summaryCards}>
+          <Card style={styles.cardContainer}>
+            <Card.Content style={styles.cardContent}>
+              <Icon name="weight-lifter" size={32} color={colors.primary} />
+              <Text variant="labelLarge">Sets</Text>
+              <Text>{setsSum}</Text>
+            </Card.Content>
+          </Card>
+          <Card style={styles.cardContainer}>
+            <Card.Content style={styles.cardContent}>
+              <Icon
+                name={
+                  weightUnit === "Kilogram" ? "weight-kilogram" : "weight-pound"
+                }
+                size={32}
+                color={colors.primary}
+              />
+              <Text variant="labelLarge">Weight</Text>
+              <Text>{weightSum}</Text>
+            </Card.Content>
+          </Card>
+          <Card style={styles.cardContainer}>
+            <Card.Content style={styles.cardContent}>
+              <Icon
+                name="timer-settings-outline"
+                size={32}
+                color={colors.primary}
+              />
+              <Text variant="labelLarge">Duration</Text>
+              <Text>{duration}</Text>
+            </Card.Content>
+          </Card>
+        </View>
+        <View>
+          {groupedExercises &&
+            Object.entries(groupedExercises).map(([groupName, exercises]) => (
+              <Card key={groupName} style={styles.groupExerciseCard}>
+                <Card.Content>
+                  <Text variant="headlineSmall">{groupName}</Text>
+                  <View style={styles.setsContainer}>
+                    {exercises.map((exercise, index) => (
+                      <View style={styles.setRow} key={index}>
+                        <View style={styles.indexContainer}>
+                          <Text variant="bodyLarge">Set {index + 1}</Text>
+                        </View>
+                        <Text variant="bodyLarge">
+                          {exercise.weight}{" "}
+                          {weightUnit === "Kilogram" ? "kg" : "lbs"} x{" "}
+                          {exercise.repetitions}
+                        </Text>
                       </View>
-                      <Text variant="bodyLarge">
-                        {exercise.weight}{" "}
-                        {weightUnit === "Kilogram" ? "kg" : "lbs"} x{" "}
-                        {exercise.repetitions}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              </Card.Content>
-            </Card>
-          ))}
-      </View>
-    </ScrollView>
+                    ))}
+                  </View>
+                </Card.Content>
+              </Card>
+            ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
