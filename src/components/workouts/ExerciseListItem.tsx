@@ -67,9 +67,6 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
       justifyContent: "space-between",
       overflow: "hidden",
     },
-    exerciseName: {
-      fontSize: 20,
-    },
     item: {
       paddingHorizontal: 20,
       paddingVertical: 20,
@@ -77,13 +74,14 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
     },
     muscle: {
       color: colors.primary,
-      fontSize: 14,
-      fontWeight: "bold",
       textTransform: "capitalize",
     },
-    addButtonText: { color: colors.primary, fontSize: 16 },
+    addButtonText: { color: colors.primary },
     divider: {
       marginHorizontal: 20,
+    },
+    addButtonContainer: {
+      marginRight: 10,
     },
   });
 
@@ -96,20 +94,19 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
       >
         <>
           <View style={styles.item}>
-            <Text style={styles.exerciseName}>{exercise.name}</Text>
-            <Text style={styles.muscle}>{exercise.primary_muscles}</Text>
+            <Text variant="titleLarge">{exercise.name}</Text>
+            <Text style={styles.muscle} variant="titleSmall">
+              {exercise.primary_muscles}
+            </Text>
           </View>
-          <Button onPress={() => handleAddWorkoutUnit(exercise.id)}>
-            <Text style={styles.addButtonText} variant="bodyMedium">
+          <Button
+            style={styles.addButtonContainer}
+            onPress={() => handleAddWorkoutUnit(exercise.id)}
+          >
+            <Text style={styles.addButtonText} variant="bodyLarge">
               Add
             </Text>
           </Button>
-          {/*<TouchableRipple*/}
-          {/*  style={styles.addContainer}*/}
-          {/*  onPress={() => handleAddWorkoutUnit(exercise.id)}*/}
-          {/*>*/}
-          {/*  <Icon name={"plus"} size={32} color={colors.primary} />*/}
-          {/*</TouchableRipple>*/}
         </>
       </TouchableRipple>
       <Divider bold style={styles.divider} />

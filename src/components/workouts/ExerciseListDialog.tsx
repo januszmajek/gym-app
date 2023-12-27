@@ -72,9 +72,6 @@ const ExerciseListDialog: React.FC<ExerciseListDialogProps> = ({
       height: "80%",
       paddingHorizontal: 0,
     },
-    dialogTitle: {
-      fontSize: 20,
-    },
     dialogTitleContainer: {
       alignItems: "center",
       display: "flex",
@@ -129,7 +126,7 @@ const ExerciseListDialog: React.FC<ExerciseListDialogProps> = ({
                 onPress={() => setActiveExerciseDescriptionId(undefined)}
               />
             </TouchableRipple>
-            <Text style={styles.dialogTitle}>{activeExercise.name}</Text>
+            <Text variant="titleLarge">{activeExercise.name}</Text>
           </View>
           <ExerciseDescription exercise={activeExercise} />
         </Dialog>
@@ -148,7 +145,7 @@ const ExerciseListDialog: React.FC<ExerciseListDialogProps> = ({
                 onPress={hideAddExercise}
               />
             </TouchableRipple>
-            <Text style={styles.dialogTitle}>Add exercise</Text>
+            <Text variant="titleLarge">Add exercise</Text>
           </View>
           <View style={styles.exerciseListContainer}>
             <TextInput
