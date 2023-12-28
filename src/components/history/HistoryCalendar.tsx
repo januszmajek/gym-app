@@ -9,22 +9,13 @@ import { Button, Divider, Text } from "react-native-paper";
 import { format } from "date-fns";
 import useTraining from "../../hooks/stores/useTraining";
 import { Training } from "../../../types";
+import useHistory from "../../hooks/stores/useHistory";
 
 const HistoryCalendar = () => {
-  const { trainings } = useTraining();
+  const { trainings, getTrainingById } = useTraining();
+  const { setActiveTraining, setActiveTrainingHistoryId } = useHistory();
   console.log("TRAININGS:", trainings);
   const todayDate = format(new Date(), "yyyy-MM-dd");
-  // testing data
-  const data = [
-    {
-      title: "2023-12-01",
-      data: [
-        {
-          date: "2023-12-01T06:00:00.000Z",
-        },
-      ],
-    },
-  ];
 
   const transformTrainings = (trainings: Training[]) => {
     const transformedData = trainings.map((training) => {
@@ -85,7 +76,11 @@ const HistoryCalendar = () => {
   const markedDates = generateMarkedDates();
   const transformedTrainings = transformTrainings(trainings);
   console.log(JSON.stringify(transformedTrainings, null, 2));
-  console.log(JSON.stringify(data, null, 2));
+
+  const handleInfoPress = (id) => {
+    setActiveTrainingHistoryId(id);
+    setActiveTraining(getTrainingById(id));
+  };
 
   const renderItem = (item) => {
     const start_time = format(new Date(item.item.date_start), "HH:mm");
@@ -99,7 +94,7 @@ const HistoryCalendar = () => {
             </Text>
             <Text variant="titleMedium">{item.item.name}</Text>
           </View>
-          <Button>
+          <Button onPress={() => handleInfoPress(item.item.id)}>
             <Text>Info</Text>
           </Button>
         </View>
@@ -134,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 20,
     marginRight: 30,
-    paddingBottom: 8,
+    paddingVertical: 8,
   },
   textWrapper: {
     display: "flex",

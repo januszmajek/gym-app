@@ -10,7 +10,7 @@ interface TrainingStore {
   removeTraining: (trainingId: string) => void;
   updateTraining: (trainingId: string, updatedTraining: Training) => void;
   getTrainingById: (trainingId: string) => Training | undefined;
-  setActiveTrainingId: (TrainingId: string | undefined) => void;
+  setActiveTrainingId: (trainingId: string | undefined) => void;
   syncTrainings: (trainings: Training[]) => void;
 }
 

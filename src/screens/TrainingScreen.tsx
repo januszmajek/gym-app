@@ -27,7 +27,7 @@ export default function TrainingScreen() {
           activeWorkoutId={activeWorkoutId}
         />
       ) : activeTrainingId ? (
-        <TrainingSummary />
+        <TrainingSummary type="training" />
       ) : activeWorkoutUnitId ? (
         <SafeAreaView>
           <WorkoutUnit workoutUnitId={activeWorkoutUnitId} />

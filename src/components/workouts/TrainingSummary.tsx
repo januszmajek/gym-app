@@ -7,9 +7,14 @@ import { Card } from "react-native-paper";
 import SummaryHeader from "./SummaryHeader";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useSettings from "../../hooks/stores/useSettings";
+import useHistory from "../../hooks/stores/useHistory";
 
-const TrainingSummary = () => {
-  const { activeTraining } = useTraining();
+interface TrainingSummaryProps {
+  type: "training" | "history";
+}
+
+const TrainingSummary: React.FC<TrainingSummaryProps> = ({ type }) => {
+  const { activeTraining } = type === "training" ? useTraining() : useHistory();
   const [duration, setDuration] = useState<string>();
   const [weightSum, setWeightSum] = useState<number>();
   const [setsSum, setSetsSum] = useState<number>();
@@ -128,7 +133,9 @@ const TrainingSummary = () => {
   return (
     <SafeAreaView>
       <ScrollView stickyHeaderIndices={[0]}>
-        {activeTraining && <SummaryHeader name={activeTraining.name} />}
+        {activeTraining && (
+          <SummaryHeader name={activeTraining.name} type={type} />
+        )}
         <View style={styles.summaryCards}>
           <Card style={styles.cardContainer}>
             <Card.Content style={styles.cardContent}>
