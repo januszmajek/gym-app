@@ -19,12 +19,6 @@ const useTraining = create<TrainingStore>((set, get) => ({
   activeTraining: undefined,
   activeTrainingId: undefined,
   setActiveTraining: (training) => {
-    console.log(
-      "ZUSTAND: setActiveTraining:",
-      get().activeTraining,
-      "---->",
-      training,
-    );
     set(() => ({
       activeTraining: training,
     }));
