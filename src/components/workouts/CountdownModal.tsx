@@ -8,6 +8,7 @@ import {
   TouchableRipple,
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Sound from "react-native-sound";
 
 interface CountdownModalProps {
   visible: boolean;
@@ -27,11 +28,44 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
   const { colors } = useTheme();
+  const [sound, setSound] = useState(
+    new Sound("countdown.mp3", Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.error("Error loading sound file:", error);
+      }
+
+      console.log(
+        "duration in seconds: " +
+          sound.getDuration() +
+          "number of channels: " +
+          sound.getNumberOfChannels(),
+      );
+    }),
+  );
+
+  useEffect(() => {
+    // Component Mount logic
+
+    // Clean up function to be executed when the component is unmounted
+    return () => {
+      // Play the sound when the component is unmounted
+      sound.play((success) => {
+        if (success) {
+          console.log("Sound played successfully");
+        } else {
+          console.error("Error playing sound");
+        }
+      });
+
+      // Release the sound resources
+      // sound.release();
+    };
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (visible && secondsRemaining > 0) {
+    if (visible && secondsRemaining >= 0) {
       timer = setInterval(() => {
         setSecondsRemaining((prev) => prev - 1);
       }, 1000);
