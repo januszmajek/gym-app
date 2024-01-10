@@ -10,6 +10,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Vibration } from "react-native";
 import Sound from "react-native-sound";
+import useSettings from "../../hooks/stores/useSettings";
 
 interface CountdownModalProps {
   visible: boolean;
@@ -28,6 +29,7 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
   const [progress, setProgress] = useState(1);
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
+  const { vibrate } = useSettings();
   const { colors } = useTheme();
 
   const soundRef = useRef<Sound | null>(null);
@@ -56,7 +58,7 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
     // Clean up function to be executed when the component is unmounted
     return () => {
       // Play the sound and vibrate when the component is unmounted
-      Vibration.vibrate([500, 500]);
+      if (vibrate) Vibration.vibrate([500, 500]);
       soundRef.current?.play((success) => {
         if (success) {
           console.log("Sound played successfully");
