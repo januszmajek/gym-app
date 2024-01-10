@@ -8,6 +8,7 @@ import {
   TouchableRipple,
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Vibration } from "react-native";
 import Sound from "react-native-sound";
 
 interface CountdownModalProps {
@@ -54,7 +55,8 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
 
     // Clean up function to be executed when the component is unmounted
     return () => {
-      // Play the sound when the component is unmounted
+      // Play the sound and vibrate when the component is unmounted
+      Vibration.vibrate([500, 500]);
       soundRef.current?.play((success) => {
         if (success) {
           console.log("Sound played successfully");
