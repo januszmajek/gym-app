@@ -11,7 +11,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Vibration } from "react-native";
 import Sound from "react-native-sound";
 import useSettings from "../../hooks/stores/useSettings";
-
 interface CountdownModalProps {
   visible: boolean;
   onClose: () => void;

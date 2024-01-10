@@ -14,6 +14,8 @@ import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import useTrainingSet from "../../hooks/stores/useTrainingSet";
 import { Training as ITraining } from "../../../types";
 import CountdownModal from "./CountdownModal";
+import KeepAwake from "react-native-keep-awake";
+import useSettings from "../../hooks/stores/useSettings";
 
 interface TrainingProps {
   activeTrainingId: string;
@@ -37,6 +39,7 @@ const Training: React.FC<TrainingProps> = ({
   const [countdownVisibility, setCountdownVisibility] = useState(false);
   const [pauseDuration, setPauseDuration] = useState(0);
   const [countdownSetId, setCountdownSetId] = useState("");
+  const { keepScreenOn } = useSettings();
 
   useEffect(() => {
     // console.log("ACTIVE TRAINING CHANGED: ", activeTraining);
@@ -59,6 +62,16 @@ const Training: React.FC<TrainingProps> = ({
       ),
     );
     addTrainingUnits(filledTrainingUnits);
+  }, []);
+
+  useEffect(() => {
+    if (keepScreenOn) {
+      KeepAwake.activate();
+    }
+    // Deactivate wake lock on component unmount
+    return () => {
+      KeepAwake.deactivate();
+    };
   }, []);
 
   const handleFinishTraining = async () => {
