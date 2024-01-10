@@ -36,6 +36,7 @@ const Training: React.FC<TrainingProps> = ({
     useTrainingSet();
   const [countdownVisibility, setCountdownVisibility] = useState(false);
   const [pauseDuration, setPauseDuration] = useState(0);
+  const [countdownSetId, setCountdownSetId] = useState("");
 
   useEffect(() => {
     // console.log("ACTIVE TRAINING CHANGED: ", activeTraining);
@@ -82,6 +83,7 @@ const Training: React.FC<TrainingProps> = ({
     pause: number,
     set: TrainingExercise,
   ) => {
+    setCountdownSetId(setId);
     if (pause > 0) {
       setPauseDuration(pause);
       setCountdownVisibility(true);
@@ -130,6 +132,7 @@ const Training: React.FC<TrainingProps> = ({
       )}
       {countdownVisibility && (
         <CountdownModal
+          id={countdownSetId}
           visible={countdownVisibility}
           duration={pauseDuration}
           onClose={() => {

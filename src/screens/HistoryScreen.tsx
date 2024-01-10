@@ -3,8 +3,11 @@ import AppBar from "../components/AppBar";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import HistoryCalendar from "../components/history/HistoryCalendar";
+import TrainingSummary from "../components/workouts/TrainingSummary";
+import useHistory from "../hooks/stores/useHistory";
 
 export default function HistoryScreen() {
+  const { activeTrainingHistoryId } = useHistory();
   // interface historyItem {
   //   time: Date;
   //   date: Date;
@@ -74,20 +77,14 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.screen}>
-      <AppBar title="Historia" />
-      {/*<Text variant="headlineMedium" style={styles.text}>*/}
-      {/*  Historia!*/}
-      {/*</Text>*/}
-      <HistoryCalendar />
-
-      {/*<HistoryCalendar markedDates={marked} markingType="multi-dot" />*/}
-      {/*<SafeAreaView style={{ flex: 1 }}>*/}
-      {/*  <FlatList*/}
-      {/*    data={history}*/}
-      {/*    renderItem={historyItem}*/}
-      {/*    style={styles.flatList}*/}
-      {/*  />*/}
-      {/*</SafeAreaView>*/}
+      {!activeTrainingHistoryId ? (
+        <>
+          <AppBar title="Historia" />
+          <HistoryCalendar />
+        </>
+      ) : (
+        <TrainingSummary type="history" />
+      )}
     </View>
   );
 }

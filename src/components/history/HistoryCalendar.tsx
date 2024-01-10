@@ -7,268 +7,46 @@ import {
 import { StyleSheet, View } from "react-native";
 import { Button, Divider, Text } from "react-native-paper";
 import { format } from "date-fns";
+import useTraining from "../../hooks/stores/useTraining";
+import { Training } from "../../../types";
+import useHistory from "../../hooks/stores/useHistory";
 
 const HistoryCalendar = () => {
+  const { trainings, getTrainingById } = useTraining();
+  const { setActiveTraining, setActiveTrainingHistoryId } = useHistory();
+  console.log("TRAININGS:", trainings);
   const todayDate = format(new Date(), "yyyy-MM-dd");
-  // testing data
-  const data = [
-    {
-      title: "2023-12-01",
-      data: [
-        {
-          date: "2023-12-01T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-02",
-      data: [
-        {
-          date: "2023-12-02T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-03",
-      data: [
-        {
-          date: "2023-12-03T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-04",
-      data: [
-        {
-          date: "2023-12-04T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-05",
-      data: [
-        {
-          date: "2023-12-05T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-06",
-      data: [
-        {
-          date: "2023-12-06T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-07",
-      data: [
-        {
-          date: "2023-12-07T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-08",
-      data: [
-        {
-          date: "2023-12-08T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-09",
-      data: [
-        {
-          date: "2023-12-09T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-10",
-      data: [
-        {
-          date: "2023-12-10T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-11",
-      data: [
-        {
-          date: "2023-12-11T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-12",
-      data: [
-        {
-          date: "2023-12-12T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-13",
-      data: [
-        {
-          date: "2023-12-13T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-14",
-      data: [
-        {
-          date: "2023-12-14T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-15",
-      data: [
-        {
-          date: "2023-12-15T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-16",
-      data: [
-        {
-          date: "2023-12-16T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-17",
-      data: [
-        {
-          date: "2023-12-17T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-18",
-      data: [
-        {
-          date: "2023-12-18T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-19",
-      data: [
-        {
-          date: "2023-12-19T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-20",
-      data: [
-        {
-          date: "2023-12-20T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-21",
-      data: [
-        {
-          date: "2023-12-21T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-22",
-      data: [
-        {
-          date: "2023-12-22T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-23",
-      data: [
-        {
-          date: "2023-12-23T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-24",
-      data: [
-        {
-          date: "2023-12-24T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-25",
-      data: [
-        {
-          date: "2023-12-25T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-26",
-      data: [
-        {
-          date: "2023-12-26T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-27",
-      data: [
-        {
-          date: "2023-12-27T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-28",
-      data: [
-        {
-          date: "2023-12-28T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-29",
-      data: [
-        {
-          date: "2023-12-29T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-30",
-      data: [
-        {
-          date: "2023-12-30T06:00:00.000Z",
-        },
-      ],
-    },
-    {
-      title: "2023-12-31",
-      data: [
-        {
-          date: "2023-12-31T06:00:00.000Z",
-        },
-      ],
-    },
-  ];
+
+  const transformTrainings = (trainings: Training[]) => {
+    const transformedData = trainings.map((training) => {
+      const title = format(training.date_start, "yyyy-MM-dd");
+      return {
+        title,
+        data: [{ ...training }],
+      };
+    });
+
+    // Combine sections with the same title
+    const groupedData = transformedData.reduce((acc, section) => {
+      const existingSection = acc.find((item) => item.title === section.title);
+      if (existingSection) {
+        existingSection.data.push(...section.data);
+      } else {
+        acc.push(section);
+      }
+      return acc;
+    }, []);
+
+    return groupedData;
+  };
 
   //TODO przykładowe, raczej do poprawy jak juz beda dane z bazy
   const generateMarkedDates = () => {
     const marked = {};
 
-    data.forEach((item) => {
-      // Assuming each 'title' is a date string in 'yyyy-MM-dd' format
-      const date = item.title;
+    trainings.forEach((item) => {
+      // Assuming each 'date_start\' is a date string in 'yyyy-MM-dd' format
+      const date = format(item.date_start, "yyyy-MM-dd");
       let color = "blue";
       if (date === todayDate) {
         color = "green"; // Color for today's date
@@ -296,20 +74,29 @@ const HistoryCalendar = () => {
   // };
 
   const markedDates = generateMarkedDates();
+  const transformedTrainings = transformTrainings(trainings);
+  console.log(JSON.stringify(transformedTrainings, null, 2));
+
+  const handleInfoPress = (id) => {
+    setActiveTrainingHistoryId(id);
+    setActiveTraining(getTrainingById(id));
+  };
 
   const renderItem = (item) => {
-    const index = format(new Date(item.item.date), "HH:mm");
+    const start_time = format(new Date(item.item.date_start), "HH:mm");
     // const index = format(new Date(item.item.date), "dd-MM-yyyy");
     return (
       <View>
-        <View key={index} style={styles.itemsWrapper}>
+        <View style={styles.itemsWrapper}>
           <View style={styles.textWrapper}>
             <Text variant="bodySmall" style={styles.hourText}>
-              {index}
+              {start_time}
             </Text>
-            <Text variant="titleMedium">Trening A</Text>
+            <Text variant="titleMedium">{item.item.name}</Text>
           </View>
-          <Button>Info</Button>
+          <Button onPress={() => handleInfoPress(item.item.id)}>
+            <Text>Info</Text>
+          </Button>
         </View>
         <Divider />
       </View>
@@ -322,13 +109,12 @@ const HistoryCalendar = () => {
         firstDay={1}
         closeOnDayPress={false}
         markedDates={markedDates}
-        // theme={useTheme()} //dostosowć
+        // theme={useTheme()} //dostosować
       />
       <AgendaList
-        sections={data}
+        sections={transformedTrainings}
         renderItem={renderItem}
-        // doesn't work with dots, need to handle it differently
-        avoidDateUpdates={false}
+        avoidDateUpdates={true}
       />
     </CalendarProvider>
   );
@@ -340,10 +126,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    // alignItems: "center",
+    alignItems: "center",
     marginLeft: 20,
     marginRight: 30,
-    paddingBottom: 8,
+    paddingVertical: 8,
   },
   textWrapper: {
     display: "flex",

@@ -13,12 +13,14 @@ interface CountdownModalProps {
   visible: boolean;
   onClose: () => void;
   duration: number;
+  id: string;
 }
 
 const CountdownModal: React.FC<CountdownModalProps> = ({
   visible,
   onClose,
   duration,
+  id,
 }) => {
   const [secondsRemaining, setSecondsRemaining] = useState(duration);
   const [progress, setProgress] = useState(1);
@@ -37,13 +39,13 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
     }
 
     return () => clearInterval(timer);
-  }, [visible, secondsRemaining]);
+  }, [visible, id, secondsRemaining]);
 
   useEffect(() => {
     if (visible) {
       setSecondsRemaining(duration);
     }
-  }, [visible, duration]);
+  }, [visible, id, duration]);
 
   useEffect(() => {
     const m = String(Math.floor(secondsRemaining / 60)).padStart(2, "0");

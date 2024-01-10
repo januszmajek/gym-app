@@ -3,13 +3,18 @@ import { View, StyleSheet } from "react-native";
 import { TouchableRipple, Text, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useTraining from "../../hooks/stores/useTraining";
+import useHistory from "../../hooks/stores/useHistory";
 
 interface SummaryHeaderProps {
   name: string;
+  type: "training" | "history";
 }
 
-const SummaryHeader: React.FC<SummaryHeaderProps> = ({ name }) => {
-  const { setActiveTrainingId, setActiveTraining } = useTraining();
+const SummaryHeader: React.FC<SummaryHeaderProps> = ({ name, type }) => {
+  const { setActiveTrainingId } = useTraining();
+  const { setActiveTraining } =
+    type === "training" ? useTraining() : useHistory();
+  const { setActiveTrainingHistoryId } = useHistory();
   const { colors } = useTheme();
 
   const styles = StyleSheet.create({
@@ -34,6 +39,7 @@ const SummaryHeader: React.FC<SummaryHeaderProps> = ({ name }) => {
       borderRadius: 15,
       flexGrow: 1,
       fontSize: 24,
+      maxWidth: "92%",
     },
   });
 
@@ -48,16 +54,29 @@ const SummaryHeader: React.FC<SummaryHeaderProps> = ({ name }) => {
           Summary: {name}
         </Text>
       </View>
-      <TouchableRipple
-        borderless
-        onPress={() => {
-          setActiveTraining(undefined);
-          setActiveTrainingId(undefined);
-        }}
-        style={styles.checkContainer}
-      >
-        <Icon name="check" size={32} color={colors.primary} />
-      </TouchableRipple>
+      {type === "training" ? (
+        <TouchableRipple
+          borderless
+          onPress={() => {
+            setActiveTraining(undefined);
+            setActiveTrainingId(undefined);
+          }}
+          style={styles.checkContainer}
+        >
+          <Icon name="check" size={32} color={colors.primary} />
+        </TouchableRipple>
+      ) : (
+        <TouchableRipple
+          borderless
+          onPress={() => {
+            setActiveTrainingHistoryId(undefined);
+            setActiveTraining(undefined);
+          }}
+          style={styles.checkContainer}
+        >
+          <Text>Back</Text>
+        </TouchableRipple>
+      )}
     </View>
   );
 };

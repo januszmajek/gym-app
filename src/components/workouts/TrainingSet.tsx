@@ -168,13 +168,13 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
           </TouchableRipple>
         </View>
         <Button
-          onPress={() =>
+          onPress={() => {
             handleCompleteExerciseSet(activeTraining, setId, pause, {
               weight,
               repetitions,
               name,
-            })
-          }
+            });
+          }}
         >
           <Text style={styles.completeText}>Complete</Text>
         </Button>
