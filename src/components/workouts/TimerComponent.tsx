@@ -10,7 +10,6 @@ const TimerComponent = () => {
     const interval = setInterval(() => {
       setSeconds((prevSeconds) => prevSeconds + 1);
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
