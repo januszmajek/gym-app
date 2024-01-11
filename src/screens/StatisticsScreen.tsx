@@ -32,8 +32,10 @@ export default function StatisticsScreen() {
     if (session) {
       const newStatistic = {
         id: uuid.v4() as string,
-        user_id: session?.user.id,
         name: statisticName,
+        icon: "custom",
+        unit: "",
+        currentValue: 0,
       };
       console.log("Adding workout:", newStatistic);
       addStatistic(newStatistic);
@@ -95,66 +97,13 @@ export default function StatisticsScreen() {
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-  const defaultItems = () => (
-    <>
-      <Card style={styles.card}>
-        <Card.Title
-          title="Weight"
-          titleStyle={styles.cardTitle}
-          titleVariant="titleLarge"
-          subtitle="Current: 81kg"
-          left={(props) => <Avatar.Icon {...props} icon="scale-bathroom" />}
-          right={(props) => (
-            <IconButton
-              {...props}
-              icon="chevron-right"
-              size={30}
-              onPress={() => {}}
-            />
-          )}
-        />
-      </Card>
-      <Card style={styles.card}>
-        <Card.Title
-          title="Body fat"
-          titleStyle={styles.cardTitle}
-          subtitle="Current: 30%"
-          left={(props) => <Avatar.Icon {...props} icon="water-percent" />}
-          right={(props) => (
-            <IconButton
-              {...props}
-              icon="chevron-right"
-              size={30}
-              onPress={() => {}}
-            />
-          )}
-        />
-      </Card>
-      <Card style={styles.card}>
-        <Card.Title
-          title="Belly waist"
-          titleStyle={styles.cardTitle}
-          subtitle="Current: 105cm"
-          left={(props) => <Avatar.Icon {...props} icon="ruler" />}
-          right={(props) => (
-            <IconButton
-              {...props}
-              icon="chevron-right"
-              size={30}
-              onPress={() => {}}
-            />
-          )}
-        />
-      </Card>
-    </>
-  );
   const customItem = ({ item }: { item: Statistic }) => (
     <Card style={styles.card}>
       <Card.Title
         title={`${item.name}`}
         titleVariant="titleLarge"
-        subtitle="CurrentDate: Value unit"
-        left={(props) => <Avatar.Icon {...props} icon="text-box-outline" />}
+        subtitle={`Current: ${item.currentValue}${item.unit}`}
+        left={(props) => <Avatar.Icon {...props} icon={item.icon} />}
         right={(props) => (
           <IconButton
             {...props}
@@ -176,7 +125,6 @@ export default function StatisticsScreen() {
       </Appbar.Header>
       <FlashList
         data={statistics}
-        ListHeaderComponent={defaultItems}
         renderItem={customItem}
         keyExtractor={(item) => item.id}
         estimatedItemSize={18}
