@@ -9,6 +9,7 @@ import {
   Portal,
   Text,
   TextInput,
+  TouchableRipple,
   useTheme,
 } from "react-native-paper";
 import { Appbar } from "react-native-paper";
@@ -62,7 +63,13 @@ export default function StatisticsScreen() {
   const styles = StyleSheet.create({
     screen: { backgroundColor: colors.background, minHeight: "100%" },
     card: { marginLeft: 10, marginRight: 10, marginBottom: 5, marginTop: 5 },
-    cardTitle: { fontSize: 20 },
+    buttonStyle: {
+      alignItems: "center",
+      backgroundColor: colors.primary,
+      borderRadius: 10,
+      color: colors.primaryContainer,
+      paddingVertical: 12,
+    },
     //button
     fab: {
       bottom: 0,
@@ -75,8 +82,7 @@ export default function StatisticsScreen() {
       paddingHorizontal: 5,
     },
     buttonText: {
-      //TODO: check later
-      color: "rgb(255, 255, 255)",
+      color: colors.primaryContainer,
     },
     dialogContent: {
       gap: 20,
@@ -89,6 +95,9 @@ export default function StatisticsScreen() {
     },
     listPadding: {
       paddingVertical: 69,
+    },
+    disabledButtonStyle: {
+      backgroundColor: colors.onSurfaceDisabled,
     },
     // container: { flex: 1 },
   });
@@ -163,13 +172,16 @@ export default function StatisticsScreen() {
                 mode="outlined"
               />
               {/*dziwne*/}
-              <Button
-                mode="contained"
+              <TouchableRipple
                 onPress={handleCreateWorkout}
                 disabled={statisticName.length < 1}
+                style={[
+                  styles.buttonStyle,
+                  statisticName.length < 1 && styles.disabledButtonStyle,
+                ]}
               >
                 <Text style={styles.buttonText}>Save</Text>
-              </Button>
+              </TouchableRipple>
             </Dialog.Content>
           </KeyboardAvoidingView>
         </Dialog>
