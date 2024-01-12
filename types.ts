@@ -63,9 +63,8 @@ export interface Training {
   exercises_done: TrainingExercise[];
 }
 
-export interface ValueDate {
-  value: number;
-  date: Date;
+export interface ValueDateDictionary {
+  [date: string]: number;
 }
 
 export interface Statistic {
@@ -79,5 +78,5 @@ export interface Statistic {
 export interface StatisticChart {
   id: string;
   statistic_id: string;
-  valuesWithDates: ValueDate[];
+  valuesWithDates: ValueDateDictionary;
 }
