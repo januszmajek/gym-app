@@ -1,6 +1,12 @@
 import { View, StyleSheet, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Text, TouchableRipple, useTheme, Card } from "react-native-paper";
+import {
+  Text,
+  TouchableRipple,
+  useTheme,
+  Card,
+  Switch,
+} from "react-native-paper";
 import useSettings from "../../hooks/stores/useSettings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Set } from "../../../types";
@@ -13,16 +19,16 @@ interface SetItemProps {
 }
 
 const SetItem: React.FC<SetItemProps> = ({
-  set: { id, workout_unit_id, weight, repetitions, pause },
+  set: { id, workout_unit_id, weight, repetitions, pause, type, time },
   sets,
   setSets,
 }) => {
   const weightValues = [
-    0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5,
-    7, 7.5, 8, 10, 12, 14, 16, 18, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40,
-    42.5, 45, 47.5, 50, 52.5, 55, 57.5, 60, 65, 70, 75, 80, 85, 90, 95, 100,
-    105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175,
-    180, 185, 190, 195, 200,
+    0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 10, 12, 14,
+    16, 18, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40, 42.5, 45, 47.5, 50,
+    52.5, 55, 57.5, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120,
+    125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180, 185, 190, 195,
+    200,
   ];
 
   const pauseValues = [
@@ -30,9 +36,17 @@ const SetItem: React.FC<SetItemProps> = ({
     135, 150, 165, 180, 210, 240, 270, 300,
   ];
 
+  const timeValues = [
+    5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80, 90, 100, 110, 120,
+    135, 150, 165, 180, 210, 240, 270, 300, 360, 420, 480, 600, 720, 900, 1200,
+    1800, 2400, 3000, 3600, 4200, 4800,
+  ];
+
   const { colors } = useTheme();
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
+  const [timeMinutes, setTimeMinutes] = useState("00");
+  const [timesSeconds, setTimeSeconds] = useState("00");
   const { weightUnit } = useSettings();
 
   const handleDeleteSet = () => {
@@ -51,10 +65,23 @@ const SetItem: React.FC<SetItemProps> = ({
       pause: pause,
       workout_unit_id: workout_unit_id,
       order: 0,
+      type: type,
+      time: time,
     };
     console.log("Copying set:", newSet);
     setSets([...sets, newSet]);
     return;
+  };
+
+  const handleSwitchType = () => {
+    const setIndex = sets.findIndex((set) => set.id === id);
+    const updatedSets = [...sets];
+    updatedSets[setIndex] = {
+      ...sets[setIndex],
+      type: type === "quantity" ? "time" : "quantity",
+    };
+
+    setSets(updatedSets);
   };
 
   const incrementWeight = () => {
@@ -138,7 +165,7 @@ const SetItem: React.FC<SetItemProps> = ({
     }
   };
 
-  const decrementPuase = () => {
+  const decrementPause = () => {
     const currentIndex = pauseValues.indexOf(pause);
 
     if (currentIndex > 0) {
@@ -156,12 +183,55 @@ const SetItem: React.FC<SetItemProps> = ({
     }
   };
 
+  const incrementTime = () => {
+    const currentIndex = timeValues.indexOf(time);
+
+    if (currentIndex < timeValues.length - 1) {
+      const setIndex = sets.findIndex((set) => set.id === id);
+
+      if (setIndex !== -1) {
+        const updatedSets = [...sets];
+        updatedSets[setIndex] = {
+          ...sets[setIndex],
+          time: timeValues[currentIndex + 1],
+        };
+
+        setSets(updatedSets);
+      }
+    }
+  };
+
+  const decrementTime = () => {
+    const currentIndex = timeValues.indexOf(time);
+
+    if (currentIndex > 0) {
+      const setIndex = sets.findIndex((set) => set.id === id);
+
+      if (setIndex !== -1) {
+        const updatedSets = [...sets];
+        updatedSets[setIndex] = {
+          ...sets[setIndex],
+          time: timeValues[currentIndex - 1],
+        };
+
+        setSets(updatedSets);
+      }
+    }
+  };
+
   useEffect(() => {
     const m = String(Math.floor(pause / 60)).padStart(2, "0");
     const s = String(pause % 60).padStart(2, "0");
     setMinutes(m);
     setSeconds(s);
   }, [pause]);
+
+  useEffect(() => {
+    const m = String(Math.floor(time / 60)).padStart(2, "0");
+    const s = String(time % 60).padStart(2, "0");
+    setTimeMinutes(m);
+    setTimeSeconds(s);
+  }, [time]);
 
   const styles = StyleSheet.create({
     actionsContainer: {
@@ -211,67 +281,116 @@ const SetItem: React.FC<SetItemProps> = ({
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.setContainer}>
+        <View style={styles.actionsContainer}>
+          <TouchableRipple
+            borderless
+            onPress={handleSwitchType}
+            style={styles.button}
+          >
+            <Icon
+              color={colors.primary}
+              name="refresh"
+              size={Platform.OS === "ios" ? 27 : 32}
+            />
+          </TouchableRipple>
+        </View>
         <View style={styles.valuesContainer}>
-          <View style={styles.valueRowContainer}>
-            <View style={styles.valueContainer}>
-              <TouchableRipple
-                borderless
-                style={styles.button}
-                onPress={incrementWeight}
-              >
-                <Icon
-                  color={colors.primary}
-                  name="plus"
-                  size={Platform.OS === "ios" ? 25 : 28}
-                />
-              </TouchableRipple>
-              <View style={styles.buttonContainer}>
-                <Text>Weight</Text>
-                <Text style={styles.buttonValue}>
-                  {weight} {weightUnit === "Kilogram" ? "kg" : "lbs"}
-                </Text>
+          {type === "quantity" ? (
+            <View style={styles.valueRowContainer}>
+              <View style={styles.valueContainer}>
+                <TouchableRipple
+                  borderless
+                  style={styles.button}
+                  onPress={incrementWeight}
+                >
+                  <Icon
+                    color={colors.primary}
+                    name="plus"
+                    size={Platform.OS === "ios" ? 25 : 28}
+                  />
+                </TouchableRipple>
+                <View style={styles.buttonContainer}>
+                  <Text>Weight</Text>
+                  <Text style={styles.buttonValue}>
+                    {weight} {weightUnit === "Kilogram" ? "kg" : "lbs"}
+                  </Text>
+                </View>
+                <TouchableRipple
+                  borderless
+                  style={styles.button}
+                  onPress={decrementWeight}
+                >
+                  <Icon
+                    color={colors.primary}
+                    name="minus"
+                    size={Platform.OS === "ios" ? 25 : 28}
+                  />
+                </TouchableRipple>
               </View>
-              <TouchableRipple
-                borderless
-                style={styles.button}
-                onPress={decrementWeight}
-              >
-                <Icon
-                  color={colors.primary}
-                  name="minus"
-                  size={Platform.OS === "ios" ? 25 : 28}
-                />
-              </TouchableRipple>
-            </View>
-            <View style={styles.valueContainer}>
-              <TouchableRipple
-                borderless
-                style={styles.button}
-                onPress={incrementRepetitions}
-              >
-                <Icon
-                  color={colors.primary}
-                  name="plus"
-                  size={Platform.OS === "ios" ? 25 : 28}
-                />
-              </TouchableRipple>
-              <View style={styles.buttonContainer}>
-                <Text>Reps</Text>
-                <Text style={styles.buttonValue}>{repetitions}</Text>
+              <View style={styles.valueContainer}>
+                <TouchableRipple
+                  borderless
+                  style={styles.button}
+                  onPress={incrementRepetitions}
+                >
+                  <Icon
+                    color={colors.primary}
+                    name="plus"
+                    size={Platform.OS === "ios" ? 25 : 28}
+                  />
+                </TouchableRipple>
+                <View style={styles.buttonContainer}>
+                  <Text>Reps</Text>
+                  <Text style={styles.buttonValue}>{repetitions}</Text>
+                </View>
+                <TouchableRipple
+                  borderless
+                  style={styles.button}
+                  onPress={decrementRepetitions}
+                >
+                  <Icon
+                    color={colors.primary}
+                    name="minus"
+                    size={Platform.OS === "ios" ? 25 : 28}
+                  />
+                </TouchableRipple>
               </View>
-              <TouchableRipple
-                borderless
-                style={styles.button}
-                onPress={decrementRepetitions}
-              >
-                <Icon
-                  color={colors.primary}
-                  name="minus"
-                  size={Platform.OS === "ios" ? 25 : 28}
-                />
-              </TouchableRipple>
             </View>
-          </View>
+          ) : (
+            <View style={styles.valueRowContainer}>
+              <View style={styles.valueContainer}>
+                <TouchableRipple
+                  borderless
+                  style={styles.button}
+                  onPress={incrementTime}
+                >
+                  <Icon
+                    color={colors.primary}
+                    name="plus"
+                    size={Platform.OS === "ios" ? 25 : 28}
+                  />
+                </TouchableRipple>
+                <View style={styles.buttonContainer}>
+                  <Text>Time</Text>
+                  <Text style={styles.buttonValue}>
+                    {timeMinutes}:{timesSeconds}
+                  </Text>
+                </View>
+                <TouchableRipple
+                  borderless
+                  style={styles.button}
+                  onPress={decrementTime}
+                >
+                  <Icon
+                    color={colors.primary}
+                    name="minus"
+                    size={Platform.OS === "ios" ? 25 : 28}
+                  />
+                </TouchableRipple>
+              </View>
+            </View>
+          )}
+
           <View style={styles.valueRowContainer}>
             <View style={styles.valueContainer}>
               <TouchableRipple
@@ -294,7 +413,7 @@ const SetItem: React.FC<SetItemProps> = ({
               <TouchableRipple
                 borderless
                 style={styles.button}
-                onPress={decrementPuase}
+                onPress={decrementPause}
               >
                 <Icon
                   color={colors.primary}

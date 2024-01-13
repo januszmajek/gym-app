@@ -36,6 +36,7 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
 
   const addSetToDB = async (set: Set) => {
     if (session) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { completed, ...restOfSet } = set;
       const { data, error: supabaseError } = await supabase
         .from("sets")
@@ -70,6 +71,8 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
         repetitions: 1,
         pause: 0,
         order: 0,
+        time: 0,
+        type: "quantity",
       };
       setSets([...sets, newSet]);
     }

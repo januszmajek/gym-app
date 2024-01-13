@@ -26,6 +26,8 @@ export interface Set {
   pause: number;
   order: number;
   completed?: boolean;
+  time: number;
+  type: string;
 }
 
 export interface WorkoutUnit {
