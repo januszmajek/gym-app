@@ -23,6 +23,7 @@ import useSession from "../../hooks/stores/useSession";
 
 export default function StatisticsList() {
   const [statisticName, setStatisticName] = useState("");
+  const [statisticUnit, setStatisticUnit] = useState("");
   const { colors } = useTheme();
   const [visible, setVisible] = useState(false);
   const { session } = useSession();
@@ -34,7 +35,7 @@ export default function StatisticsList() {
         id: uuid.v4() as string,
         name: statisticName,
         icon: "human",
-        unit: "",
+        unit: statisticUnit,
         currentValue: 0,
       };
       console.log("Adding workout:", newStatistic);
@@ -150,6 +151,7 @@ export default function StatisticsList() {
           visible={visible}
           onDismiss={() => {
             setStatisticName("");
+            setStatisticUnit("");
             hideDialog();
           }}
           style={styles.dialogContainer}
@@ -172,6 +174,16 @@ export default function StatisticsList() {
                 autoFocus
                 onChangeText={(statistictName) =>
                   setStatisticName(statistictName)
+                }
+                mode="outlined"
+              />
+              <TextInput
+                style={styles.inputText}
+                outlineStyle={styles.outline}
+                value={statisticUnit}
+                label="Measurement unit e.g. kg, %"
+                onChangeText={(statistictUnit) =>
+                  setStatisticUnit(statistictUnit)
                 }
                 mode="outlined"
               />

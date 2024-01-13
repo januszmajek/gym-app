@@ -6,9 +6,13 @@ import useStatistics from "../../hooks/stores/useStatistic";
 
 interface StatisticHeaderProps {
   statisticId: string;
+  handleDeleteStatistic: () => void;
 }
 
-const StatisticHeader: React.FC<StatisticHeaderProps> = ({ statisticId }) => {
+const StatisticHeader: React.FC<StatisticHeaderProps> = ({
+  statisticId,
+  handleDeleteStatistic,
+}) => {
   const { getStatisticById, setActiveStatisticId } = useStatistics();
   const statistic = getStatisticById(statisticId);
   const { colors } = useTheme();
@@ -73,10 +77,12 @@ const StatisticHeader: React.FC<StatisticHeaderProps> = ({ statisticId }) => {
       </View>
       <TouchableRipple
         borderless
-        onPress={() => {}}
+        onPress={handleDeleteStatistic}
         style={styles.saveContainer}
       >
-        <Text variant="bodyLarge" style={styles.saveText}></Text>
+        <Text variant="bodyLarge" style={styles.saveText}>
+          Delete
+        </Text>
       </TouchableRipple>
     </View>
   );

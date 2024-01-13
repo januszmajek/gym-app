@@ -27,8 +27,10 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     updateStatisticChart,
     addStatisticChart,
     getStatisticChartByStatisticId,
+    removeStatisticChart,
   } = useStatisticChart();
-  const { getStatisticById } = useStatistic();
+  const { removeStatistic, getStatisticById, setActiveStatisticId } =
+    useStatistic();
   const statistic = getStatisticById(statistic_id);
   const statisticChart = getStatisticChartByStatisticId(statistic_id);
   const screenWidth = Dimensions.get("window").width;
@@ -39,7 +41,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
       {
         data: [85, 86, 87, 85, 86, 83],
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 2, // optional
+        strokeWidth: 5, // optional
       },
     ],
     legend: ["Weight"], // optional
@@ -53,20 +55,11 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   };
 
   function incrementLastDigit(dateString) {
-    // Convert the string to an array of characters
     const dateArray = dateString.split("");
-
-    // Convert the last character to a number and increment it
     let lastDigit = parseInt(dateArray[dateArray.length - 1]);
     lastDigit++;
-
-    // Convert the incremented number back to a string
     const updatedLastDigit = lastDigit.toString();
-
-    // Replace the last character in the array with the updated character
     dateArray[dateArray.length - 1] = updatedLastDigit;
-
-    // Join the array back into a string and return
     return dateArray.join("");
   }
 
@@ -89,6 +82,12 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     });
   };
 
+  const handleDeleteStatistic = () => {
+    removeStatistic(statistic.id);
+    removeStatisticChart(statisticChart.id);
+    setActiveStatisticId(undefined);
+  };
+
   function formatDate(dateString: string): string {
     const [year, month, day] = dateString.split("-");
     return `${day}.${month}`;
@@ -106,7 +105,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     const data = sortedPairs.map(([, value]) => value);
 
     const chartData: ChartData = {
-      labels: labels.map(formatDate), // Assuming formatDate is a function to format the date
+      labels: labels.map(formatDate),
       datasets: [
         {
           data,
@@ -114,6 +113,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
           strokeWidth: 2,
         },
       ],
+      legend: ["Weight"],
     };
 
     return chartData;
@@ -170,12 +170,16 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
 
   return (
     <View>
-      <StatisticHeader statisticId={statistic_id} />
+      <StatisticHeader
+        statisticId={statistic_id}
+        handleDeleteStatistic={handleDeleteStatistic}
+      />
       <LineChart
         data={data}
         width={screenWidth}
         height={220}
         chartConfig={chartConfig}
+        yAxisSuffix={statistic.unit}
       />
       <View>
         <TouchableRipple style={styles.buttonStyle} onPress={addValueWithDate}>
