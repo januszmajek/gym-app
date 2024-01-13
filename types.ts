@@ -63,7 +63,20 @@ export interface Training {
   exercises_done: TrainingExercise[];
 }
 
+export interface ValueDateDictionary {
+  [date: string]: number;
+}
+
 export interface Statistic {
   id: string;
   name: string;
+  currentValue: number;
+  unit: string;
+  icon: "scale-bathroom" | "water-percent" | "ruler" | "human";
+}
+
+export interface StatisticChart {
+  id: string;
+  statistic_id: string;
+  valuesWithDates: ValueDateDictionary;
 }
