@@ -32,12 +32,16 @@ interface ChartData {
 const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   const {
     updateStatisticChart,
-    addStatisticChart,
     getStatisticChartByStatisticId,
     removeStatisticChart,
+    addStatisticChart,
   } = useStatisticChart();
-  const { removeStatistic, getStatisticById, setActiveStatisticId } =
-    useStatistic();
+  const {
+    removeStatistic,
+    getStatisticById,
+    setActiveStatisticId,
+    updateStatistic,
+  } = useStatistic();
   const [visible, setVisible] = useState(false);
   const [newValue, setNewValue] = useState<string>("");
   const statistic = getStatisticById(statistic_id);
@@ -60,35 +64,39 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     return `${year}-${month}-${day}`;
   }
 
-  const [data, setData] = useState<ChartData>({
-    labels: ["05.01", "06.01", "07.01"],
-    datasets: [
-      {
-        data: [85, 86, 87, 85, 86, 83],
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 2, // optional
-      },
-    ],
-    legend: [statistic.name],
-  });
-
-  function incrementLastDigit(dateString) {
-    const dateArray = dateString.split("");
-    let lastDigit = parseInt(dateArray[dateArray.length - 1]);
-    lastDigit++;
-    const updatedLastDigit = lastDigit.toString();
-    dateArray[dateArray.length - 1] = updatedLastDigit;
-    return dateArray.join("");
-  }
+  const [data, setData] = useState<ChartData>(
+    statisticChart ? transformData(statisticChart.valuesWithDates) : undefined,
+  );
 
   const addValueWithDate = () => {
-    updateStatisticChart(statisticChart.id, {
-      ...statisticChart,
-      valuesWithDates: {
-        ...statisticChart.valuesWithDates,
-        [today]: parseInt(newValue, 10), // Convert newValue to a number
-      },
-    });
+    const value = parseInt(newValue, 10);
+    if (data) {
+      updateStatisticChart(statisticChart.id, {
+        ...statisticChart,
+        valuesWithDates: {
+          ...statisticChart.valuesWithDates,
+          [today]: value, // Convert newValue to a number
+        },
+      });
+      updateStatistic(statistic_id, {
+        ...statistic,
+        currentValue: value,
+      });
+    } else {
+      addStatisticChart({
+        id: uuid.v4() as string,
+        statistic_id: statistic.id,
+        valuesWithDates: {
+          [today]: value,
+        },
+      });
+      updateStatistic(statistic_id, {
+        ...statistic,
+        currentValue: value,
+      });
+    }
+    hideDialog();
+    setNewValue("");
   };
 
   const handleDeleteStatistic = () => {
@@ -123,28 +131,11 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
           strokeWidth: 2,
         },
       ],
-      legend: [statistic.name],
+      legend: [`${statistic.name} in ${statistic.unit}`],
     };
 
     return chartData;
   }
-
-  // useEffect(() => {
-  //   if (statisticChart) return;
-  //   console.log("Statistic chart not found, adding few points...");
-  //   addStatisticChart({
-  //     id: uuid.v4() as string,
-  //     statistic_id: statistic.id,
-  //     valuesWithDates: {
-  //       "2024-01-12": 67,
-  //       "2024-01-07": 69,
-  //       "2024-01-04": 68,
-  //       "2024-01-02": 70,
-  //       "2023-12-28": 71,
-  //       "2023-12-23": 68,
-  //     },
-  //   });
-  // }, []);
 
   useEffect(() => {
     if (!statisticChart) return;
@@ -153,10 +144,10 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   }, [statisticChart]);
 
   const chartConfig = {
-    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFrom: "#ffffff",
     backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#08130D",
-    backgroundGradientToOpacity: 0.5,
+    backgroundGradientTo: "#ffffff",
+    backgroundGradientToOpacity: 0,
     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.5,
@@ -209,13 +200,15 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
         statisticId={statistic_id}
         handleDeleteStatistic={handleDeleteStatistic}
       />
-      <LineChart
-        data={data}
-        width={screenWidth}
-        height={220}
-        chartConfig={chartConfig}
-        yAxisSuffix={statistic.unit}
-      />
+      {data && (
+        <LineChart
+          data={data}
+          width={screenWidth}
+          height={220}
+          chartConfig={chartConfig}
+          yAxisSuffix={statistic.unit}
+        />
+      )}
       <View>
         <TouchableRipple style={styles.buttonStyle} onPress={showDialog}>
           <Text style={styles.buttonText}>Add current value</Text>
