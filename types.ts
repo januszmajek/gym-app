@@ -53,8 +53,10 @@ export interface Workout {
 
 export interface TrainingExercise {
   name: string;
+  type: string;
   repetitions: number;
   weight: number;
+  time: number;
 }
 
 export interface Training {

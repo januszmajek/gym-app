@@ -49,7 +49,9 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = ({ type }) => {
   const weightCalc = (exercises: TrainingExercise[]): number => {
     let weightSum = 0;
     exercises.forEach((exercises) => {
-      weightSum = weightSum + exercises.weight * exercises.repetitions;
+      if (exercises.type === "quantity") {
+        weightSum = weightSum + exercises.weight * exercises.repetitions;
+      }
     });
     return weightSum;
   };
@@ -181,11 +183,21 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = ({ type }) => {
                         <View style={styles.indexContainer}>
                           <Text variant="bodyLarge">Set {index + 1}</Text>
                         </View>
-                        <Text variant="bodyLarge">
-                          {exercise.weight}{" "}
-                          {weightUnit === "Kilogram" ? "kg" : "lbs"} x{" "}
-                          {exercise.repetitions}
-                        </Text>
+                        {exercise.type === "quantity" ? (
+                          <Text variant="bodyLarge">
+                            {exercise.weight}{" "}
+                            {weightUnit === "Kilogram" ? "kg" : "lbs"} x{" "}
+                            {exercise.repetitions}
+                          </Text>
+                        ) : (
+                          <Text variant="bodyLarge">
+                            {String(Math.floor(exercise.time / 60)).padStart(
+                              2,
+                              "0",
+                            )}
+                            :{String(exercise.time % 60).padStart(2, "0")}
+                          </Text>
+                        )}
                       </View>
                     ))}
                   </View>

@@ -10,6 +10,7 @@ interface TrainingSetStore {
     getTrainingSetById: (setId: string) => TrainingSet | undefined;
     updateWeight: (setId: string, newWeight: number) => void;
     updateRepetitions: (setId: string, newReps: number) => void;
+    updateTime: (setId: string, newTime: number) => void;
     clearTrainingSets: () => void;
     getTrainingSetsByUnitId: (trainingUnitId: string) => TrainingSet[];
 }
@@ -64,6 +65,14 @@ const usetrainingSet = create<TrainingSetStore>((set, get) => ({
             trainingSets: state.trainingSets.map((trainingSet) =>
                 trainingSet.id === setId
                     ? { ...trainingSet, repetitions: newReps }
+                    : trainingSet,
+            ),
+        })),
+    updateTime: (setId, newTime) =>
+        set((state) => ({
+            trainingSets: state.trainingSets.map((trainingSet) =>
+                trainingSet.id === setId
+                    ? { ...trainingSet, time: newTime }
                     : trainingSet,
             ),
         })),
