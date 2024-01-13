@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, TouchableRipple, useTheme } from "react-native-paper";
+import {
+  Dialog,
+  Portal,
+  Text,
+  TextInput,
+  TouchableRipple,
+  useTheme,
+} from "react-native-paper";
 import useStatisticChart from "../../hooks/stores/useStatisticChart";
 import StatisticHeader from "./StatisticHeader";
 import { LineChart } from "react-native-chart-kit";
@@ -31,28 +38,39 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   } = useStatisticChart();
   const { removeStatistic, getStatisticById, setActiveStatisticId } =
     useStatistic();
+  const [visible, setVisible] = useState(false);
+  const [newValue, setNewValue] = useState<string>("");
   const statistic = getStatisticById(statistic_id);
   const statisticChart = getStatisticChartByStatisticId(statistic_id);
   const screenWidth = Dimensions.get("window").width;
   const { colors } = useTheme();
+  const today = getFormattedDate();
+
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
+
+  function getFormattedDate(): string {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const day = today.getDate().toString().padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
   const [data, setData] = useState<ChartData>({
-    labels: ["05.01", "06.01", "07.01", "08.01", "09.01", "10.01"],
+    labels: ["05.01", "06.01", "07.01"],
     datasets: [
       {
         data: [85, 86, 87, 85, 86, 83],
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 5, // optional
+        strokeWidth: 2, // optional
       },
     ],
-    legend: ["Weight"], // optional
+    legend: [statistic.name],
   });
-  const [nextDay, setNextDay] = useState("2024-01-13");
-
-  const getRandomNumber = () => {
-    const min = 65;
-    const max = 73;
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
 
   function incrementLastDigit(dateString) {
     const dateArray = dateString.split("");
@@ -64,20 +82,11 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   }
 
   const addValueWithDate = () => {
-    const temp = nextDay;
-    setNextDay(incrementLastDigit(temp));
-    console.log("adding new value:", {
-      ...statisticChart,
-      valuesWithDates: {
-        ...statisticChart.valuesWithDates,
-        [nextDay]: getRandomNumber(),
-      },
-    });
     updateStatisticChart(statisticChart.id, {
       ...statisticChart,
       valuesWithDates: {
         ...statisticChart.valuesWithDates,
-        [nextDay]: getRandomNumber(),
+        [today]: parseInt(newValue, 10), // Convert newValue to a number
       },
     });
   };
@@ -89,6 +98,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   };
 
   function formatDate(dateString: string): string {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [year, month, day] = dateString.split("-");
     return `${day}.${month}`;
   }
@@ -113,28 +123,28 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
           strokeWidth: 2,
         },
       ],
-      legend: ["Weight"],
+      legend: [statistic.name],
     };
 
     return chartData;
   }
 
-  useEffect(() => {
-    if (statisticChart) return;
-    console.log("Statistic chart not found, adding few points...");
-    addStatisticChart({
-      id: uuid.v4() as string,
-      statistic_id: statistic.id,
-      valuesWithDates: {
-        "2024-01-12": 67,
-        "2024-01-07": 69,
-        "2024-01-04": 68,
-        "2024-01-02": 70,
-        "2023-12-28": 71,
-        "2023-12-23": 68,
-      },
-    });
-  }, []);
+  // useEffect(() => {
+  //   if (statisticChart) return;
+  //   console.log("Statistic chart not found, adding few points...");
+  //   addStatisticChart({
+  //     id: uuid.v4() as string,
+  //     statistic_id: statistic.id,
+  //     valuesWithDates: {
+  //       "2024-01-12": 67,
+  //       "2024-01-07": 69,
+  //       "2024-01-04": 68,
+  //       "2024-01-02": 70,
+  //       "2023-12-28": 71,
+  //       "2023-12-23": 68,
+  //     },
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (!statisticChart) return;
@@ -166,7 +176,32 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     buttonText: {
       color: colors.primaryContainer,
     },
+    dialogContainer: { paddingHorizontal: 5 },
+    dialogContent: {
+      gap: 20,
+    },
+    dialogTitle: {
+      color: colors.primary,
+      fontSize: 21,
+    },
+    disabledButtonStyle: {
+      backgroundColor: colors.onSurfaceDisabled,
+    },
+    inputText: {
+      textDecorationLine: "none",
+    },
+    outline: {
+      borderRadius: 4,
+    },
   });
+
+  const handleNumericInput = (text: string) => {
+    // Use a regular expression to allow only numeric input
+    const numericOnly = text.replace(/[^0-9]/g, "");
+    setNewValue(numericOnly);
+    console.log(text);
+    console.log(newValue.length > 0 ? false : true);
+  };
 
   return (
     <View>
@@ -182,10 +217,50 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
         yAxisSuffix={statistic.unit}
       />
       <View>
-        <TouchableRipple style={styles.buttonStyle} onPress={addValueWithDate}>
-          <Text style={styles.buttonText}>Add chart value</Text>
+        <TouchableRipple style={styles.buttonStyle} onPress={showDialog}>
+          <Text style={styles.buttonText}>Add current value</Text>
         </TouchableRipple>
       </View>
+      <Portal>
+        <Dialog
+          visible={visible}
+          onDismiss={() => {
+            hideDialog();
+            setNewValue("");
+          }}
+          style={styles.dialogContainer}
+        >
+          <Dialog.Title style={styles.dialogTitle}>
+            <Text>Add current value to chart</Text>
+          </Dialog.Title>
+          <Dialog.Content style={styles.dialogContent}>
+            <TextInput
+              value={newValue}
+              onChangeText={handleNumericInput}
+              mode="outlined"
+              label={statistic.name}
+              placeholder={`Today's ${statistic.name.toLowerCase()} in ${
+                statistic.unit
+              }`}
+              autoFocus
+              style={styles.inputText}
+              outlineStyle={styles.outline}
+              activeUnderlineColor="rgba(0,0,0,0)"
+              keyboardType="numeric"
+            />
+            <TouchableRipple
+              style={[
+                styles.buttonStyle,
+                !(newValue.length > 0) && styles.disabledButtonStyle,
+              ]}
+              onPress={addValueWithDate}
+              disabled={newValue.length > 0 ? false : true}
+            >
+              <Text style={styles.buttonText}>Save</Text>
+            </TouchableRipple>
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
     </View>
   );
 };
