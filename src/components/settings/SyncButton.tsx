@@ -8,6 +8,8 @@ import useExercise from "../../hooks/stores/useExercise";
 import { supabase } from "../../../supabase/supabase";
 import useSession from "../../hooks/stores/useSession";
 import useSet from "../../hooks/stores/useSet";
+import useTraining from "../../hooks/stores/useTraining";
+import { Training, TrainingExercise } from "../../../types";
 
 const SyncButton = () => {
   const { colors } = useTheme();
@@ -16,6 +18,7 @@ const SyncButton = () => {
   const { syncWorkoutUnits } = useWorkoutUnits();
   const { syncSets } = useSet();
   const { syncExercises } = useExercise();
+  const { addTraining, clearTrainings } = useTraining();
 
   const styles = StyleSheet.create({
     buttonStyle: {
@@ -75,6 +78,40 @@ const SyncButton = () => {
         else {
           console.log("Syncing exercises");
           syncExercises(data);
+        }
+      }
+      {
+        const { data, error: supabaseError } = await supabase
+          .from("trainings")
+          .select("*")
+          .eq("user_id", session.user.id);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
+        else {
+          clearTrainings();
+          console.log("Syncing trainings");
+          data.map((training) => {
+            const jsonArray = JSON.parse(training.exercises_done);
+            const trainingExercises: TrainingExercise[] = jsonArray.map(
+              (exercise: TrainingExercise) => {
+                return {
+                  name: exercise.name,
+                  type: exercise.type,
+                  repetitions: exercise.repetitions,
+                  weight: exercise.weight,
+                  time: exercise.time,
+                };
+              },
+            );
+            console.log("TRAINING EXERCISES:", trainingExercises);
+            const newTraining = {
+              ...training,
+              date_start: new Date(training.date_start),
+              date_end: new Date(training.date_end),
+              exercises_done: trainingExercises,
+            };
+            console.log(newTraining);
+            addTraining(newTraining);
+          });
         }
       }
     }

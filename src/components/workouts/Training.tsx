@@ -16,6 +16,8 @@ import { Training as ITraining } from "../../../types";
 import CountdownModal from "./CountdownModal";
 import KeepAwake from "react-native-keep-awake";
 import useSettings from "../../hooks/stores/useSettings";
+import useSession from "../../hooks/stores/useSession";
+import { supabase } from "../../../supabase/supabase";
 
 interface TrainingProps {
   activeTrainingId: string;
@@ -40,6 +42,7 @@ const Training: React.FC<TrainingProps> = ({
   const [pauseDuration, setPauseDuration] = useState(0);
   const [countdownSetId, setCountdownSetId] = useState("");
   const { keepScreenOn } = useSettings();
+  const { session } = useSession();
 
   useEffect(() => {
     // console.log("ACTIVE TRAINING CHANGED: ", activeTraining);
@@ -76,14 +79,29 @@ const Training: React.FC<TrainingProps> = ({
 
   const handleFinishTraining = async () => {
     if (activeTraining) {
-      setActiveTraining({
+      const training = {
         ...activeTraining,
         date_end: new Date(Date.now()),
-      });
-      updateTraining(activeTrainingId, {
-        ...activeTraining,
-        date_end: new Date(Date.now()),
-      });
+      };
+      setActiveTraining(training);
+      updateTraining(activeTrainingId, training);
+      console.log("INSERTING NEW TRAINING INTO DB:", training);
+      if (session) {
+        const supabaseTraining = {
+          ...training,
+          date_end: training.date_end.toISOString(),
+          date_start: training.date_start.toISOString(),
+          exercises_done: JSON.stringify(training.exercises_done),
+          user_id: session?.user.id,
+        };
+        const { data, error: supabaseError } = await supabase
+          .from("trainings")
+          .insert(supabaseTraining)
+          .select()
+          .single();
+        if (supabaseError) console.log(supabaseError);
+        if (data) console.log(data);
+      }
       clearTrainingUnits();
       clearTrainingSets();
       setActiveWorkoutId(undefined);
