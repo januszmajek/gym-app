@@ -76,7 +76,6 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
       };
       setSets([...sets, newSet]);
     }
-    console.log("Deleted Workout Unit:", workoutUnitId);
   };
 
   const styles = StyleSheet.create({
