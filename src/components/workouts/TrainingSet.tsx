@@ -71,7 +71,7 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
   };
 
   const incrementTime = () => {
-    const currentIndex = timeValues.indexOf(weight);
+    const currentIndex = timeValues.indexOf(time);
 
     if (currentIndex < timeValues.length) {
       updateTime(setId, timeValues[currentIndex + 1]);
@@ -79,7 +79,7 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
   };
 
   const decrementTime = () => {
-    const currentIndex = timeValues.indexOf(weight);
+    const currentIndex = timeValues.indexOf(time);
 
     if (currentIndex > 0) {
       updateTime(setId, timeValues[currentIndex - 1]);
