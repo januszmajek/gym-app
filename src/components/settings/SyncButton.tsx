@@ -9,7 +9,7 @@ import { supabase } from "../../../supabase/supabase";
 import useSession from "../../hooks/stores/useSession";
 import useSet from "../../hooks/stores/useSet";
 import useTraining from "../../hooks/stores/useTraining";
-import { Training, TrainingExercise } from "../../../types";
+import { TrainingExercise } from "../../../types";
 
 const SyncButton = () => {
   const { colors } = useTheme();
