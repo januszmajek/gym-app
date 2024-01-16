@@ -17,6 +17,7 @@ import uuid from "react-native-uuid";
 import { StatisticChart } from "../../../types";
 import { supabase } from "../../../supabase/supabase";
 import useSession from "../../hooks/stores/useSession";
+import useThemeStore from "../../hooks/stores/useThemeStore";
 
 interface StatisticProps {
   statistic_id: string;
@@ -54,6 +55,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   );
   const screenWidth = Dimensions.get("window").width;
   const { colors } = useTheme();
+  const { value: themeType } = useThemeStore();
   const today = getFormattedDate();
   const { session } = useSession();
 
@@ -209,8 +211,11 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
       labels: labels,
       datasets: [
         {
-          data: data,
-          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+          data,
+          color: (opacity = 1) =>
+            `rgba(${
+              themeType === "Light" ? "0, 95, 175," : "165, 200, 255,"
+            } ${opacity})`,
           strokeWidth: 2,
         },
       ],
@@ -225,7 +230,10 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     backgroundGradientFromOpacity: 0,
     backgroundGradientTo: "#ffffff",
     backgroundGradientToOpacity: 0,
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    color: (opacity = 1) =>
+      `rgba(${
+        themeType === "Light" ? "0, 0, 0," : "255, 255, 255,"
+      } ${opacity})`,
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
@@ -270,6 +278,23 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     console.log(text);
     console.log(newValue.length > 0 ? false : true);
   };
+
+  useEffect(() => {
+    if (statisticChart) return;
+    console.log("Statistic chart not found, adding few points...");
+    addStatisticChart({
+      id: uuid.v4() as string,
+      statistic_id: statistic.id,
+      valuesWithDates: {
+        "2024-01-12": 67,
+        "2024-01-07": 69,
+        "2024-01-04": 68,
+        "2024-01-02": 70,
+        "2023-12-28": 71,
+        "2023-12-23": 68,
+      },
+    });
+  }, []);
 
   return (
     <View>
