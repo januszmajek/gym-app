@@ -14,6 +14,9 @@ import { LineChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 import useStatistic from "../../hooks/stores/useStatistic";
 import uuid from "react-native-uuid";
+import { StatisticChart } from "../../../types";
+import { supabase } from "../../../supabase/supabase";
+import useSession from "../../hooks/stores/useSession";
 
 interface StatisticProps {
   statistic_id: string;
@@ -32,7 +35,7 @@ interface ChartData {
 const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   const {
     updateStatisticChart,
-    getStatisticChartByStatisticId,
+    getStatisticChartsByStatisticId,
     removeStatisticChart,
     addStatisticChart,
   } = useStatisticChart();
@@ -44,15 +47,24 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   } = useStatistic();
   const [visible, setVisible] = useState(false);
   const [newValue, setNewValue] = useState<string>("");
+  const [chartData, setChartData] = useState<ChartData>();
   const statistic = getStatisticById(statistic_id);
-  const statisticChart = getStatisticChartByStatisticId(statistic_id);
+  const [statisticCharts, setStatisticCharts] = useState(
+    sortByDateAscending(getStatisticChartsByStatisticId(statistic_id)),
+  );
   const screenWidth = Dimensions.get("window").width;
   const { colors } = useTheme();
   const today = getFormattedDate();
+  const { session } = useSession();
 
   const showDialog = () => setVisible(true);
-
   const hideDialog = () => setVisible(false);
+
+  useEffect(() => {
+    if (!statisticCharts || statisticCharts.length < 1) return;
+    const temp = transformStatisticCharts(statisticCharts);
+    setChartData(temp);
+  }, [statisticCharts]);
 
   function getFormattedDate(): string {
     const today = new Date();
@@ -64,84 +76,149 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     return `${year}-${month}-${day}`;
   }
 
-  const [data, setData] = useState<ChartData>(
-    statisticChart ? transformData(statisticChart.valuesWithDates) : undefined,
-  );
+  function sortByDateAscending(
+    chartArray: StatisticChart[] | undefined,
+  ): StatisticChart[] | undefined {
+    if (chartArray === undefined) return undefined;
+    return chartArray.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
 
-  const addValueWithDate = () => {
+      return dateA.getTime() - dateB.getTime();
+    });
+  }
+
+  const addValueWithDate = async () => {
     const value = parseInt(newValue, 10);
-    if (data) {
-      updateStatisticChart(statisticChart.id, {
-        ...statisticChart,
-        valuesWithDates: {
-          ...statisticChart.valuesWithDates,
-          [today]: value, // Convert newValue to a number
-        },
-      });
-      updateStatistic(statistic_id, {
-        ...statistic,
-        currentValue: value,
-      });
+    if (statisticCharts.length > 0) {
+      if (statisticCharts[statisticCharts.length - 1].date === today) {
+        console.log("SAME DAY - UPDATING...");
+        const newChartValue = {
+          ...statisticCharts[statisticCharts.length - 1],
+          value: value,
+        };
+        console.log(newChartValue);
+        updateStatisticChart(
+          statisticCharts[statisticCharts.length - 1].id,
+          newChartValue,
+        );
+        const { data, error: supabaseError } = await supabase
+          .from("chart_values")
+          .update({ ...newChartValue, user_id: session.user.id })
+          .eq("id", newChartValue.id)
+          .select();
+
+        if (supabaseError) {
+          console.log(supabaseError.message);
+        }
+        if (data) {
+          console.log("Updated chart value", data);
+        }
+      } else {
+        const newChartValue = {
+          id: uuid.v4() as string,
+          statistic_id: statistic_id,
+          date: today,
+          value: value,
+        };
+        addStatisticChart(newChartValue);
+        const { data, error: supabaseError } = await supabase
+          .from("chart_values")
+          .insert({ ...newChartValue, user_id: session.user.id })
+          .select()
+          .single();
+
+        if (supabaseError) {
+          console.log(supabaseError.message);
+        }
+        if (data) {
+          console.log("Added chart value", data);
+        }
+      }
     } else {
-      addStatisticChart({
+      const newChartValue = {
         id: uuid.v4() as string,
-        statistic_id: statistic.id,
-        valuesWithDates: {
-          [today]: value,
-        },
-      });
-      updateStatistic(statistic_id, {
-        ...statistic,
-        currentValue: value,
-      });
+        statistic_id: statistic_id,
+        date: today,
+        value: value,
+      };
+      addStatisticChart(newChartValue);
+      const { data, error: supabaseError } = await supabase
+        .from("chart_values")
+        .insert({ ...newChartValue, user_id: session.user.id })
+        .select()
+        .single();
+
+      if (supabaseError) {
+        console.log(supabaseError.message);
+      }
+      if (data) {
+        console.log("Added chart value", data);
+      }
     }
+    updateStatistic(statistic_id, {
+      ...statistic,
+      currentValue: value,
+    });
+    const { data, error: supabaseError } = await supabase
+      .from("statistics")
+      .update({ ...statistic, currentValue: value })
+      .eq("id", statistic_id)
+      .select();
+    if (supabaseError) {
+      console.log(supabaseError.message);
+    }
+    if (data) {
+      console.log("Updated statistic", data);
+    }
+
     hideDialog();
+    setStatisticCharts(getStatisticChartsByStatisticId(statistic_id));
     setNewValue("");
   };
 
-  const handleDeleteStatistic = () => {
-    removeStatistic(statistic.id);
-    removeStatisticChart(statisticChart.id);
+  const handleDeleteStatistic = async () => {
     setActiveStatisticId(undefined);
+    removeStatistic(statistic.id);
+    statisticCharts.map((statisticChart) => {
+      removeStatisticChart(statisticChart.id);
+    });
+    const { error: supabaseError } = await supabase
+      .from("statistics")
+      .delete()
+      .eq("id", statistic_id);
+    if (supabaseError) {
+      console.log(supabaseError.message);
+    }
+    console.log("Deleted Statistic:", statistic_id);
   };
 
-  function formatDate(dateString: string): string {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [year, month, day] = dateString.split("-");
-    return `${day}.${month}`;
-  }
+  // function formatDate(dateString: string): string {
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   const [year, month, day] = dateString.split("-");
+  //   return `${day}.${month}`;
+  // }
 
-  function transformData(valuesWithDates: {
-    [date: string]: number;
-  }): ChartData {
-    const sortedPairs = Object.entries(valuesWithDates).sort(
-      ([dateA], [dateB]) =>
-        new Date(dateA).getTime() - new Date(dateB).getTime(),
-    );
-
-    const labels = sortedPairs.map(([date]) => date);
-    const data = sortedPairs.map(([, value]) => value);
+  function transformStatisticCharts(
+    statisticCharts: StatisticChart[],
+  ): ChartData {
+    const labels = statisticCharts.map((chart) => chart.date);
+    const data = statisticCharts.map((chart) => chart.value);
 
     const chartData: ChartData = {
-      labels: labels.map(formatDate),
+      labels: labels,
       datasets: [
         {
-          data,
+          data: data,
           color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
           strokeWidth: 2,
         },
       ],
-      legend: [`${statistic.name} in ${statistic.unit}`],
+      legend: [statistic.name],
     };
 
     return chartData;
   }
-
-  useEffect(() => {
-    if (!statisticChart) return;
-    const temp = transformData(statisticChart.valuesWithDates);
-    setData(temp);
-  }, [statisticChart]);
 
   const chartConfig = {
     backgroundGradientFrom: "#ffffff",
@@ -200,9 +277,9 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
         statisticId={statistic_id}
         handleDeleteStatistic={handleDeleteStatistic}
       />
-      {data && (
+      {chartData && (
         <LineChart
-          data={data}
+          data={chartData}
           width={screenWidth}
           height={220}
           chartConfig={chartConfig}

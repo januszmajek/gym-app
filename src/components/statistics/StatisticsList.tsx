@@ -31,20 +31,21 @@ export default function StatisticsList() {
 
   const handleCreateStatistic = async () => {
     if (session) {
-      const newStatistic: Statistic = {
+      const newStatistic = {
         id: uuid.v4() as string,
         name: statisticName,
         icon: "human",
         unit: statisticUnit,
         currentValue: 0,
       };
-      console.log("Adding workout:", newStatistic);
-      addStatistic(newStatistic);
+      console.log("Adding statistic:", newStatistic);
+      addStatistic(newStatistic as Statistic);
       setActiveStatisticId(newStatistic.id);
 
+      const newStatisticDB = { ...newStatistic, user_id: session.user.id };
       const { data, error: supabaseError } = await supabase
         .from("statistics")
-        .insert(newStatistic)
+        .insert(newStatisticDB)
         .select()
         .single();
 
@@ -53,7 +54,7 @@ export default function StatisticsList() {
         return;
       }
       if (data) {
-        console.log("Added workout:", data);
+        console.log("Added statistic", data);
       }
     }
     hideDialog();

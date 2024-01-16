@@ -10,6 +10,7 @@ import useSession from "../../hooks/stores/useSession";
 import useSet from "../../hooks/stores/useSet";
 import useTraining from "../../hooks/stores/useTraining";
 import { TrainingExercise } from "../../../types";
+import useStatisticChart from "../../hooks/stores/useStatisticChart";
 
 const SyncButton = () => {
   const { colors } = useTheme();
@@ -19,6 +20,7 @@ const SyncButton = () => {
   const { syncSets } = useSet();
   const { syncExercises } = useExercise();
   const { addTraining, clearTrainings } = useTraining();
+  const { syncStatisticCharts } = useStatisticChart();
 
   const styles = StyleSheet.create({
     buttonStyle: {
@@ -113,6 +115,15 @@ const SyncButton = () => {
             addTraining(newTraining);
           });
         }
+      }
+      const { data, error: supabaseError } = await supabase
+        .from("chart_values")
+        .select("*")
+        .eq("user_id", session.user.id);
+      if (supabaseError) console.log("Error fetching data", supabaseError);
+      else {
+        console.log("Syncing chart_values", data);
+        syncStatisticCharts(data);
       }
     }
   };
