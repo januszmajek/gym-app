@@ -3,7 +3,6 @@ import { StatisticChart } from "../../../types";
 
 interface StatisticChartStore {
     statisticCharts: StatisticChart[];
-    activeStatisticChartId: string | undefined;
     addStatisticChart: (statisticChart: StatisticChart) => void;
     removeStatisticChart: (statisticChartId: string) => void;
     updateStatisticChart: (
@@ -13,17 +12,12 @@ interface StatisticChartStore {
     getStatisticChartById: (
         statisticChartId: string,
     ) => StatisticChart | undefined;
-    setActiveStatisticChartId: (statisticId: string | undefined) => void;
     syncStatisticCharts: (statisticCharts: StatisticChart[]) => void;
-    getStatisticChartByStatisticId: (
-        statisticId: string,
-    ) => StatisticChart | undefined;
+    getStatisticChartsByStatisticId: (statisticId: string) => StatisticChart[];
 }
 
 const useStatisticChart = create<StatisticChartStore>((set, get) => ({
     statisticCharts: [],
-    activeStatisticChartId: undefined,
-
     addStatisticChart: (statisticChart) =>
         set((state) => ({
             statisticCharts: [...state.statisticCharts, statisticChart],
@@ -51,13 +45,11 @@ const useStatisticChart = create<StatisticChartStore>((set, get) => ({
         );
         return statisticChart ? { ...statisticChart } : undefined;
     },
-    setActiveStatisticChartId: (statisticChartId) =>
-        set({ activeStatisticChartId: statisticChartId }),
-    getStatisticChartByStatisticId: (statisticId) => {
-        const statisticChart = get().statisticCharts.find(
+    getStatisticChartsByStatisticId: (statisticId) => {
+        const statisticCharts = get().statisticCharts.filter(
             (statisticChart) => statisticChart.statistic_id === statisticId,
         );
-        return statisticChart ? statisticChart : undefined;
+        return statisticCharts ? [...statisticCharts] : [];
     },
     syncStatisticCharts: (statisticCharts) =>
         set(() => ({ statisticCharts: statisticCharts })),

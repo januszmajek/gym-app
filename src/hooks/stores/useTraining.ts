@@ -12,6 +12,7 @@ interface TrainingStore {
   getTrainingById: (trainingId: string) => Training | undefined;
   setActiveTrainingId: (trainingId: string | undefined) => void;
   syncTrainings: (trainings: Training[]) => void;
+  clearTrainings: () => void;
 }
 
 const useTraining = create<TrainingStore>((set, get) => ({
@@ -47,6 +48,7 @@ const useTraining = create<TrainingStore>((set, get) => ({
   },
   setActiveTrainingId: (trainingId) => set({ activeTrainingId: trainingId }),
   syncTrainings: (trainings) => set(() => ({ trainings: trainings })),
+  clearTrainings: () => set(() => ({ trainings: [] })),
 }));
 
 export default useTraining;

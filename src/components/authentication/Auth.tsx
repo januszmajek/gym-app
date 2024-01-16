@@ -3,12 +3,20 @@ import { Alert, StyleSheet, View } from "react-native";
 import { supabase } from "../../../supabase/supabase";
 import { Button, Input } from "react-native-elements";
 import useSession from "../../hooks/stores/useSession";
+import useExercise from "../../hooks/stores/useExercise";
+import useSet from "../../hooks/stores/useSet";
+import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import useWorkout from "../../hooks/stores/useWorkout";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { setSession } = useSession();
+  const { syncWorkouts } = useWorkout();
+  const { syncWorkoutUnits } = useWorkoutUnits();
+  const { syncSets } = useSet();
+  const { syncExercises } = useExercise();
 
   async function signInWithEmail() {
     setLoading(true);
@@ -24,6 +32,49 @@ export default function Auth() {
     if (session) {
       // Alert.alert("setting session");
       setSession(session);
+      {
+        const { data, error: supabaseError } = await supabase
+          .from("workouts")
+          .select("*")
+          .eq("user_id", session.user.id);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
+        else {
+          console.log("Syncing workouts:", data);
+          syncWorkouts(data);
+        }
+      }
+      {
+        const { data, error: supabaseError } = await supabase
+          .from("workout_units")
+          .select("*")
+          .eq("user_id", session.user.id);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
+        else {
+          console.log("Syncing workout units:", data);
+          syncWorkoutUnits(data);
+        }
+      }
+      {
+        const { data, error: supabaseError } = await supabase
+          .from("sets")
+          .select("*")
+          .eq("user_id", session.user.id);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
+        else {
+          console.log("Syncing sets:", data);
+          syncSets(data);
+        }
+      }
+      {
+        const { data, error: supabaseError } = await supabase
+          .from("exercises")
+          .select("*");
+        if (supabaseError) console.log("Error fetching data", supabaseError);
+        else {
+          console.log("Syncing exercises");
+          syncExercises(data);
+        }
+      }
     }
     setLoading(false);
   }
