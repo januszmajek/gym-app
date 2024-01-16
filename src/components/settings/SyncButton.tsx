@@ -9,8 +9,9 @@ import { supabase } from "../../../supabase/supabase";
 import useSession from "../../hooks/stores/useSession";
 import useSet from "../../hooks/stores/useSet";
 import useTraining from "../../hooks/stores/useTraining";
-import { TrainingExercise } from "../../../types";
+import { Statistic, TrainingExercise } from "../../../types";
 import useStatisticChart from "../../hooks/stores/useStatisticChart";
+import useStatistic from "../../hooks/stores/useStatistic";
 
 const SyncButton = () => {
   const { colors } = useTheme();
@@ -21,6 +22,7 @@ const SyncButton = () => {
   const { syncExercises } = useExercise();
   const { addTraining, clearTrainings } = useTraining();
   const { syncStatisticCharts } = useStatisticChart();
+  const { syncStatistics } = useStatistic();
 
   const styles = StyleSheet.create({
     buttonStyle: {
@@ -124,6 +126,16 @@ const SyncButton = () => {
       else {
         console.log("Syncing chart_values", data);
         syncStatisticCharts(data);
+      }
+
+      const { data: x_data, error: x_supabaseError } = await supabase
+        .from("statistics")
+        .select("*")
+        .eq("user_id", session.user.id);
+      if (x_supabaseError) console.log("Error fetching data", supabaseError);
+      else {
+        console.log("Syncing chart_values", x_data);
+        syncStatistics(x_data);
       }
     }
   };
