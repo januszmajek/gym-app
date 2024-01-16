@@ -1,26 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   AgendaList,
   CalendarProvider,
   ExpandableCalendar,
 } from "react-native-calendars";
 import { StyleSheet, View } from "react-native";
-import { Button, Divider, Text, useTheme } from "react-native-paper";
+import { Button, Divider, Text } from "react-native-paper";
 import { format } from "date-fns";
 import useTraining from "../../hooks/stores/useTraining";
 import { Training } from "../../../types";
 import useHistory from "../../hooks/stores/useHistory";
-import useThemeStore from "../../hooks/stores/useThemeStore";
 
 const HistoryCalendar = () => {
   const { trainings, getTrainingById } = useTraining();
   const { setActiveTraining, setActiveTrainingHistoryId } = useHistory();
+  console.log("TRAININGS:", trainings);
   const todayDate = format(new Date(), "yyyy-MM-dd");
-  const { value: themeType } = useThemeStore();
-  const [themeId, setThemeId] = useState(
-    themeType === "Light" ? "light" : "dark",
-  );
-  const { colors } = useTheme();
 
   const transformTrainings = (trainings: Training[]) => {
     const transformedData = trainings.map((training) => {
@@ -45,10 +40,6 @@ const HistoryCalendar = () => {
     return groupedData;
   };
 
-  useEffect(() => {
-    setThemeId(themeType === "Light" ? "light" : "dark");
-  }, [themeType, colors]);
-
   //TODO przykładowe, raczej do poprawy jak juz beda dane z bazy
   const generateMarkedDates = () => {
     const marked = {};
@@ -58,7 +49,7 @@ const HistoryCalendar = () => {
       const date = format(item.date_start, "yyyy-MM-dd");
       let color = "blue";
       if (date === todayDate) {
-        color = colors.secondary; // Color for today's date
+        color = "green"; // Color for today's date
       }
 
       // Define the marker for this date
@@ -114,32 +105,17 @@ const HistoryCalendar = () => {
 
   return (
     <CalendarProvider date={todayDate}>
-      <View key={themeId}>
-        <ExpandableCalendar
-          firstDay={1}
-          closeOnDayPress={false}
-          markedDates={markedDates}
-          theme={{
-            backgroundColor: colors.background,
-            calendarBackground: colors.background,
-            textSectionTitleColor: colors.onBackground,
-            selectedDayBackgroundColor: colors.primary,
-            selectedDayTextColor: colors.primaryContainer,
-            todayTextColor: colors.onBackground,
-            todayBackgroundColor: colors.primaryContainer,
-            dayTextColor: colors.onPrimaryContainer,
-            dotColor: colors.primary,
-            selectedDotColor: colors.onBackground,
-            monthTextColor: colors.onBackground,
-          }}
-          extraData={colors}
-        />
-        <AgendaList
-          sections={transformedTrainings}
-          renderItem={renderItem}
-          avoidDateUpdates={true}
-        />
-      </View>
+      <ExpandableCalendar
+        firstDay={1}
+        closeOnDayPress={false}
+        markedDates={markedDates}
+        // theme={useTheme()} //dostosować
+      />
+      <AgendaList
+        sections={transformedTrainings}
+        renderItem={renderItem}
+        avoidDateUpdates={true}
+      />
     </CalendarProvider>
   );
 };
