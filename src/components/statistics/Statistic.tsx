@@ -57,6 +57,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   const { colors } = useTheme();
   const today = getFormattedDate();
   const { session } = useSession();
+  const { value: themeType } = useThemeStore();
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
@@ -211,7 +212,10 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
       datasets: [
         {
           data,
-          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+          color: (opacity = 1) =>
+            `rgba(${
+              themeType === "Light" ? "0, 95, 175," : "165, 200, 255,"
+            } ${opacity})`,
           strokeWidth: 2,
         },
       ],
@@ -226,7 +230,10 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     backgroundGradientFromOpacity: 0,
     backgroundGradientTo: "#ffffff",
     backgroundGradientToOpacity: 0,
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    color: (opacity = 1) =>
+      `rgba(${
+        themeType === "Light" ? "0, 0, 0," : "255, 255, 255,"
+      } ${opacity})`,
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
