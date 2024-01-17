@@ -28,7 +28,7 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
   const [progress, setProgress] = useState(1);
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
-  const { vibrate } = useSettings();
+  const { vibrate, sound } = useSettings();
   const { colors } = useTheme();
 
   const soundRef = useRef<Sound | null>(null);
@@ -48,7 +48,7 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
   useEffect(() => {
     return () => {
       if (vibrate) Vibration.vibrate([500, 500]);
-      soundRef.current?.play(() => {});
+      if (sound) soundRef.current?.play(() => {});
     };
   }, []);
 

@@ -16,15 +16,23 @@ const OptionSwitchButton = ({
   label,
   iconName,
 }: OptionSwitchButtonProps) => {
-  const { vibrate, switchVibrate, keepScreenOn, switchKeepScreenOn } =
-    useSettings();
+  const {
+    vibrate,
+    switchVibrate,
+    keepScreenOn,
+    switchKeepScreenOn,
+    sound,
+    switchSound,
+  } = useSettings();
 
   const { colors } = useTheme();
   const store: () => [boolean, () => void] = () => {
     if (type === "vibrate") {
       return [vibrate, switchVibrate];
-    } else {
+    } else if (type === "keepScreenOn") {
       return [keepScreenOn, switchKeepScreenOn];
+    } else if (type === "sound") {
+      return [sound, switchSound];
     }
   };
 

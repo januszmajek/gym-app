@@ -40,8 +40,14 @@ export default function SettingsScreen() {
     icon: "cellphone",
   };
 
+  const sound = {
+    type: "sound",
+    label: "Timer sound signal",
+    icon: "volume-high",
+  }
+
   const radioButtons = [weight, theme];
-  const switchButtons = [vibrate, keepScreenOn];
+  const switchButtons = [vibrate, keepScreenOn, sound];
 
   const { colors } = useTheme();
 
