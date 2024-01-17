@@ -40,7 +40,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
         user_id: session.user.id,
       };
       addWorkoutUnit(newUnit);
-      const { data, error: supabaseError } = await supabase
+      const { error: supabaseError } = await supabase
         .from("workout_units")
         .insert(newUnit)
         .select();
@@ -49,18 +49,10 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
         console.log(supabaseError);
         return;
       }
-      if (data) {
-        console.log("Added new workout unit:", data[0]);
-      }
     }
   };
 
   const styles = StyleSheet.create({
-    // addContainer: {
-    //   // backgroundColor: colors.inversePrimary,
-    // borderRadius: 5,
-    //   padding: 5,
-    // },
     container: {
       alignItems: "center",
       flexDirection: "row",

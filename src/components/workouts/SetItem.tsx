@@ -55,9 +55,7 @@ const SetItem: React.FC<SetItemProps> = ({
   const { weightUnit } = useSettings();
 
   const handleDeleteSet = () => {
-    console.log("Removing set:", id);
     const newSets = sets.filter((set) => set.id !== id);
-    console.log("New sets:", newSets);
     setSets([...newSets]);
     return;
   };
@@ -73,7 +71,6 @@ const SetItem: React.FC<SetItemProps> = ({
       type: type,
       time: time,
     };
-    console.log("Copying set:", newSet);
     setSets([...sets, newSet]);
     return;
   };

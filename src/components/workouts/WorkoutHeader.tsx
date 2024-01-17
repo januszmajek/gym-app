@@ -28,12 +28,10 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
 
   const startRenaming = () => {
     setRenaming(true);
-    console.log("Start renaming...");
   };
 
   const finishRenaming = async () => {
     setRenaming(false);
-    console.log("...Finished renaming");
     if (workout) {
       if (workoutName) {
         if (workoutName != workout.name) {
@@ -58,7 +56,6 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
 
   const styles = StyleSheet.create({
     arrowContainer: {
-      // backgroundColor: colors.primaryContainer,
       borderRadius: 15,
       padding: 7,
     },

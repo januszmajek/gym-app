@@ -160,10 +160,6 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
       display: "flex",
       flexDirection: "row",
     },
-    timeValueContainer: {
-      // marginLeft: "auto",
-      // marginRight: "auto",
-    },
   });
 
   return (
@@ -233,7 +229,7 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
             </View>
           </>
         ) : (
-          <View style={[styles.valueContainer, styles.timeValueContainer]}>
+          <View style={styles.valueContainer}>
             <TouchableRipple
               borderless
               style={styles.button}

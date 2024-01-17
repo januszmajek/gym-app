@@ -33,11 +33,10 @@ const AddWorkoutButton = () => {
         name: workoutName,
         order: workouts.length,
       };
-      console.log("Adding workout:", newWorkout);
       addWorkout(newWorkout);
       setActiveWorkoutId(newWorkout.id);
 
-      const { data, error: supabaseError } = await supabase
+      const { error: supabaseError } = await supabase
         .from("workouts")
         .insert(newWorkout)
         .select()
@@ -46,9 +45,6 @@ const AddWorkoutButton = () => {
       if (supabaseError) {
         console.log(supabaseError.message);
         return;
-      }
-      if (data) {
-        console.log("Added workout:", data);
       }
     }
   };

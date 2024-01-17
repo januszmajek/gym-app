@@ -97,8 +97,6 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = ({ type }) => {
     exercises: TrainingExercise[],
   ): Record<string, TrainingExercise[]> => {
     const groupedExercises: Record<string, TrainingExercise[]> = {};
-    console.log("GROUP EXERCISES BY NAME FUNCTION:", exercises);
-
     exercises.forEach((exercise) => {
       const { name } = exercise;
 

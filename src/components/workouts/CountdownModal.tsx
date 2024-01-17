@@ -35,36 +35,20 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
 
   useEffect(() => {
     soundRef.current = new Sound(
-      "countdown_toyota.mp3",
+      "countdown.mp3",
       Sound.MAIN_BUNDLE,
       (error) => {
         if (error) {
           console.error("Error loading sound file:", error);
         }
-        console.log(
-          "duration in seconds: " +
-            soundRef.current?.getDuration() +
-            " number of channels: " +
-            soundRef.current?.getNumberOfChannels(),
-        );
       },
     );
   }, []);
 
   useEffect(() => {
-    // Component Mount logic
-
-    // Clean up function to be executed when the component is unmounted
     return () => {
-      // Play the sound and vibrate when the component is unmounted
       if (vibrate) Vibration.vibrate([500, 500]);
-      soundRef.current?.play((success) => {
-        if (success) {
-          console.log("Sound played successfully");
-        } else {
-          console.error("Error playing sound");
-        }
-      });
+      soundRef.current?.play(() => {});
     };
   }, []);
 

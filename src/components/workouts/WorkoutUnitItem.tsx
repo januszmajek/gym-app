@@ -24,7 +24,6 @@ const WorkoutUnitItem = ({
   const { colors } = useTheme();
 
   const handleDeleteWorkoutUnit = async () => {
-    console.log("Removing Workout Unit:", workoutUnitId);
     clearSetsByWorkoutUnitId(workoutUnitId);
     removeWorkoutUnit(workoutUnitId);
     const { error } = await supabase
@@ -35,7 +34,6 @@ const WorkoutUnitItem = ({
       console.log(error);
       return;
     }
-    console.log("Deleted Workout Unit:", workoutUnitId);
   };
 
   const styles = StyleSheet.create({

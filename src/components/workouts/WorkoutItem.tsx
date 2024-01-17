@@ -32,7 +32,6 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
     setActiveTraining(newTraining);
     setActiveTrainingId(newTraining.id);
     setActiveWorkoutId(workout.id);
-    console.log("active training:", newTraining);
   };
 
   const styles = StyleSheet.create({

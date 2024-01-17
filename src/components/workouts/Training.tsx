@@ -45,10 +45,6 @@ const Training: React.FC<TrainingProps> = ({
   const { session } = useSession();
 
   useEffect(() => {
-    // console.log("ACTIVE TRAINING CHANGED: ", activeTraining);
-  }, [activeTraining]);
-
-  useEffect(() => {
     const units = getWorkoutUnitsByWorkoutId(activeWorkoutId);
     const filledTrainingUnits = units.map(
       (trainingUnit: TrainingUnit) => (
@@ -71,7 +67,6 @@ const Training: React.FC<TrainingProps> = ({
     if (keepScreenOn) {
       KeepAwake.activate();
     }
-    // Deactivate wake lock on component unmount
     return () => {
       KeepAwake.deactivate();
     };
@@ -85,7 +80,6 @@ const Training: React.FC<TrainingProps> = ({
       };
       setActiveTraining(training);
       updateTraining(activeTrainingId, training);
-      console.log("INSERTING NEW TRAINING INTO DB:", training);
       if (session) {
         const supabaseTraining = {
           ...training,

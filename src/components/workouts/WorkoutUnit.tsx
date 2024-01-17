@@ -30,7 +30,6 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
 
   useEffect(() => {
     const newSets = getSetsByWorkoutUnitId(workoutUnitId);
-    console.log("WorkoutUnit useEffect[allSets]:\nsetSets:", newSets);
     setSets(newSets);
   }, [allSets]);
 
@@ -38,12 +37,11 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
     if (session) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { completed, ...restOfSet } = set;
-      const { data, error: supabaseError } = await supabase
+      const { error: supabaseError } = await supabase
         .from("sets")
         .insert({ ...restOfSet, user_id: session.user.id })
         .select();
       if (supabaseError) console.log(supabaseError);
-      console.log(data);
     }
   };
 
