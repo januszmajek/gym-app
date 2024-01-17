@@ -214,7 +214,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
         themeType === "Light" ? "0, 0, 0," : "255, 255, 255,"
       } ${opacity})`,
     strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
+    barPercentage: 5,
     useShadowColorFromDataset: false, // optional
   };
 

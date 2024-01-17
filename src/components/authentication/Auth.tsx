@@ -64,7 +64,6 @@ export default function Auth() {
           .select("*");
         if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
-          console.log("Syncing exercises");
           syncExercises(data);
         }
       }
@@ -144,7 +143,7 @@ export default function Auth() {
   async function signUpWithEmail() {
     setLoading(true);
     const {
-      data: { user, session },
+      data: { session },
       error,
     } = await supabase.auth.signUp({
       email: email,
@@ -152,62 +151,6 @@ export default function Auth() {
     });
 
     if (error) Alert.alert(error.message);
-    if (user) {
-      {
-        const newStatistic = {
-          user_id: user.id,
-          name: "Weight",
-          icon: "scale-bathroom",
-          unit: "kg",
-          currentValue: 0,
-        };
-        const { error: supabaseError } = await supabase
-          .from("statistics")
-          .insert(newStatistic)
-          .select()
-          .single();
-        if (supabaseError) {
-          console.log(supabaseError.message);
-          return;
-        }
-      }
-      {
-        const newStatistic = {
-          user_id: user.id,
-          name: "Body fat",
-          icon: "water-percent",
-          unit: "%",
-          currentValue: 0,
-        };
-        const { error: supabaseError } = await supabase
-          .from("statistics")
-          .insert(newStatistic)
-          .select()
-          .single();
-        if (supabaseError) {
-          console.log(supabaseError.message);
-          return;
-        }
-      }
-      {
-        const newStatistic = {
-          user_id: user.id,
-          name: "Belly waist",
-          icon: "ruler",
-          unit: "cm",
-          currentValue: 0,
-        };
-        const { error: supabaseError } = await supabase
-          .from("statistics")
-          .insert(newStatistic)
-          .select()
-          .single();
-        if (supabaseError) {
-          console.log(supabaseError.message);
-          return;
-        }
-      }
-    }
     if (!session)
       Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
