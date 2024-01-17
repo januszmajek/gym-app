@@ -11,6 +11,7 @@ import useStatistic from "../../hooks/stores/useStatistic";
 import useStatisticChart from "../../hooks/stores/useStatisticChart";
 import useTraining from "../../hooks/stores/useTraining";
 import { TrainingExercise } from "../../../types";
+import GoogleAuth from "./GoogleAuth";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -248,6 +249,9 @@ export default function Auth() {
           disabled={loading}
           onPress={() => signUpWithEmail()}
         />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <GoogleAuth />
       </View>
     </View>
   );
