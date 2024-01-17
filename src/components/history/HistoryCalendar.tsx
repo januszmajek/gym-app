@@ -31,7 +31,6 @@ const HistoryCalendar = () => {
       };
     });
 
-    // Combine sections with the same title
     const groupedData = transformedData.reduce((acc, section) => {
       const existingSection = acc.find((item) => item.title === section.title);
       if (existingSection) {
@@ -49,38 +48,20 @@ const HistoryCalendar = () => {
     setThemeId(themeType === "Light" ? "light" : "dark");
   }, [themeType, colors]);
 
-  //TODO przykładowe, raczej do poprawy jak juz beda dane z bazy
   const generateMarkedDates = () => {
     const marked = {};
 
     trainings.forEach((item) => {
-      // Assuming each 'date_start\' is a date string in 'yyyy-MM-dd' format
       const date = format(item.date_start, "yyyy-MM-dd");
       let color = "blue";
       if (date === todayDate) {
-        color = colors.secondary; // Color for today's date
+        color = colors.secondary;
       }
-
-      // Define the marker for this date
-      // Customize as needed
       marked[date] = { marked: true, dotColor: color };
     });
 
     return marked;
   };
-
-  // const generateMarkedDates = () => {
-  //   data.reduce(
-  //     (acc, item) => ({
-  //       ...acc,
-  //       [item.title]: {
-  //         marked: true,
-  //         dotColor: item.title === todayDate ? "green" : "blue",
-  //       },
-  //     }),
-  //     {},
-  //   );
-  // };
 
   const markedDates = generateMarkedDates();
   const transformedTrainings = transformTrainings(trainings);
@@ -93,7 +74,6 @@ const HistoryCalendar = () => {
 
   const renderItem = (item) => {
     const start_time = format(new Date(item.item.date_start), "HH:mm");
-    // const index = format(new Date(item.item.date), "dd-MM-yyyy");
     return (
       <View>
         <View style={styles.itemsWrapper}>

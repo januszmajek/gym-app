@@ -34,7 +34,6 @@ export default function Auth() {
           .eq("user_id", session.user.id);
         if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
-          console.log("Syncing workouts:", data);
           syncWorkouts(data);
         }
       }
@@ -45,7 +44,6 @@ export default function Auth() {
           .eq("user_id", session.user.id);
         if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
-          console.log("Syncing workout units:", data);
           syncWorkoutUnits(data);
         }
       }
@@ -56,7 +54,6 @@ export default function Auth() {
           .eq("user_id", session.user.id);
         if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
-          console.log("Syncing sets:", data);
           syncSets(data);
         }
       }
@@ -78,7 +75,6 @@ export default function Auth() {
         if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
           clearTrainings();
-          console.log("Syncing trainings");
           data.map((training) => {
             const jsonArray = JSON.parse(training.exercises_done);
             const trainingExercises: TrainingExercise[] = jsonArray.map(
@@ -92,7 +88,6 @@ export default function Auth() {
                 };
               },
             );
-            console.log("TRAINING EXERCISES:", trainingExercises);
             const newTraining = {
               ...training,
               date_start: new Date(training.date_start),
@@ -111,7 +106,6 @@ export default function Auth() {
           .eq("user_id", session.user.id);
         if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
-          console.log("Syncing chart_values", data);
           syncStatisticCharts(data);
         }
       }
@@ -122,7 +116,6 @@ export default function Auth() {
           .eq("user_id", session.user.id);
         if (supabaseError) console.log("Error fetching data", supabaseError);
         else {
-          console.log("Syncing statistics", data);
           syncStatistics(data);
         }
       }
@@ -167,7 +160,7 @@ export default function Auth() {
           unit: "kg",
           currentValue: 0,
         };
-        const { data, error: supabaseError } = await supabase
+        const { error: supabaseError } = await supabase
           .from("statistics")
           .insert(newStatistic)
           .select()
@@ -175,9 +168,6 @@ export default function Auth() {
         if (supabaseError) {
           console.log(supabaseError.message);
           return;
-        }
-        if (data) {
-          console.log("Added statistic weight", data);
         }
       }
       {
@@ -188,7 +178,7 @@ export default function Auth() {
           unit: "%",
           currentValue: 0,
         };
-        const { data, error: supabaseError } = await supabase
+        const { error: supabaseError } = await supabase
           .from("statistics")
           .insert(newStatistic)
           .select()
@@ -196,9 +186,6 @@ export default function Auth() {
         if (supabaseError) {
           console.log(supabaseError.message);
           return;
-        }
-        if (data) {
-          console.log("Added statistic body fat", data);
         }
       }
       {
@@ -209,7 +196,7 @@ export default function Auth() {
           unit: "cm",
           currentValue: 0,
         };
-        const { data, error: supabaseError } = await supabase
+        const { error: supabaseError } = await supabase
           .from("statistics")
           .insert(newStatistic)
           .select()
@@ -217,9 +204,6 @@ export default function Auth() {
         if (supabaseError) {
           console.log(supabaseError.message);
           return;
-        }
-        if (data) {
-          console.log("Added statistic belly waist", data);
         }
       }
     }
