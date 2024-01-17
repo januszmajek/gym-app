@@ -1,4 +1,3 @@
-//TODO: prawdopodobnie do wyrzucenia ale na razie zakomentowane
 import { StatusBar } from "react-native";
 import React, { useState } from "react";
 import type { StatusBarStyle } from "react-native";
@@ -11,7 +10,6 @@ const TRANSITIONS = ["fade", "slide", "none"] as const;
 const PhoneBar = () => {
   const { colors } = useTheme();
   const { value: theme } = useThemeStore();
-  // UKRYWANIE STATUS BARU - KIEDYŚ MOŻE SIĘ PRZYDAĆ
   const [hidden, setHidden] = useState(false);
   const [statusBarTransition, setStatusBarTransition] = useState<
     "fade" | "slide" | "none"
