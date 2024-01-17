@@ -31,7 +31,7 @@ export default function StatisticsList() {
 
   const handleCreateStatistic = async () => {
     if (session) {
-      const newStatistic = {
+      const newStatistic: Statistic = {
         id: uuid.v4() as string,
         name: statisticName,
         icon: "human",
@@ -39,7 +39,7 @@ export default function StatisticsList() {
         currentValue: 0,
       };
       console.log("Adding statistic:", newStatistic);
-      addStatistic(newStatistic as Statistic);
+      addStatistic(newStatistic);
       setActiveStatisticId(newStatistic.id);
 
       const newStatisticDB = { ...newStatistic, user_id: session.user.id };

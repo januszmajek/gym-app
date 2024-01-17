@@ -7,6 +7,10 @@ import useExercise from "../../hooks/stores/useExercise";
 import useSet from "../../hooks/stores/useSet";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
 import useWorkout from "../../hooks/stores/useWorkout";
+import useStatistic from "../../hooks/stores/useStatistic";
+import useStatisticChart from "../../hooks/stores/useStatisticChart";
+import useTraining from "../../hooks/stores/useTraining";
+import { TrainingExercise } from "../../../types";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -17,21 +21,12 @@ export default function Auth() {
   const { syncWorkoutUnits } = useWorkoutUnits();
   const { syncSets } = useSet();
   const { syncExercises } = useExercise();
+  const { addTraining, clearTrainings } = useTraining();
+  const { syncStatistics } = useStatistic();
+  const { syncStatisticCharts } = useStatisticChart();
 
-  async function signInWithEmail() {
-    setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if (error) Alert.alert(error.message);
+  const handleSync = async (session) => {
     if (session) {
-      // Alert.alert("setting session");
-      setSession(session);
       {
         const { data, error: supabaseError } = await supabase
           .from("workouts")
@@ -75,6 +70,79 @@ export default function Auth() {
           syncExercises(data);
         }
       }
+      {
+        const { data, error: supabaseError } = await supabase
+          .from("trainings")
+          .select("*")
+          .eq("user_id", session.user.id);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
+        else {
+          clearTrainings();
+          console.log("Syncing trainings");
+          data.map((training) => {
+            const jsonArray = JSON.parse(training.exercises_done);
+            const trainingExercises: TrainingExercise[] = jsonArray.map(
+              (exercise: TrainingExercise) => {
+                return {
+                  name: exercise.name,
+                  type: exercise.type,
+                  repetitions: exercise.repetitions,
+                  weight: exercise.weight,
+                  time: exercise.time,
+                };
+              },
+            );
+            console.log("TRAINING EXERCISES:", trainingExercises);
+            const newTraining = {
+              ...training,
+              date_start: new Date(training.date_start),
+              date_end: new Date(training.date_end),
+              exercises_done: trainingExercises,
+            };
+            console.log(newTraining);
+            addTraining(newTraining);
+          });
+        }
+      }
+      {
+        const { data, error: supabaseError } = await supabase
+          .from("chart_values")
+          .select("*")
+          .eq("user_id", session.user.id);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
+        else {
+          console.log("Syncing chart_values", data);
+          syncStatisticCharts(data);
+        }
+      }
+      {
+        const { data, error: supabaseError } = await supabase
+          .from("statistics")
+          .select("*")
+          .eq("user_id", session.user.id);
+        if (supabaseError) console.log("Error fetching data", supabaseError);
+        else {
+          console.log("Syncing statistics", data);
+          syncStatistics(data);
+        }
+      }
+    }
+  };
+
+  async function signInWithEmail() {
+    setLoading(true);
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) Alert.alert(error.message);
+    if (session) {
+      setSession(session);
+      handleSync(session);
     }
     setLoading(false);
   }

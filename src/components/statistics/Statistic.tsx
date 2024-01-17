@@ -211,7 +211,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
       labels: labels,
       datasets: [
         {
-          data,
+          data: data,
           color: (opacity = 1) =>
             `rgba(${
               themeType === "Light" ? "0, 95, 175," : "165, 200, 255,"
@@ -275,8 +275,6 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     // Use a regular expression to allow only numeric input
     const numericOnly = text.replace(/[^0-9]/g, "");
     setNewValue(numericOnly);
-    console.log(text);
-    console.log(newValue.length > 0 ? false : true);
   };
 
   return (
