@@ -34,11 +34,22 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
   setsLength,
 }) => {
   const weightValues = [
-    0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5,
-    7, 7.5, 8, 10, 12, 14, 16, 18, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40,
-    42.5, 45, 47.5, 50, 52.5, 55, 57.5, 60, 65, 70, 75, 80, 85, 90, 95, 100,
-    105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175,
-    180, 185, 190, 195, 200,
+    0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 11,
+    12, 13, 14, 15, 16, 18, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40, 42.5,
+    45, 47.5, 50, 52.5, 55, 57.5, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110,
+    115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180, 185,
+    190, 195, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320,
+    330, 340, 350, 360, 370, 380, 390, 400,
+  ];
+
+  const lbsWeightValues = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26,
+    28, 30, 32, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105,
+    110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180,
+    185, 190, 195, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310,
+    330, 340, 350, 360, 370, 380, 390, 400, 420, 440, 460, 480, 500, 500, 520,
+    540, 560, 580, 600, 620, 640, 660, 680, 700, 720, 740, 760, 780, 800, 820,
+    840,
   ];
 
   const timeValues = [
@@ -53,6 +64,19 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
   const { weightUnit } = useSettings();
   const [timeMinutes, setTimeMinutes] = useState("00");
   const [timesSeconds, setTimeSeconds] = useState("00");
+
+  function roundToClosestWeight(number) {
+    const closestIndex = lbsWeightValues.reduce(
+      (prevIndex, currentValue, currentIndex) => {
+        const prevDiff = Math.abs(lbsWeightValues[prevIndex] - number);
+        const currentDiff = Math.abs(currentValue - number);
+        return currentDiff < prevDiff ? currentIndex : prevIndex;
+      },
+      0,
+    );
+
+    return lbsWeightValues[closestIndex];
+  }
 
   const incrementWeight = () => {
     const currentIndex = weightValues.indexOf(weight);
@@ -162,7 +186,9 @@ const TrainingSet: React.FC<TrainingSetProps> = ({
               <View style={styles.buttonContainer}>
                 <Text>Weight</Text>
                 <Text>
-                  {weight} {weightUnit === "Kilogram" ? "kg" : "lbs"}
+                  {weightUnit === "Kilogram"
+                    ? `${weight} kg`
+                    : `${roundToClosestWeight(weight * 2)} lbs`}
                 </Text>
               </View>
               <TouchableRipple
