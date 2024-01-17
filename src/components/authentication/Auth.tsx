@@ -150,7 +150,7 @@ export default function Auth() {
   async function signUpWithEmail() {
     setLoading(true);
     const {
-      data: { session },
+      data: { user, session },
       error,
     } = await supabase.auth.signUp({
       email: email,
@@ -158,6 +158,71 @@ export default function Auth() {
     });
 
     if (error) Alert.alert(error.message);
+    if (user) {
+      {
+        const newStatistic = {
+          user_id: user.id,
+          name: "Weight",
+          icon: "scale-bathroom",
+          unit: "kg",
+          currentValue: 0,
+        };
+        const { data, error: supabaseError } = await supabase
+          .from("statistics")
+          .insert(newStatistic)
+          .select()
+          .single();
+        if (supabaseError) {
+          console.log(supabaseError.message);
+          return;
+        }
+        if (data) {
+          console.log("Added statistic weight", data);
+        }
+      }
+      {
+        const newStatistic = {
+          user_id: user.id,
+          name: "Body fat",
+          icon: "water-percent",
+          unit: "%",
+          currentValue: 0,
+        };
+        const { data, error: supabaseError } = await supabase
+          .from("statistics")
+          .insert(newStatistic)
+          .select()
+          .single();
+        if (supabaseError) {
+          console.log(supabaseError.message);
+          return;
+        }
+        if (data) {
+          console.log("Added statistic body fat", data);
+        }
+      }
+      {
+        const newStatistic = {
+          user_id: user.id,
+          name: "Belly waist",
+          icon: "ruler",
+          unit: "cm",
+          currentValue: 0,
+        };
+        const { data, error: supabaseError } = await supabase
+          .from("statistics")
+          .insert(newStatistic)
+          .select()
+          .single();
+        if (supabaseError) {
+          console.log(supabaseError.message);
+          return;
+        }
+        if (data) {
+          console.log("Added statistic belly waist", data);
+        }
+      }
+    }
     if (!session)
       Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
