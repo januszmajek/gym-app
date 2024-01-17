@@ -118,6 +118,7 @@ const HistoryCalendar = () => {
           sections={transformedTrainings}
           renderItem={renderItem}
           avoidDateUpdates={true}
+          theme={{ calendarBackground: colors.background }}
         />
       </View>
     </CalendarProvider>
