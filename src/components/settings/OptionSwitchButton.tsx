@@ -40,7 +40,7 @@ const OptionSwitchButton = ({
       paddingHorizontal: 10,
       paddingVertical: 10,
     },
-    cardStyle: { marginHorizontal: 10, marginVertical: 5 },
+    cardStyle: { marginHorizontal: 10, marginVertical: 5, paddingVertical: 6 },
     ripple: {
       borderRadius: 10,
     },
