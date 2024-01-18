@@ -12,6 +12,7 @@ import useStatisticChart from "../../hooks/stores/useStatisticChart";
 import useTraining from "../../hooks/stores/useTraining";
 import useWorkout from "../../hooks/stores/useWorkout";
 import useWorkoutUnits from "../../hooks/stores/useWorkoutUnit";
+import { StyleSheet } from "react-native";
 
 export default function () {
   GoogleSignin.configure({
@@ -122,9 +123,16 @@ export default function () {
     }
   };
 
+  const styles = StyleSheet.create({
+    googleSignIn: {
+      width: "100%",
+    },
+  });
+
   return (
     <GoogleSigninButton
       size={GoogleSigninButton.Size.Wide}
+      style={styles.googleSignIn}
       onPress={async () => {
         try {
           await GoogleSignin.hasPlayServices();
