@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
 import { supabase } from "../../../supabase/supabase";
 import { Button, Input } from "react-native-elements";
 import useSession from "../../hooks/stores/useSession";
@@ -122,7 +123,22 @@ export default function Auth() {
     }
   };
 
+  const emailValidation: () => boolean = () => {
+    // Regular expression for basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return emailRegex.test(email);
+  };
+
   async function signInWithEmail() {
+    if (!emailValidation()) {
+      Alert.alert("Invalid Email", "Please enter a valid email address.");
+      return;
+    }
+    if (password.length < 1) {
+      Alert.alert("No password", "Please enter a password.");
+      return;
+    }
     setLoading(true);
     const {
       data: { session },
@@ -141,6 +157,14 @@ export default function Auth() {
   }
 
   async function signUpWithEmail() {
+    if (!emailValidation()) {
+      Alert.alert("Invalid Email", "Please enter a valid email address.");
+      return;
+    }
+    if (password.length < 1) {
+      Alert.alert("No password", "Please enter a password.");
+      return;
+    }
     setLoading(true);
     const {
       data: { session },
@@ -179,19 +203,25 @@ export default function Auth() {
           autoCapitalize={"none"}
         />
       </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title="Sign in"
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          title="Sign up"
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
-        />
+      <View
+        style={[styles.verticallySpaced, styles.mt20, styles.buttonsContainer]}
+      >
+        <View style={styles.button}>
+          <Button
+            title="Log in"
+            disabled={loading}
+            onPress={() => signInWithEmail()}
+            style={styles.button}
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            title="Sign up"
+            disabled={loading}
+            onPress={() => signUpWithEmail()}
+            style={styles.button}
+          />
+        </View>
       </View>
       <View style={styles.verticallySpaced}>
         <GoogleAuth />
@@ -209,8 +239,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   verticallySpaced: {
-    alignSelf: "stretch",
+    display: "flex",
+    flexDirection: "row",
     paddingBottom: 4,
     paddingTop: 4,
+  },
+  buttonsContainer: {
+    padding: 5,
+    gap: 25,
+  },
+  button: {
+    flex: 1,
   },
 });
