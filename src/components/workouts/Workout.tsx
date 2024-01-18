@@ -53,7 +53,6 @@ const Workout: React.FC<WorkoutProps> = ({ workoutId }) => {
       console.log(supabaseError.message);
       return;
     }
-    console.log("Deleted Workout:", workoutId);
   };
 
   const styles = StyleSheet.create({

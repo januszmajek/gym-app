@@ -72,7 +72,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     const today = new Date();
 
     const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
     const day = today.getDate().toString().padStart(2, "0");
 
     return `${year}-${month}-${day}`;
@@ -94,17 +94,15 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     const value = parseInt(newValue, 10);
     if (statisticCharts.length > 0) {
       if (statisticCharts[statisticCharts.length - 1].date === today) {
-        console.log("SAME DAY - UPDATING...");
         const newChartValue = {
           ...statisticCharts[statisticCharts.length - 1],
           value: value,
         };
-        console.log(newChartValue);
         updateStatisticChart(
           statisticCharts[statisticCharts.length - 1].id,
           newChartValue,
         );
-        const { data, error: supabaseError } = await supabase
+        const { error: supabaseError } = await supabase
           .from("chart_values")
           .update({ ...newChartValue, user_id: session.user.id })
           .eq("id", newChartValue.id)
@@ -112,9 +110,6 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
 
         if (supabaseError) {
           console.log(supabaseError.message);
-        }
-        if (data) {
-          console.log("Updated chart value", data);
         }
       } else {
         const newChartValue = {
@@ -124,7 +119,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
           value: value,
         };
         addStatisticChart(newChartValue);
-        const { data, error: supabaseError } = await supabase
+        const { error: supabaseError } = await supabase
           .from("chart_values")
           .insert({ ...newChartValue, user_id: session.user.id })
           .select()
@@ -132,9 +127,6 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
 
         if (supabaseError) {
           console.log(supabaseError.message);
-        }
-        if (data) {
-          console.log("Added chart value", data);
         }
       }
     } else {
@@ -145,7 +137,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
         value: value,
       };
       addStatisticChart(newChartValue);
-      const { data, error: supabaseError } = await supabase
+      const { error: supabaseError } = await supabase
         .from("chart_values")
         .insert({ ...newChartValue, user_id: session.user.id })
         .select()
@@ -154,24 +146,18 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
       if (supabaseError) {
         console.log(supabaseError.message);
       }
-      if (data) {
-        console.log("Added chart value", data);
-      }
     }
     updateStatistic(statistic_id, {
       ...statistic,
       currentValue: value,
     });
-    const { data, error: supabaseError } = await supabase
+    const { error: supabaseError } = await supabase
       .from("statistics")
       .update({ ...statistic, currentValue: value })
       .eq("id", statistic_id)
       .select();
     if (supabaseError) {
       console.log(supabaseError.message);
-    }
-    if (data) {
-      console.log("Updated statistic", data);
     }
 
     hideDialog();
@@ -192,14 +178,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
     if (supabaseError) {
       console.log(supabaseError.message);
     }
-    console.log("Deleted Statistic:", statistic_id);
   };
-
-  // function formatDate(dateString: string): string {
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   const [year, month, day] = dateString.split("-");
-  //   return `${day}.${month}`;
-  // }
 
   function transformStatisticCharts(
     statisticCharts: StatisticChart[],
@@ -211,7 +190,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
       labels: labels,
       datasets: [
         {
-          data,
+          data: data,
           color: (opacity = 1) =>
             `rgba(${
               themeType === "Light" ? "0, 95, 175," : "165, 200, 255,"
@@ -235,7 +214,7 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
         themeType === "Light" ? "0, 0, 0," : "255, 255, 255,"
       } ${opacity})`,
     strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
+    barPercentage: 5,
     useShadowColorFromDataset: false, // optional
   };
 
@@ -272,11 +251,8 @@ const Statistic: React.FC<StatisticProps> = ({ statistic_id }) => {
   });
 
   const handleNumericInput = (text: string) => {
-    // Use a regular expression to allow only numeric input
     const numericOnly = text.replace(/[^0-9]/g, "");
     setNewValue(numericOnly);
-    console.log(text);
-    console.log(newValue.length > 0 ? false : true);
   };
 
   return (

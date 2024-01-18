@@ -16,15 +16,23 @@ const OptionSwitchButton = ({
   label,
   iconName,
 }: OptionSwitchButtonProps) => {
-  const { vibrate, switchVibrate, keepScreenOn, switchKeepScreenOn } =
-    useSettings();
+  const {
+    vibrate,
+    switchVibrate,
+    keepScreenOn,
+    switchKeepScreenOn,
+    sound,
+    switchSound,
+  } = useSettings();
 
   const { colors } = useTheme();
   const store: () => [boolean, () => void] = () => {
     if (type === "vibrate") {
       return [vibrate, switchVibrate];
-    } else {
+    } else if (type === "keepScreenOn") {
       return [keepScreenOn, switchKeepScreenOn];
+    } else if (type === "sound") {
+      return [sound, switchSound];
     }
   };
 
@@ -40,7 +48,7 @@ const OptionSwitchButton = ({
       paddingHorizontal: 10,
       paddingVertical: 10,
     },
-    cardStyle: { marginHorizontal: 10, marginVertical: 5 },
+    cardStyle: { marginHorizontal: 10, marginVertical: 5, paddingVertical: 6 },
     ripple: {
       borderRadius: 10,
     },

@@ -23,6 +23,29 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = ({ type }) => {
   const { colors } = useTheme();
   const { weightUnit } = useSettings();
 
+  const lbsWeightValues = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26,
+    28, 30, 32, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105,
+    110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180,
+    185, 190, 195, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310,
+    330, 340, 350, 360, 370, 380, 390, 400, 420, 440, 460, 480, 500, 500, 520,
+    540, 560, 580, 600, 620, 640, 660, 680, 700, 720, 740, 760, 780, 800, 820,
+    840,
+  ];
+
+  function roundToClosestWeight(number) {
+    const closestIndex = lbsWeightValues.reduce(
+      (prevIndex, currentValue, currentIndex) => {
+        const prevDiff = Math.abs(lbsWeightValues[prevIndex] - number);
+        const currentDiff = Math.abs(currentValue - number);
+        return currentDiff < prevDiff ? currentIndex : prevIndex;
+      },
+      0,
+    );
+
+    return lbsWeightValues[closestIndex];
+  }
+
   const durationCalc = (
     start: Date | undefined,
     end: Date | undefined,
@@ -50,7 +73,13 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = ({ type }) => {
     let weightSum = 0;
     exercises.forEach((exercises) => {
       if (exercises.type === "quantity") {
-        weightSum = weightSum + exercises.weight * exercises.repetitions;
+        if (weightUnit === "Kilogram") {
+          weightSum = weightSum + exercises.weight * exercises.repetitions;
+        } else {
+          weightSum =
+            weightSum +
+            roundToClosestWeight(exercises.weight * 2) * exercises.repetitions;
+        }
       }
     });
     return weightSum;
@@ -68,8 +97,6 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = ({ type }) => {
     exercises: TrainingExercise[],
   ): Record<string, TrainingExercise[]> => {
     const groupedExercises: Record<string, TrainingExercise[]> = {};
-    console.log("GROUP EXERCISES BY NAME FUNCTION:", exercises);
-
     exercises.forEach((exercise) => {
       const { name } = exercise;
 
@@ -185,9 +212,12 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = ({ type }) => {
                         </View>
                         {exercise.type === "quantity" ? (
                           <Text variant="bodyLarge">
-                            {exercise.weight}{" "}
-                            {weightUnit === "Kilogram" ? "kg" : "lbs"} x{" "}
-                            {exercise.repetitions}
+                            {weightUnit === "Kilogram"
+                              ? `${exercise.weight} kg `
+                              : `${roundToClosestWeight(
+                                  exercise.weight * 2,
+                                )} lbs `}{" "}
+                            x {exercise.repetitions}
                           </Text>
                         ) : (
                           <Text variant="bodyLarge">

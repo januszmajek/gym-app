@@ -47,14 +47,6 @@ export default function Navigation() {
           }}
           getLabelText={({ route }) => {
             const { options } = descriptors[route.key];
-            //TODO: check later
-            // const label =
-            //   options.tabBarLabel !== undefined
-            //     ? options.tabBarLabel
-            //     : options.title !== undefined
-            //     ? options.title
-            //     : route.title as string;
-
             return options.tabBarLabel as string;
           }}
         />

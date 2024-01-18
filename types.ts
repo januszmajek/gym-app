@@ -72,7 +72,7 @@ export interface Statistic {
   name: string;
   currentValue: number;
   unit: string;
-  icon: "scale-bathroom" | "water-percent" | "ruler" | "human";
+  icon: string;
 }
 
 export interface StatisticChart {

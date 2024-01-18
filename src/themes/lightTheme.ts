@@ -37,8 +37,6 @@ const lightTheme = {
       level1: "rgb(240, 244, 251)",
       level2: "rgb(233, 239, 249)",
       level3: "rgb(233, 239, 249)",
-      // zobaczymy
-      // level3: "rgb(225, 235, 246)"
       level4: "rgb(223, 233, 245)",
       level5: "rgb(218, 230, 244)",
     },

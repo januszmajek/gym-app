@@ -31,19 +31,18 @@ export default function StatisticsList() {
 
   const handleCreateStatistic = async () => {
     if (session) {
-      const newStatistic = {
+      const newStatistic: Statistic = {
         id: uuid.v4() as string,
         name: statisticName,
         icon: "human",
         unit: statisticUnit,
         currentValue: 0,
       };
-      console.log("Adding statistic:", newStatistic);
-      addStatistic(newStatistic as Statistic);
+      addStatistic(newStatistic);
       setActiveStatisticId(newStatistic.id);
 
       const newStatisticDB = { ...newStatistic, user_id: session.user.id };
-      const { data, error: supabaseError } = await supabase
+      const { error: supabaseError } = await supabase
         .from("statistics")
         .insert(newStatisticDB)
         .select()
@@ -52,9 +51,6 @@ export default function StatisticsList() {
       if (supabaseError) {
         console.log(supabaseError.message);
         return;
-      }
-      if (data) {
-        console.log("Added statistic", data);
       }
     }
     hideDialog();
@@ -71,14 +67,12 @@ export default function StatisticsList() {
       color: colors.primaryContainer,
       paddingVertical: 12,
     },
-    //button
     fab: {
       bottom: 0,
       margin: 16,
       position: "absolute",
       right: 0,
     },
-    //dialog
     dialogContainer: {
       paddingHorizontal: 5,
     },
@@ -100,7 +94,6 @@ export default function StatisticsList() {
     disabledButtonStyle: {
       backgroundColor: colors.onSurfaceDisabled,
     },
-    // container: { flex: 1 },
   });
   const { statistics } = useStatistic();
 
@@ -108,7 +101,6 @@ export default function StatisticsList() {
   const hideDialog = () => setVisible(false);
 
   const showStatistic = (id: string) => {
-    console.log("Show Statistic:", id);
     setActiveStatisticId(id);
   };
 
@@ -145,7 +137,6 @@ export default function StatisticsList() {
         estimatedItemSize={18}
         ListFooterComponent={listFooter}
       />
-      {/*TODO:optimalize*/}
       <FAB icon="plus" style={styles.fab} onPress={showDialog} />
       <Portal>
         <Dialog
@@ -157,11 +148,9 @@ export default function StatisticsList() {
           }}
           style={styles.dialogContainer}
         >
-          {/*//TODO: nie dizała*/}
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? 70 : 0} // Adjust the offset based on your UI
-            // style={styles.container}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 70 : 0}
           >
             <Dialog.Title>
               <Text variant="titleLarge">Create measurement</Text>
@@ -188,7 +177,6 @@ export default function StatisticsList() {
                 }
                 mode="outlined"
               />
-              {/*dziwne*/}
               <TouchableRipple
                 onPress={handleCreateStatistic}
                 disabled={statisticName.length < 1}

@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { Statistic } from "../../../types";
-import uuid from "react-native-uuid";
 
 interface StatisticStore {
   statistics: Statistic[];
@@ -14,29 +13,7 @@ interface StatisticStore {
 }
 
 const useStatistic = create<StatisticStore>((set, get) => ({
-  statistics: [
-    {
-      id: uuid.v4() as string,
-      name: "Weight",
-      currentValue: 75,
-      icon: "scale-bathroom",
-      unit: "kg",
-    },
-    {
-      id: uuid.v4() as string,
-      name: "Body fat",
-      currentValue: 20,
-      icon: "water-percent",
-      unit: "%",
-    },
-    {
-      id: uuid.v4() as string,
-      name: "Belly waist",
-      currentValue: 100,
-      icon: "ruler",
-      unit: "cm",
-    },
-  ],
+  statistics: [],
   activeStatisticId: undefined,
 
   addStatistic: (statistic) =>
