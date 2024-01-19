@@ -91,13 +91,12 @@ const Training: React.FC<TrainingProps> = ({
           exercises_done: JSON.stringify(training.exercises_done),
           user_id: session?.user.id,
         };
-        const { data, error: supabaseError } = await supabase
+        const { error: supabaseError } = await supabase
           .from("trainings")
           .insert(supabaseTraining)
           .select()
           .single();
         if (supabaseError) console.log(supabaseError);
-        if (data) console.log(data);
       }
       clearTrainingUnits();
       clearTrainingSets();

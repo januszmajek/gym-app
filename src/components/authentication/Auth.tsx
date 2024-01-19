@@ -95,7 +95,6 @@ export default function Auth() {
               date_end: new Date(training.date_end),
               exercises_done: trainingExercises,
             };
-            console.log(newTraining);
             addTraining(newTraining);
           });
         }

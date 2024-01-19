@@ -36,7 +36,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
       if (workoutName) {
         if (workoutName != workout.name) {
           updateWorkout(workoutId, { ...workout, name: workoutName });
-          const { data, error: supabaseError } = await supabase
+          const { error: supabaseError } = await supabase
             .from("workouts")
             .update({ name: workoutName })
             .eq("id", workoutId)
@@ -45,13 +45,11 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
             console.log(supabaseError.message);
             return;
           }
-          console.log("Renamed workout:", data);
           return;
         }
       }
     }
     workout && setWorkoutName(name);
-    console.log("But input was not changed or null!");
   };
 
   const styles = StyleSheet.create({
