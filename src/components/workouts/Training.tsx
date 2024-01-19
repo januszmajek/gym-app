@@ -67,10 +67,13 @@ const Training: React.FC<TrainingProps> = ({
     if (keepScreenOn) {
       KeepAwake.activate();
     }
+    if (!keepScreenOn) {
+      KeepAwake.deactivate();
+    }
     return () => {
       KeepAwake.deactivate();
     };
-  }, []);
+  }, [keepScreenOn]);
 
   const handleFinishTraining = async () => {
     if (activeTraining) {
