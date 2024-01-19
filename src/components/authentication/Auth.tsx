@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
 import { supabase } from "../../../supabase/supabase";
 import { Button, Input } from "react-native-elements";
 import useSession from "../../hooks/stores/useSession";
@@ -12,7 +11,6 @@ import useStatistic from "../../hooks/stores/useStatistic";
 import useStatisticChart from "../../hooks/stores/useStatisticChart";
 import useTraining from "../../hooks/stores/useTraining";
 import { TrainingExercise } from "../../../types";
-import GoogleAuth from "./GoogleAuth";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -221,9 +219,6 @@ export default function Auth() {
             style={styles.button}
           />
         </View>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <GoogleAuth />
       </View>
     </View>
   );
