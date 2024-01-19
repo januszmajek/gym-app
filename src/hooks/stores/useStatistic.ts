@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Statistic } from "../../../types";
 
 interface StatisticStore {
@@ -12,39 +13,58 @@ interface StatisticStore {
   syncStatistics: (statistics: Statistic[]) => void;
 }
 
-const useStatistic = create<StatisticStore>((set, get) => ({
-  statistics: [],
-  activeStatisticId: undefined,
+const useStatistic = create<StatisticStore>((set, get) => {
+  AsyncStorage.getItem("statistics").then((storedStatistics) => {
+    const parsedStatistics = storedStatistics
+      ? JSON.parse(storedStatistics)
+      : [];
+    set({ statistics: parsedStatistics });
+  });
 
-  addStatistic: (statistic) =>
-    set((state) => ({
-      statistics: [...state.statistics, statistic],
-    })),
+  return {
+    statistics: [],
+    activeStatisticId: undefined,
 
-  removeStatistic: (statisticId) =>
-    set((state) => ({
-      statistics: state.statistics.filter(
-        (statistic) => statistic.id !== statisticId,
-      ),
-    })),
+    addStatistic: (statistic) =>
+      set((state) => {
+        const updatedStatistics = [...state.statistics, statistic];
+        AsyncStorage.setItem("statistics", JSON.stringify(updatedStatistics));
+        return { statistics: updatedStatistics };
+      }),
 
-  updateStatistic: (statisticId, updatedStatistic) =>
-    set((state) => ({
-      statistics: state.statistics.map((statistic) =>
-        statistic.id === statisticId
-          ? { ...statistic, ...updatedStatistic }
-          : statistic,
-      ),
-    })),
+    removeStatistic: (statisticId) =>
+      set((state) => {
+        const updatedStatistics = state.statistics.filter(
+          (statistic) => statistic.id !== statisticId,
+        );
+        AsyncStorage.setItem("statistics", JSON.stringify(updatedStatistics));
+        return { statistics: updatedStatistics };
+      }),
 
-  getStatisticById: (statisticId) => {
-    const statistic = get().statistics.find((w) => w.id === statisticId);
-    return statistic ? { ...statistic } : undefined;
-  },
-  setActiveStatisticId: (statisticId) =>
-    set({ activeStatisticId: statisticId }),
+    updateStatistic: (statisticId, updatedStatistic) =>
+      set((state) => {
+        const updatedStatistics = state.statistics.map((statistic) =>
+          statistic.id === statisticId
+            ? { ...statistic, ...updatedStatistic }
+            : statistic,
+        );
+        AsyncStorage.setItem("statistics", JSON.stringify(updatedStatistics));
+        return { statistics: updatedStatistics };
+      }),
 
-  syncStatistics: (statistics) => set(() => ({ statistics: statistics })),
-}));
+    getStatisticById: (statisticId) => {
+      const statistic = get().statistics.find((w) => w.id === statisticId);
+      return statistic ? { ...statistic } : undefined;
+    },
+
+    setActiveStatisticId: (statisticId) =>
+      set({ activeStatisticId: statisticId }),
+
+    syncStatistics: (statistics) => {
+      AsyncStorage.setItem("statistics", JSON.stringify(statistics));
+      set({ statistics });
+    },
+  };
+});
 
 export default useStatistic;

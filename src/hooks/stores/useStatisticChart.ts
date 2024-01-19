@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatisticChart } from "../../../types";
 
 interface StatisticChartStore {
@@ -16,43 +17,61 @@ interface StatisticChartStore {
     getStatisticChartsByStatisticId: (statisticId: string) => StatisticChart[];
 }
 
-const useStatisticChart = create<StatisticChartStore>((set, get) => ({
-    statisticCharts: [],
-    addStatisticChart: (statisticChart) =>
-        set((state) => ({
-            statisticCharts: [...state.statisticCharts, statisticChart],
-        })),
+const useStatisticChart = create<StatisticChartStore>((set, get) => {
+    AsyncStorage.getItem("statisticCharts").then((storedCharts) => {
+        const parsedCharts = storedCharts ? JSON.parse(storedCharts) : [];
+        set({ statisticCharts: parsedCharts });
+    });
 
-    removeStatisticChart: (statisticChartId) =>
-        set((state) => ({
-            statisticCharts: state.statisticCharts.filter(
-                (statisticChart) => statisticChart.id !== statisticChartId,
-            ),
-        })),
+    return {
+        statisticCharts: [],
 
-    updateStatisticChart: (statisticChartId, updatedStatisticChart) =>
-        set((state) => ({
-            statisticCharts: state.statisticCharts.map((statisticChart) =>
-                statisticChart.id === statisticChartId
-                    ? { ...statisticChart, ...updatedStatisticChart }
-                    : statisticChart,
-            ),
-        })),
+        addStatisticChart: (statisticChart) =>
+            set((state) => {
+                const updatedCharts = [...state.statisticCharts, statisticChart];
+                AsyncStorage.setItem("statisticCharts", JSON.stringify(updatedCharts));
+                return { statisticCharts: updatedCharts };
+            }),
 
-    getStatisticChartById: (statisticChartId) => {
-        const statisticChart = get().statisticCharts.find(
-            (w) => w.id === statisticChartId,
-        );
-        return statisticChart ? { ...statisticChart } : undefined;
-    },
-    getStatisticChartsByStatisticId: (statisticId) => {
-        const statisticCharts = get().statisticCharts.filter(
-            (statisticChart) => statisticChart.statistic_id === statisticId,
-        );
-        return statisticCharts ? [...statisticCharts] : [];
-    },
-    syncStatisticCharts: (statisticCharts) =>
-        set(() => ({ statisticCharts: statisticCharts })),
-}));
+        removeStatisticChart: (statisticChartId) =>
+            set((state) => {
+                const updatedCharts = state.statisticCharts.filter(
+                    (statisticChart) => statisticChart.id !== statisticChartId,
+                );
+                AsyncStorage.setItem("statisticCharts", JSON.stringify(updatedCharts));
+                return { statisticCharts: updatedCharts };
+            }),
+
+        updateStatisticChart: (statisticChartId, updatedStatisticChart) =>
+            set((state) => {
+                const updatedCharts = state.statisticCharts.map((statisticChart) =>
+                    statisticChart.id === statisticChartId
+                        ? { ...statisticChart, ...updatedStatisticChart }
+                        : statisticChart,
+                );
+                AsyncStorage.setItem("statisticCharts", JSON.stringify(updatedCharts));
+                return { statisticCharts: updatedCharts };
+            }),
+
+        getStatisticChartById: (statisticChartId) => {
+            const statisticChart = get().statisticCharts.find(
+                (w) => w.id === statisticChartId,
+            );
+            return statisticChart ? { ...statisticChart } : undefined;
+        },
+
+        getStatisticChartsByStatisticId: (statisticId) => {
+            const statisticCharts = get().statisticCharts.filter(
+                (statisticChart) => statisticChart.statistic_id === statisticId,
+            );
+            return statisticCharts ? [...statisticCharts] : [];
+        },
+
+        syncStatisticCharts: (statisticCharts) => {
+            AsyncStorage.setItem("statisticCharts", JSON.stringify(statisticCharts));
+            set({ statisticCharts });
+        },
+    };
+});
 
 export default useStatisticChart;

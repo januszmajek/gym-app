@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface SettingsStore {
     weightUnit: string;
@@ -11,27 +12,46 @@ interface SettingsStore {
     changeWeightUnit: (unit: string) => void;
 }
 
-const useSettings = create<SettingsStore>((set) => ({
-    weightUnit: "Kilogram",
-    vibrate: false,
-    keepScreenOn: false,
-    sound: false,
-    switchKeepScreenOn: () =>
-        set((state) => ({
-            ...state,
-            keepScreenOn: !state.keepScreenOn,
-        })),
-    switchVibrate: () =>
-        set((state) => ({
-            ...state,
-            vibrate: !state.vibrate,
-        })),
-    switchSound: () =>
-        set((state) => ({
-            ...state,
-            sound: !state.sound,
-        })),
-    changeWeightUnit: (unit: string) => set({ weightUnit: unit }),
-}));
+const useSettings = create<SettingsStore>((set) => {
+    AsyncStorage.getItem("settings").then((storedSettings) => {
+        const parsedSettings = storedSettings ? JSON.parse(storedSettings) : {};
+        set(parsedSettings);
+    });
+
+    return {
+        weightUnit: "Kilogram",
+        vibrate: false,
+        keepScreenOn: false,
+        sound: false,
+
+        switchKeepScreenOn: () =>
+            set((state) => {
+                const updatedState = { ...state, keepScreenOn: !state.keepScreenOn };
+                AsyncStorage.setItem("settings", JSON.stringify(updatedState));
+                return updatedState;
+            }),
+
+        switchVibrate: () =>
+            set((state) => {
+                const updatedState = { ...state, vibrate: !state.vibrate };
+                AsyncStorage.setItem("settings", JSON.stringify(updatedState));
+                return updatedState;
+            }),
+
+        switchSound: () =>
+            set((state) => {
+                const updatedState = { ...state, sound: !state.sound };
+                AsyncStorage.setItem("settings", JSON.stringify(updatedState));
+                return updatedState;
+            }),
+
+        changeWeightUnit: (unit: string) =>
+            set((state) => {
+                const updatedState = { ...state, weightUnit: unit };
+                AsyncStorage.setItem("settings", JSON.stringify(updatedState));
+                return updatedState;
+            }),
+    };
+});
 
 export default useSettings;
