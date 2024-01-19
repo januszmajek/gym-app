@@ -67,7 +67,6 @@ const SetItem: React.FC<SetItemProps> = ({
       repetitions: repetitions,
       pause: pause,
       workout_unit_id: workout_unit_id,
-      order: 0,
       type: type,
       time: time,
     };

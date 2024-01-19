@@ -19,7 +19,7 @@ const AddWorkoutButton = () => {
   const [workoutName, setWorkoutName] = useState("");
   const { session } = useSession();
   const { colors } = useTheme();
-  const { setActiveWorkoutId, addWorkout, workouts } = useWorkoutStore();
+  const { setActiveWorkoutId, addWorkout } = useWorkoutStore();
 
   const showDialog = () => setVisible(true);
 
@@ -31,7 +31,6 @@ const AddWorkoutButton = () => {
         id: uuid.v4() as string,
         user_id: session?.user.id,
         name: workoutName,
-        order: workouts.length,
       };
       addWorkout(newWorkout);
       setActiveWorkoutId(newWorkout.id);

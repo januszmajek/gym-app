@@ -24,7 +24,6 @@ export interface Set {
   weight: number;
   repetitions: number;
   pause: number;
-  order: number;
   completed?: boolean;
   time: number;
   type: string;
@@ -34,7 +33,6 @@ export interface WorkoutUnit {
   id: string;
   workout_id: string;
   exercise_id: string;
-  order: number;
 }
 
 export interface TrainingUnit extends WorkoutUnit {
@@ -48,7 +46,6 @@ export interface TrainingSet extends Set {
 export interface Workout {
   id: string;
   name: string;
-  order: number;
 }
 
 export interface TrainingExercise {

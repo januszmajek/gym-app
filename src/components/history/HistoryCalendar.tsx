@@ -65,7 +65,6 @@ const HistoryCalendar = () => {
 
   const markedDates = generateMarkedDates();
   const transformedTrainings = transformTrainings(trainings);
-  console.log(JSON.stringify(transformedTrainings, null, 2));
 
   const handleInfoPress = (id) => {
     setActiveTrainingHistoryId(id);

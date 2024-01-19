@@ -36,7 +36,6 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
         id: uuid.v4() as string,
         workout_id: activeWorkoutId,
         exercise_id: exercise_id,
-        order: 0,
         user_id: session.user.id,
       };
       addWorkoutUnit(newUnit);

@@ -68,7 +68,6 @@ const WorkoutUnit = ({ workoutUnitId }: WorkoutUnitProps) => {
         weight: 0.5,
         repetitions: 1,
         pause: 0,
-        order: 0,
         time: 0,
         type: "quantity",
       };
