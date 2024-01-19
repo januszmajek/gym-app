@@ -6,7 +6,7 @@ import {
 } from "react-native-calendars";
 import { StyleSheet, View } from "react-native";
 import { Button, Divider, Text, useTheme } from "react-native-paper";
-import { format, parseISO } from "date-fns";
+import { format, isDate, parseISO } from "date-fns";
 import useTraining from "../../hooks/stores/useTraining";
 import { Training } from "../../../types";
 import useHistory from "../../hooks/stores/useHistory";
@@ -24,10 +24,13 @@ const HistoryCalendar = () => {
 
   const transformTrainings = (trainings: Training[]) => {
     const transformedData = trainings.map((training) => {
-      const title = format(
-        parseISO(training.date_start.toString()),
-        "yyyy-MM-dd",
-      );
+      let title;
+
+      if (isDate(training.date_start)) {
+        title = format(training.date_start, "yyyy-MM-dd");
+      } else {
+        title = format(parseISO(training.date_start.toString()), "yyyy-MM-dd");
+      }
       return {
         title,
         data: [{ ...training }],
@@ -53,9 +56,14 @@ const HistoryCalendar = () => {
 
   const generateMarkedDates = () => {
     const marked = {};
-
     trainings.forEach((item) => {
-      const date = format(parseISO(item.date_start.toString()), "yyyy-MM-dd");
+      let date;
+
+      if (isDate(item.date_start)) {
+        date = format(item.date_start, "yyyy-MM-dd");
+      } else {
+        date = format(parseISO(item.date_start.toString()), "yyyy-MM-dd");
+      }
       let color = "blue";
       if (date === todayDate) {
         color = colors.secondary;
